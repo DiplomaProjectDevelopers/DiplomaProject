@@ -1,0 +1,48 @@
+﻿@model IEnumerable<DiplomaProject.Domain.ViewModels.OutcomeViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>@Model</h2>
+<h2>Create subjects</h2>
+<hr />
+<div id="row">
+    <div id="outcome-list" class="col-md-2">
+        <ul>                <li draggable="true" ondragstart="drag(event)">OutCome(5)</li></ul>
+        @if (Model != null)
+        {
+            <ul>
+                @foreach (var item in Model)
+                {
+                    <li draggable="true" ondragstart="drag(event)">@string.Format($"{item.Name}({item.TotalWeight})")</li>
+                }
+            </ul>
+        }
+    </div>
+    <div id="outcome-container" class="col-md-10">
+        @for (int i = 0; i < 6; i++)
+        {
+            <div class="row">
+                @for (int j = 0; j < 6; j++)
+                {
+                    <div class ="block col-md-2">
+                        <div ondrop="drop(event)" ondragover="allowDrop(event)" class="cell"></div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+@section Styles{ 
+    <link href="/Content/Outcomes/OutcomeGraph.css" rel="stylesheet" />
+}
+
+@section Scripts{ 
+    <script src="/Scripts/dragdrop.js" type="text/javascript"></script>
+}
+<script>
+    function drag(event){
+        event.dataTransfer.setData("text", event.target.value)
+    
+    }
+</script>

@@ -1,0 +1,12 @@
+﻿.block {
+    height: 70px;
+}
+
+.cell {
+    margin-top: 4px;
+    background-color: #ded0d0;
+    height: 80%;
+}
+#outcome-container{
+    border: 1px solid #424242;
+}

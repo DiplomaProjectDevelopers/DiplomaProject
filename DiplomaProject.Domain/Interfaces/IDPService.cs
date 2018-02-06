@@ -1,0 +1,26 @@
+﻿using DiplomaProject.Domain.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DiplomaProject.Domain.Interfaces
+{
+    public interface IDPService
+    {
+        Task<T> GetById<T>(int id) where T : class;
+        Task<IEnumerable<T>> GetAll<T>() where T : class;
+
+        Task Insert<T>(T item) where T : class;
+
+        Task Update<T>(T item) where T : class;
+
+        Task DeleteById<T>(int id) where T : class;
+
+        Task Delete<T>(T item) where T : class;
+
+        Task<SignInResult> SignInAsync(LoginViewModel model, bool lockoutOnFailure = false);
+        void Save();
+    }
+}

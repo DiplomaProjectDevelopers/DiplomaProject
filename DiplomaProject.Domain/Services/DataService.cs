@@ -1,19 +1,25 @@
-﻿using DiplomaProject.Domain.Interfaces;
+﻿using DiplomaProject.Domain.Entities;
+using DiplomaProject.Domain.Interfaces;
 using DiplomaProject.Domain.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace DiplomaProject.Domain.Services
 {
     public class DataService : IDPService
     {
         private IDPRepository repository;
-        public DataService(IDPRepository repository)
+        private SignInManager<Entities.User> signInManager;
+        private UserManager<Entities.User> userManager;
+        public DataService(IDPRepository repository, UserManager<Entities.User> userManager, SignInManager<Entities.User> signInManager)
         {
             this.repository = repository;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
         public async Task Delete<T>(T item) where T : class
         {
@@ -51,9 +57,18 @@ namespace DiplomaProject.Domain.Services
             return await repository.SignInAsync(loginModel.Username, loginModel.Password, loginModel.RememberMe, lockoutInFailure);
         }
 
+        public async Task SignOutAsync()
+        {
+             await repository.SignOutAsync();
+        }
         public void Save()
         {
             repository.Save();
+        }
+
+        public async Task<User> GetUserAsync(ClaimsPrincipal claimsPrincipal)
+        {
+            return await userManager.GetUserAsync(claimsPrincipal);
         }
     }
 }

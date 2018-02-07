@@ -21,6 +21,7 @@ namespace DiplomaProject.Domain.Interfaces
         Task Delete<T>(T item) where T : class;
 
         Task<SignInResult> SignInAsync(string username, string password, bool rememberme, bool lockoutOnFailure = false);
+        Task SignOutAsync();
         void Save();
     }
 }

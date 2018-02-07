@@ -45,16 +45,28 @@ namespace DiplomaProject.Domain.Initializer
                 //Create the Administartor Role
 
                 //Create the default Admin account and apply the Administrator role
-                string email = "hakobpapazyan2@gmail.com";
-                string userName = "admin9";
                 string password = "Admin0chka!";
-                if (!_context.Users.Any(u => u.Email == email))
+                var user = new User
                 {
-                    _userManager.CreateAsync(new User { UserName = userName, Email = email, EmailConfirmed = true }, password).GetAwaiter().GetResult();
+                    FirstName = "Hakob",
+                    LastName = "Papazyan",
+                    PhoneNumber = "093697343",
+                    UserName = "admin9",//userName,
+                    Email = "hakobpapazyan2@gmail.com",//email,
+                    EmailConfirmed = true
+                };
+                if (!_context.Users.Any(u => u.Email == user.Email))
+                {
+                    _userManager.CreateAsync(user, password).GetAwaiter().GetResult();
                 }
-                if (_context.Users.Any(u => u.Email == email))
+                else
                 {
-                    await _userManager.AddToRoleAsync(await _userManager.FindByNameAsync(userName), "Administrator");
+                    var existUser = await _userManager.FindByEmailAsync(user.Email);
+                    existUser.FirstName = user.FirstName;
+                    existUser.LastName = user.LastName;
+                    existUser.PhoneNumber = user.PhoneNumber;
+                    await _userManager.UpdateAsync(existUser);
+                    await _userManager.AddToRoleAsync(existUser, "Administrator");
                 }
             }
             catch (Exception exception)

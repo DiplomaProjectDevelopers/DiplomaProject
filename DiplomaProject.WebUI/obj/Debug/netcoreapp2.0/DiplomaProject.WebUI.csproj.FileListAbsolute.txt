@@ -11,3 +11,16 @@ C:\Projects\DiplomaProjects\DiplomaProject.WebUI\obj\Debug\netcoreapp2.0\Diploma
 C:\Projects\DiplomaProjects\DiplomaProject.WebUI\obj\Debug\netcoreapp2.0\DiplomaProject.WebUI.AssemblyInfo.cs
 C:\Projects\DiplomaProjects\DiplomaProject.WebUI\obj\Debug\netcoreapp2.0\DiplomaProject.WebUI.dll
 C:\Projects\DiplomaProjects\DiplomaProject.WebUI\obj\Debug\netcoreapp2.0\DiplomaProject.WebUI.pdb
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\obj\Debug\netcoreapp2.0\DiplomaProject.WebUI.csprojResolveAssemblyReference.cache
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\obj\Debug\netcoreapp2.0\DiplomaProject.WebUI.csproj.CoreCompileInputs.cache
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\obj\Debug\netcoreapp2.0\DiplomaProject.WebUI.AssemblyInfoInputs.cache
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\obj\Debug\netcoreapp2.0\DiplomaProject.WebUI.AssemblyInfo.cs
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\obj\Debug\netcoreapp2.0\DiplomaProject.WebUI.dll
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\obj\Debug\netcoreapp2.0\DiplomaProject.WebUI.pdb
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\bin\Debug\netcoreapp2.0\DiplomaProject.WebUI.deps.json
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\bin\Debug\netcoreapp2.0\DiplomaProject.WebUI.runtimeconfig.json
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\bin\Debug\netcoreapp2.0\DiplomaProject.WebUI.runtimeconfig.dev.json
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\bin\Debug\netcoreapp2.0\DiplomaProject.WebUI.dll
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\bin\Debug\netcoreapp2.0\DiplomaProject.WebUI.pdb
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\bin\Debug\netcoreapp2.0\DiplomaProject.Domain.dll
+C:\Projects\DiplomaProject\DiplomaProject.WebUI\bin\Debug\netcoreapp2.0\DiplomaProject.Domain.pdb

@@ -108,6 +108,11 @@ namespace DiplomaProject.Domain.Repositories
         {
             return await signInManager.PasswordSignInAsync(username, Password, RememberMe, lockoutInFailure);
         }
+
+        public async Task SignOutAsync()
+        {
+             await signInManager.SignOutAsync();
+        }
         /// <summary>
         ///Save changes in database.
         /// </summary>

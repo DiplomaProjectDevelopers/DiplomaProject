@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DiplomaProject.Domain.Entities;
 using DiplomaProject.Domain.Interfaces;
 using DiplomaProject.Domain.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +15,12 @@ namespace DiplomaProject.WebUI.Controllers
     public class AdminController : Controller
     {
         private IDPService service;
-        public AdminController(IDPService service,
+        private IMapper mapper;
+        public AdminController(IDPService service, IMapper mapper,
             UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this.service = service;
-
+            this.mapper = mapper;
         }
         [HttpGet]
         public IActionResult Login()
@@ -34,7 +37,7 @@ namespace DiplomaProject.WebUI.Controllers
                 var result = await service.SignInAsync(model);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Outcomes");
+                    return RedirectToAction("Index", "Admin");
                 }
                 else
                 {
@@ -52,14 +55,16 @@ namespace DiplomaProject.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOut()
         {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation(4, "User logged out.");
+            await service.SignOutAsync();
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var user = mapper.Map<ProfessionAdminViewModel>(
+                await service.GetUserAsync(HttpContext.User));
+            return View(user);
         }
     }
 }

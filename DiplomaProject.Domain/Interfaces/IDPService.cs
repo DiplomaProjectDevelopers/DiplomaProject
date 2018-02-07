@@ -1,7 +1,9 @@
-﻿using DiplomaProject.Domain.ViewModels;
+﻿using DiplomaProject.Domain.Entities;
+using DiplomaProject.Domain.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +23,10 @@ namespace DiplomaProject.Domain.Interfaces
         Task Delete<T>(T item) where T : class;
 
         Task<SignInResult> SignInAsync(LoginViewModel model, bool lockoutOnFailure = false);
+
+        Task SignOutAsync();
+
+        Task<User> GetUserAsync(ClaimsPrincipal claimsPrincipal);
         void Save();
     }
 }

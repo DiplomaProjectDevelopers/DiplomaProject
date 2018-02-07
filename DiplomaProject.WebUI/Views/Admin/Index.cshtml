@@ -1,0 +1,68 @@
+﻿@model DiplomaProject.Domain.ViewModels.ProfessionAdminViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Welcome @Model?.FirstName</h2>
+<div>
+    <div class="row">
+        <div class="col-md-4"><img src="/Content/Images/user-icon-27998.png" width="300" height="300" alt="user-icon" /></div>
+        <div class="col-md-8">
+            <h3>Genereal Info</h3>
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FirstName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.LastName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Phone)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <br />
+    <p>You're admin for the next professions. You can make subjects for each profession.</p>
+    <table class="table">
+        <tr>
+            <th>Profession name</th>
+            <th>Description</th>
+        </tr>
+        @if (Model != null && Model.Professions != null)
+        {
+            @foreach (var profession in Model.Professions)
+            {
+                <tr>
+                    <td>
+                        @profession.Name
+                    </td>
+                    <td>
+                        @profession.Description
+                    </td>
+                    <td>
+                        @Html.ActionLink("Create subjects", "Create", "OutCome", profession.Id)
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+@section Styles{ 
+    <link href="/Content/Admin/login.css" rel="stylesheet" />
+}

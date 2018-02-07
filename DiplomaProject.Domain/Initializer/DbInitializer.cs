@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DiplomaProject.Domain.Initializer
 {
@@ -28,7 +29,7 @@ namespace DiplomaProject.Domain.Initializer
         }
 
         //This example just creates an Administrator role and one Admin users
-        public async void Initialize()
+        public async Task Initialize()
         {
             try
             {

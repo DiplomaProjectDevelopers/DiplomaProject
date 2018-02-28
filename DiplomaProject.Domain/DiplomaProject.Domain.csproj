@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Migrations\20180204142919_Initial.cs" />
     <Compile Remove="Migrations\20180204154008_Initial.cs" />
@@ -18,4 +22,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
+  </ItemGroup>
 </Project>

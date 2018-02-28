@@ -1,22 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace DiplomaProject.Domain.Entities
 {
-    public class UserRole : IdentityRole
+    public class UserRole : IdentityUserRole<string>
     {
-        public UserRole(string roleName) : base(roleName)
-        {
 
-        }
-        public UserRole()
-        {
-
-        }
-        [StringLength(500)]
-        public override string Id { get => base.Id; set => base.Id = value; }
     }
 }

@@ -38,7 +38,7 @@ namespace DiplomaProject.WebUI
             services.AddTransient<IDPRepository, DPRepository>();
             services.AddDbContext<DiplomaProjectContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<User, UserRole>()
+            services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<DiplomaProjectContext>()
                 .AddDefaultTokenProviders();
             services.Configure<IdentityOptions>(options =>

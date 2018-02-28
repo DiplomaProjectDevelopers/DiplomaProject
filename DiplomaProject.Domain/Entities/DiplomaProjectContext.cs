@@ -1,12 +1,15 @@
 ﻿using System;
+using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace DiplomaProject.Domain.Entities
 {
-    public class DiplomaProjectContext : IdentityDbContext<User>
+    public class DiplomaProjectContext : IdentityDbContext<User, Role, string>
     {
         public DiplomaProjectContext(DbContextOptions<DiplomaProjectContext> options) : base(options)
         {
@@ -25,7 +28,6 @@ namespace DiplomaProject.Domain.Entities
         public virtual DbSet<StakeHolder> StakeHolders { get; set; }
         public virtual DbSet<StakeHolderType> StakeHolderTypes { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Edge>()
@@ -38,7 +40,23 @@ namespace DiplomaProject.Domain.Entities
                 .WithMany(t => t.RightSideOutComes)
                 .HasForeignKey(m => m.RightOutComeId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<Role>().ToTable("Roles");
+            modelBuilder.Entity<UserRole>().ToTable("UserRoles");
+            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
             base.OnModelCreating(modelBuilder);
+        }
+    }
+
+    public class BloggingContextFactory : IDesignTimeDbContextFactory<DiplomaProjectContext>
+    {
+        public DiplomaProjectContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<DiplomaProjectContext>();
+            optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=DiplomaProject;Trusted_Connection=True;");
+
+            return new DiplomaProjectContext(optionsBuilder.Options);
         }
     }
 }

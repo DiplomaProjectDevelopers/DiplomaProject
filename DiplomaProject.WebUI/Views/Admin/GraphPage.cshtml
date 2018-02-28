@@ -1,0 +1,15 @@
+﻿@model IEnumerable<DiplomaProject.Domain.ViewModels.OutcomeViewModel>
+
+@{
+    ViewData["Title"] = "GraphPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>GraphPage</h2>
+
+<div onload="buildGraph()"></div>
+
+@section Scripts {
+    <script src="~/lib/vivagraphjs/dist/vivagraph.js"></script>
+    <script src="~Scripts/GraphBuilder.js"></script>
+}

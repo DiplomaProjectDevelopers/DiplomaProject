@@ -10,65 +10,233 @@ using System.Threading.Tasks;
 
 namespace DiplomaProject.Domain.Initializer
 {
-    public class DbInitializer : IDbInitializer
+    public class DbInitializer :  IDbInitializer
     {
 
 
         private readonly DiplomaProjectContext _context;
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<UserRole> _roleManager;
+        private readonly RoleManager<Role> _roleManager;
 
         public DbInitializer(
             DiplomaProjectContext context,
             UserManager<User> userManager,
-            RoleManager<UserRole> roleManager)
+            RoleManager<Role> roleManager)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
         }
 
+        public static void Seed()
+        {
+
+        }
+
         //This example just creates an Administrator role and one Admin users
-        public async Task Initialize()
+        public Task Initialize()
         {
             try
             {
                 //create database schema if none exists
                 _context.Database.Migrate();
-
                 //If there is already an Administrator role, abort
-                if (!_context.Roles.Any(r => r.Name == "Administrator"))
+                if (!_context.Roles.Any())
                 {
-                    _roleManager.CreateAsync(new UserRole("Administrator")).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new Role("BaseAdmin")).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new Role("ProfessionAdmin")).GetAwaiter().GetResult();
                 }
 
+                if (!_context.Faculties.Any())
+                {
+                    var faculties = new List<Faculty>
+                    {
+                        new Faculty
+                        {
+                            Name = "Քոմփյութերային համակարգեր և ինֆորմատիկա",
+                        }
+                    };
+                    _context.Faculties.AddRange(faculties);
+                    _context.SaveChanges();
+                }
 
+                if (!_context.Departments.Any())
+                {
+                    var departments = new List<Department>
+                    {
+                        new Department
+                        {
+                            Name= "ՏԱԾԱ",
+                            FacultyId = 1
+
+                        }
+                    };
+                    _context.Departments.AddRange(departments);
+                    _context.SaveChanges();
+                }
+
+                if (!_context.Professions.Any())
+                {
+                    var professions = new List<Profession>
+                    {
+                        new Profession
+                        {
+                            Name = "Տեղեկատվական անվտանգություն",
+                            DepartmentId = 1,
+                        },
+                        new Profession
+                        {
+                            Name = "Ինֆորմատիկա և ծրագրավորում",
+                            DepartmentId = 1
+                        }
+                    };
+                    _context.Professions.AddRange(professions);
+                    _context.SaveChanges();
+                }
+
+                if (!_context.OutComeTypes.Any())
+                {
+                    var types = new List<OutComeType>
+                    {
+                        new OutComeType
+                        {
+                            Name= "Գիտելիք"
+                        },
+                        new OutComeType
+                        {
+                            Name ="Կարողություն"
+                        },
+                        new OutComeType
+                        {
+                            Name = "Հմտություն"
+                        }
+                    };
+                    _context.OutComeTypes.AddRange(types);
+                    _context.SaveChanges();
+                }
+
+                if (!_context.InitialSubjects.Any())
+                {
+                    var subjects = new List<InitialSubject>
+                    {
+                        new InitialSubject
+                        {
+                            Name = "Օբյեկտ կողմոնորշված և կոմպոնենտային ծրագրավորում",
+                            ProfessionId = 1
+                        },
+                        new InitialSubject
+                        {
+                            Name = "Տվյալների բազաների նախագծման տեխնոլոգիաներ և պաշտպանություն",
+                            ProfessionId = 1
+                        }
+                    };
+                    _context.AddRange(subjects);
+                    _context.SaveChanges();
+                }
+
+                if (!_context.InitialOutComes.Any())
+                {
+                    var outComes = new List<InitialOutCome>
+                    {
+                        new InitialOutCome
+                        {
+                            Name = "Կիրառական ծրագրերի գործնական նախագծման կարողություն",
+                            SubjectId = 1,
+                            TypeId = 2
+                        },
+                        new InitialOutCome
+                        {
+                            Name = "Պաշտպանված ծրագրային ապահովման նախագծման կարողություն",
+                            SubjectId = 1,
+                            TypeId = 2
+                        },
+                        new InitialOutCome
+                        {
+                            Name = "Խրագրային ապահովման թեստավորման հմտություն",
+                            SubjectId = 1,
+                            TypeId = 3
+                        },
+                        new InitialOutCome
+                        {
+                            Name ="Մասնագիտական գործնական գիտելիքներ",
+                            SubjectId = 1,
+                            TypeId = 1
+                        },
+                        new InitialOutCome
+                        {
+                            Name= "Մասնագիտական գործնական հմտություններ",
+                            SubjectId = 1,
+                            TypeId = 3
+                        },
+                        new InitialOutCome
+                        {
+                            Name = "Պաշտպանված քոմփյութերային համակարգերի նախագծման կարողություններ",
+                            SubjectId = 2,
+                            TypeId = 2
+                        },
+                        new InitialOutCome
+                        {
+                            Name = "Մասնագիտական գործնական գիտելիքներ",
+                            SubjectId = 2,
+                            TypeId = 1
+                        }
+                    };
+                    _context.InitialOutComes.AddRange(outComes);
+                    _context.SaveChanges();
+                }
                 //Create the Administartor Role
 
                 //Create the default Admin account and apply the Administrator role
                 string password = "Admin0chka!";
-                var user = new User
+                var users = new List<User>
                 {
+                    new User {
                     FirstName = "Hakob",
                     LastName = "Papazyan",
                     PhoneNumber = "093697343",
-                    UserName = "admin9",//userName,
-                    Email = "hakobpapazyan2@gmail.com",//email,
+                    UserName = "hakob_papazyan",
+                    Email = "hakobpapazyan2@gmail.com",
                     EmailConfirmed = true
+                    },
+                    new User
+                    {
+                        Email = "sa@sa.com",
+                        UserName = "sa",
+                        EmailConfirmed = true,
+                    },
+                    new User
+                    {
+                        FirstName = "Liana",
+                        LastName = "Grigoryan",
+                        UserName = "liana_grigoryan",
+                        Email = "lgrigoryan25@gmail.com",
+                        EmailConfirmed = true
+                    },
+                    new User
+                    {
+                        FirstName = "Qristine",
+                        LastName = "Serobyan",
+                        UserName = "qristine_serobyan",
+                        Email = "serobyanqristine@gmail.com",
+                        EmailConfirmed = true
+                    },
+                    new User
+                    {
+                        FirstName = "Kim",
+                        LastName = "Sargsyan",
+                        UserName = "kim_sargsyan",
+                        Email = "kim.sargsian@gmail.com",
+                        EmailConfirmed = true
+                    }
                 };
-                if (!_context.Users.Any(u => u.Email == user.Email))
+                if (!_context.Users.Any())
                 {
-                    _userManager.CreateAsync(user, password).GetAwaiter().GetResult();
+                    foreach (var user in users)
+                    {
+                        _userManager.CreateAsync(user, password).GetAwaiter().GetResult();
+                    }
                 }
-                else
-                {
-                    var existUser = await _userManager.FindByEmailAsync(user.Email);
-                    existUser.FirstName = user.FirstName;
-                    existUser.LastName = user.LastName;
-                    existUser.PhoneNumber = user.PhoneNumber;
-                    await _userManager.UpdateAsync(existUser);
-                    await _userManager.AddToRoleAsync(existUser, "Administrator");
-                }
+                return Task.CompletedTask;
             }
             catch (Exception exception)
             {

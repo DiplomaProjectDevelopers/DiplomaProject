@@ -9,22 +9,16 @@ using DiplomaProject.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaProject.WebUI.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : BaseController
     {
-        private IDPService service;
-        private IMapper mapper;
-        private UserManager<User> userManager;
-        private SignInManager<User> signInManager;
-        public AdminController(IDPService service, IMapper mapper,
-            UserManager<User> userManager, SignInManager<User> signInManager)
+        public AdminController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
+            : base(service, mapper, userManager,signInManager, roleManager)
         {
-            this.service = service;
-            this.mapper = mapper;
-            this.userManager = userManager;
-            this.signInManager = signInManager;
+                
         }
         [HttpGet]
         public IActionResult Login()
@@ -67,32 +61,19 @@ namespace DiplomaProject.WebUI.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var userId = userManager.GetUserId(HttpContext.User);
-            var roles = (from r in await service.GetAll<UserRole>()
-                         join role in await service.GetAll<Role>()
-                         on r.RoleId equals role.Id
-                         select role).ToList();
-            if (roles.Find(r => r.Name == "BaseAdminMainPage") != null)
+            var user = await userManager.GetUserAsync(User);
+            if (userManager.IsInRoleAsync(user,"BaseAdmin").Result)
             {
-                var users = (from user in await service.GetAll<User>()
-                             join userrole in await service.GetAll<UserRole>() on user.Id equals userrole.UserId
-                             join role in await service.GetAll<Role>() on userrole.RoleId equals role.Id
-                             where role.Name != "BaseAdministrator"
-                             select user).ToList();
-                return View("BaseAdminPage", mapper.Map<IEnumerable<UserViewModel>>(users));
+                var users = (await service.GetAll<User>()).Where(u => u.Id != user.Id && !userManager.IsInRoleAsync(u, "BaseAdmin").GetAwaiter().GetResult());
+                return View("BaseAdminMainPage",mapper.Map<IEnumerable<UserViewModel>>(users));
             }
-            //switch (user.Role?.Name)
-            //{
-            //    case "ProfessionAdmin":
-            //        var model = mapper.Map<ProfessionViewModel>(user);
-            //        return View("ProfessionAdminMainPage", model);
-            //    case "BaseAdmin":
-            //        return View("BaseAdminMainPage");
-            //}
+            if (userManager.IsInRoleAsync(user, "PROFESSIONADMIN").Result)
+            {
+                var outcomes = await service.GetAll<FinalOutCome>();
+                var model = outcomes.Where(o => user.Professions.Select(p => p.Id).Contains(o.ProfessionId.Value)).Select(o => mapper.Map<OutcomeViewModel>(o));
+                return View("GraphPage",model);
+            }   
             return NotFound();
-            //var user = mapper.Map<ProfessionAdminViewModel>(
-            //    await service.GetUserAsync(HttpContext.User));
-            //return View(user);
         }
 
         public async Task<IActionResult> BuildGraph(int professionId)

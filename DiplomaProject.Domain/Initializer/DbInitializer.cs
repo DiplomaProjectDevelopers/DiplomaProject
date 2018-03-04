@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DiplomaProject.Domain.Initializer
 {
-    public class DbInitializer :  IDbInitializer
+    public class DbInitializer : IDbInitializer
     {
 
 
@@ -28,13 +28,8 @@ namespace DiplomaProject.Domain.Initializer
             _roleManager = roleManager;
         }
 
-        public static void Seed()
-        {
-
-        }
-
         //This example just creates an Administrator role and one Admin users
-        public Task Initialize()
+        public async Task Initialize()
         {
             try
             {
@@ -130,7 +125,7 @@ namespace DiplomaProject.Domain.Initializer
                             ProfessionId = 1
                         }
                     };
-                    _context.AddRange(subjects);
+                    _context.InitialSubjects.AddRange(subjects);
                     _context.SaveChanges();
                 }
 
@@ -184,19 +179,75 @@ namespace DiplomaProject.Domain.Initializer
                     _context.InitialOutComes.AddRange(outComes);
                     _context.SaveChanges();
                 }
+
+
+                if (!_context.FinalOutComes.Any())
+                {
+                    var outComes = new List<FinalOutCome>
+                    {
+                        new FinalOutCome
+                        {
+                            Name = "Կիրառական ծրագրերի գործնական նախագծման կարողություն",
+                            TypeId = 2,
+                            ProfessionId = 1
+                        },
+                        new FinalOutCome
+                        {
+                            Name = "Պաշտպանված ծրագրային ապահովման նախագծման կարողություն",
+                            TypeId = 2,
+                            ProfessionId = 1
+                        },
+                        new FinalOutCome
+                        {
+                            Name = "Խրագրային ապահովման թեստավորման հմտություն",
+                            TypeId = 3,
+                            ProfessionId = 1
+                        },
+                        new FinalOutCome
+                        {
+                            Name ="Մասնագիտական գործնական գիտելիքներ",
+                            TypeId = 1,
+                            ProfessionId = 1
+                        },
+                        new FinalOutCome
+                        {
+                            Name= "Մասնագիտական գործնական հմտություններ",
+                            TypeId = 3,
+                            ProfessionId = 1
+                        },
+                        new FinalOutCome
+                        {
+                            Name = "Պաշտպանված քոմփյութերային համակարգերի նախագծման կարողություններ",
+                            TypeId = 2,
+                            ProfessionId = 1
+                        },
+                        new FinalOutCome
+                        {
+                            Name = "Մասնագիտական գործնական գիտելիքներ",
+                            TypeId = 1,
+                            ProfessionId = 1,
+                            IsNew = true
+                        }
+                    };
+                    _context.FinalOutComes.AddRange(outComes);
+                    _context.SaveChanges();
+                }
+
+
                 //Create the Administartor Role
 
                 //Create the default Admin account and apply the Administrator role
-                string password = "Admin0chka!";
+                string password = "sa";
                 var users = new List<User>
                 {
-                    new User {
-                    FirstName = "Hakob",
-                    LastName = "Papazyan",
-                    PhoneNumber = "093697343",
-                    UserName = "hakob_papazyan",
-                    Email = "hakobpapazyan2@gmail.com",
-                    EmailConfirmed = true
+                    new User
+                    {
+                        FirstName = "Hakob",
+                        LastName = "Papazyan",
+                        PhoneNumber = "093697343",
+                        UserName = "hakob_papazyan",
+                        Email = "hakobpapazyan2@gmail.com",
+                        EmailConfirmed = true
                     },
                     new User
                     {
@@ -233,10 +284,12 @@ namespace DiplomaProject.Domain.Initializer
                 {
                     foreach (var user in users)
                     {
-                        _userManager.CreateAsync(user, password).GetAwaiter().GetResult();
+                        await _userManager.CreateAsync(user, password);
+                        await _userManager.AddToRolesAsync(user, new[] { "ProfessionAdmin" });
                     }
+                    await _userManager.AddToRoleAsync(users[0], "BaseAdmin");
+                    await _context.SaveChangesAsync();
                 }
-                return Task.CompletedTask;
             }
             catch (Exception exception)
             {

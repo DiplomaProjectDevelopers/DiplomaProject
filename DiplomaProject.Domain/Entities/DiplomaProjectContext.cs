@@ -40,11 +40,6 @@ namespace DiplomaProject.Domain.Entities
                 .WithMany(t => t.RightSideOutComes)
                 .HasForeignKey(m => m.RightOutComeId)
                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<Role>().ToTable("Roles");
-            modelBuilder.Entity<UserRole>().ToTable("UserRoles");
-            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
-            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
             base.OnModelCreating(modelBuilder);
         }
     }

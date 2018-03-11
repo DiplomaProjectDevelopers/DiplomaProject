@@ -1,0 +1,15 @@
+{
+  "name": "jquery-validator",
+  "homepage": "https://github.com/sasha-bichkov/validator",
+  "version": "1.0.0",
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0",
+    "commit": "0ee61906d7f86ef4a77bffc3ac3cbd0986ab811d"
+  },
+  "_source": "https://github.com/sasha-bichkov/validator.git",
+  "_target": "v1.0.0",
+  "_originalSource": "jquery-validator",
+  "_direct": true
+}

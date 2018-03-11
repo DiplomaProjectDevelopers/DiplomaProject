@@ -1,15 +1,31 @@
-﻿@model IEnumerable<DiplomaProject.Domain.ViewModels.OutcomeViewModel>
+﻿@model IEnumerable<OutcomeViewModel>
 
 @{
     ViewData["Title"] = "GraphPage";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var list = Model.ToList();
+    List<string> array = new List<string>();
+    foreach (var item in Model.ToList())
+    {
+        array.Add(Newtonsoft.Json.JsonConvert.SerializeObject(item));
+    }
 }
 
 <h2>GraphPage</h2>
 
-<div onload="buildGraph()"></div>
+<div></div>
 
 @section Scripts {
     <script src="~/lib/vivagraphjs/dist/vivagraph.js"></script>
-    <script src="~Scripts/GraphBuilder.js"></script>
+    <script src="~/Scripts/GraphBuilder.js"></script>
+    <script>
+        const array = @array;
+        const model = [];
+        array.foreach(item => {
+            model.push(JSON.parse(item));
+        });
+        $(document).ready(function () {
+            buildGraph(model);
+        });
+    </script>
 }

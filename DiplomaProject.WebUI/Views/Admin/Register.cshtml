@@ -1,0 +1,145 @@
+﻿@model DiplomaProject.Domain.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register new user";
+}
+<hr />
+<br />
+<div class="row">
+    <div class="col-md-6 col-sm-12 col-lg-6 col-md-offset-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">Enter Your Details Here</div>
+            <div class="panel-body">
+                <form id="register-form" asp-controller="Admin" asp-antiforgery="true" asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Username" class="control-label"></label>
+                        <input asp-for="Username" class="form-control" id="register-username"/>
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" id="register-email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" id="register-psw"/>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="control-label"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" id="register-pswConfirm" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FirstName" class="control-label"></label>
+                        <input asp-for="FirstName" class="form-control" id="register-fname" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName" class="control-label"></label>
+                        <input asp-for="LastName" class="form-control" id="register-lname"/>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BirthDate" class="control-label"></label>
+                        <input asp-for="BirthDate" class="form-control" id="register-bdate"/>
+                        <span asp-validation-for="BirthDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input id="register-btnSubmit" type="submit"  value="Register" class="btn btn-success text-center" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $flag = 1;
+
+            $("#register-username").focusout(function () {
+                if ($(this).val() == '' || $(this).val().length < 3 || $(this).val() > 32) {
+                    $(this).css("border-color", "#FF0000");
+                    $('#register-btnSubmit').attr('disabled', true);
+                }
+                else {
+                    $(this).css("border-color", "#2eb82e");
+                    $('#register-btnSubmit').attr('disabled', false);
+                }
+            });
+
+            $("#register-email").focusout(function () {
+                if ($(this).val() == '' || $(this).val().length < 3 || $(this).val() > 32) {
+                    $(this).css("border-color", "#FF0000");
+                    $('#register-btnSubmit').attr('disabled', true);
+                }
+                else {
+                    $(this).css("border-color", "#2eb82e");
+                    $('#register-btnSubmit').attr('disabled', false);
+                }
+            });
+
+            $("#register-psw").focusout(function () {
+                if ($(this).val() == '' || $(this).val().length < 6 || $(this).val() > 32) {
+                    $(this).css("border-color", "#FF0000");
+                    $('#register-btnSubmit').attr('disabled', true);
+                }
+                else {
+                    $(this).css("border-color", "#2eb82e");
+                    $('#register-btnSubmit').attr('disabled', false);
+                }
+            });
+            $("#register-pswConfirm").focusout(function () {
+                if ($(this).val() == '' || $(this).val().length < 6 || $(this).val() > 32) {
+                    $(this).css("border-color", "#FF0000");
+                    $('#register-btnSubmit').attr('disabled', true);
+                }
+                else {
+                    $(this).css("border-color", "#2eb82e");
+                    $('#register-btnSubmit').attr('disabled', false);
+                }
+
+            });
+            $("#register-lname").focusout(function () {
+                if ($(this).val() == '' || $(this).val().length < 2 || $(this).val() > 50) {
+                    $(this).css("border-color", "#FF0000");
+                    $('#register-btnSubmit').attr('disabled', true);
+                }
+                else {
+                    $(this).css({ "border-color": "#2eb82e" });
+                    $('#register-btnSubmit').attr('disabled', false);
+
+                }
+            });
+            $("#register-fname").focusout(function () {
+                if ($(this).val() == '' || $(this).val().length < 2 || $(this).val() > 40) {
+                    $(this).css("border-color", "#FF0000");
+                    $('#register-btnSubmit').attr('disabled', true);
+                }
+                else {
+                    $(this).css({ "border-color": "#2eb82e" });
+                    $('#register-btnSubmit').attr('disabled', false);
+                }
+
+            });
+
+            $("#register-bdate").focusout(function () {
+                if ($(this).val() == '' ) {
+                    $(this).css("border-color", "#FF0000");
+                    $('#register-btnSubmit').attr('disabled', true);
+                }
+                else {
+                    $(this).css({ "border-color": "#2eb82e" });
+                    $('#register-btnSubmit').attr('disabled', false);
+                }
+
+            });
+
+        });
+    </script>
+}
+

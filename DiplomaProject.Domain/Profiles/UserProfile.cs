@@ -12,6 +12,7 @@ namespace DiplomaProject.Domain.Profiles
         public UserProfile()
         {
             CreateMap<User, ProfessionAdminViewModel>();
+            CreateMap<User, RegisterViewModel>();
         }
     }
 }

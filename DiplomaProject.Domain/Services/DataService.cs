@@ -70,5 +70,10 @@ namespace DiplomaProject.Domain.Services
         {
             return await userManager.GetUserAsync(claimsPrincipal);
         }
+
+        public async Task<IdentityResult> AddUserAsync(User user, string password)
+        {
+            return await userManager.CreateAsync(user, password);
+        }
     }
 }

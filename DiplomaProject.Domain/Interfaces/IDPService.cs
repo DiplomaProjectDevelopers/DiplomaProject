@@ -27,6 +27,8 @@ namespace DiplomaProject.Domain.Interfaces
         Task SignOutAsync();
 
         Task<User> GetUserAsync(ClaimsPrincipal claimsPrincipal);
+
+        Task<IdentityResult> AddUserAsync(User user, string password);
         void Save();
     }
 }

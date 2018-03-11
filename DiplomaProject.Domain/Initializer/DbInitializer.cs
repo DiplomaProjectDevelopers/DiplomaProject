@@ -36,6 +36,68 @@ namespace DiplomaProject.Domain.Initializer
                 //create database schema if none exists
                 _context.Database.Migrate();
                 //If there is already an Administrator role, abort
+
+
+
+
+                //Create the Administartor Role
+
+                //Create the default Admin account and apply the Administrator role
+                string password = "sa";
+                var users = new List<User>
+                {
+                    new User
+                    {
+                        FirstName = "Hakob",
+                        LastName = "Papazyan",
+                        PhoneNumber = "093697343",
+                        UserName = "hakob_papazyan",
+                        Email = "hakobpapazyan2@gmail.com",
+                        EmailConfirmed = true
+                    },
+                    new User
+                    {
+                        Email = "sa@sa.com",
+                        UserName = "sa",
+                        EmailConfirmed = true,
+                    },
+                    new User
+                    {
+                        FirstName = "Liana",
+                        LastName = "Grigoryan",
+                        UserName = "liana_grigoryan",
+                        Email = "lgrigoryan25@gmail.com",
+                        EmailConfirmed = true
+                    },
+                    new User
+                    {
+                        FirstName = "Qristine",
+                        LastName = "Serobyan",
+                        UserName = "qristine_serobyan",
+                        Email = "serobyanqristine@gmail.com",
+                        EmailConfirmed = true
+                    },
+                    new User
+                    {
+                        FirstName = "Kim",
+                        LastName = "Sargsyan",
+                        UserName = "kim_sargsyan",
+                        Email = "kim.sargsian@gmail.com",
+                        EmailConfirmed = true
+                    }
+                };
+                if (!_context.Users.Any())
+                {
+                    foreach (var user in users)
+                    {
+                        await _userManager.CreateAsync(user, password);
+                        await _userManager.AddToRolesAsync(user, new[] { "ProfessionAdmin" });
+                    }
+                    await _userManager.AddToRoleAsync(users[0], "BaseAdmin");
+                    await _context.SaveChangesAsync();
+                }
+
+
                 if (!_context.Roles.Any())
                 {
                     _roleManager.CreateAsync(new Role("BaseAdmin")).GetAwaiter().GetResult();
@@ -231,64 +293,6 @@ namespace DiplomaProject.Domain.Initializer
                     };
                     _context.FinalOutComes.AddRange(outComes);
                     _context.SaveChanges();
-                }
-
-
-                //Create the Administartor Role
-
-                //Create the default Admin account and apply the Administrator role
-                string password = "sa";
-                var users = new List<User>
-                {
-                    new User
-                    {
-                        FirstName = "Hakob",
-                        LastName = "Papazyan",
-                        PhoneNumber = "093697343",
-                        UserName = "hakob_papazyan",
-                        Email = "hakobpapazyan2@gmail.com",
-                        EmailConfirmed = true
-                    },
-                    new User
-                    {
-                        Email = "sa@sa.com",
-                        UserName = "sa",
-                        EmailConfirmed = true,
-                    },
-                    new User
-                    {
-                        FirstName = "Liana",
-                        LastName = "Grigoryan",
-                        UserName = "liana_grigoryan",
-                        Email = "lgrigoryan25@gmail.com",
-                        EmailConfirmed = true
-                    },
-                    new User
-                    {
-                        FirstName = "Qristine",
-                        LastName = "Serobyan",
-                        UserName = "qristine_serobyan",
-                        Email = "serobyanqristine@gmail.com",
-                        EmailConfirmed = true
-                    },
-                    new User
-                    {
-                        FirstName = "Kim",
-                        LastName = "Sargsyan",
-                        UserName = "kim_sargsyan",
-                        Email = "kim.sargsian@gmail.com",
-                        EmailConfirmed = true
-                    }
-                };
-                if (!_context.Users.Any())
-                {
-                    foreach (var user in users)
-                    {
-                        await _userManager.CreateAsync(user, password);
-                        await _userManager.AddToRolesAsync(user, new[] { "ProfessionAdmin" });
-                    }
-                    await _userManager.AddToRoleAsync(users[0], "BaseAdmin");
-                    await _context.SaveChangesAsync();
                 }
             }
             catch (Exception exception)

@@ -58,6 +58,28 @@ namespace DiplomaProject.WebUI.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user  = mapper.Map<User>(model);
+                var result = await service.AddUserAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    TempData["Message"] = "User was registered successfully!";
+                    return RedirectToAction("Login");
+                }
+            }
+            return View(model);
+        }
+
         [Authorize]
         public async Task<IActionResult> Index()
         {

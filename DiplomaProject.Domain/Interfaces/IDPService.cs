@@ -1,6 +1,7 @@
 ﻿using DiplomaProject.Domain.Entities;
 using DiplomaProject.Domain.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -11,8 +12,9 @@ namespace DiplomaProject.Domain.Interfaces
 {
     public interface IDPService
     {
-        Task<T> GetById<T>(int id) where T : class;
-        Task<IEnumerable<T>> GetAll<T>() where T : class;
+        T GetById<T>(int id) where T : class;
+
+        DbSet<T> GetAll<T>() where T : class;
 
         Task Insert<T>(T item) where T : class;
 

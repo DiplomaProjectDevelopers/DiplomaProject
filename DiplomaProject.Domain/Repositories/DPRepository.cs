@@ -28,9 +28,9 @@ namespace DiplomaProject.Domain.Repositories
         /// Get all items.
         /// </summary>
         /// <returns></returns>      
-        public async Task<IEnumerable<T>> GetAll<T>() where T : class
+        public DbSet<T> GetAll<T>() where T : class
         {
-            return await Task.FromResult(context.Set<T>().ToList());
+            return context.Set<T>();
         }
 
         /// <summary>
@@ -38,9 +38,9 @@ namespace DiplomaProject.Domain.Repositories
         /// </summary>
         /// <param name = "id" ></ param >
         /// < returns ></ returns >
-        public async Task<T> GetById<T>(int id) where T : class
+        public T GetById<T>(int id) where T : class
         {
-            return await context.Set<T>().FindAsync(id);
+            return context.Set<T>().Find(id);
         }
 
         /// <summary>
@@ -61,9 +61,9 @@ namespace DiplomaProject.Domain.Repositories
         /// <param name = "id" ></ param >
         public async Task DeleteById<T>(int id) where T : class
         {
-            T entityToDelete = await GetById<T>(id);
+            T entityToDelete =  GetById<T>(id);
             if (entityToDelete == null) return;
-             await Task.Run(() => Delete(entityToDelete));
+            await Task.Run(() => Delete(entityToDelete));
         }
 
         /// <summary>
@@ -104,14 +104,14 @@ namespace DiplomaProject.Domain.Repositories
             return item;
         }
 
-        public async Task<SignInResult> SignInAsync(string username, string Password,bool RememberMe, bool lockoutInFailure = false)
+        public async Task<SignInResult> SignInAsync(string username, string Password, bool RememberMe, bool lockoutInFailure = false)
         {
             return await signInManager.PasswordSignInAsync(username, Password, RememberMe, lockoutInFailure);
         }
 
         public async Task SignOutAsync()
         {
-             await signInManager.SignOutAsync();
+            await signInManager.SignOutAsync();
         }
         /// <summary>
         ///Save changes in database.

@@ -86,7 +86,7 @@ namespace DiplomaProject.WebUI
                 RequestPath = "/Scripts"
             });
             app.UseAuthentication();
-            dbInitializer.Initialize().Wait();//.GetAwaiter();
+            dbInitializer.Initialize().Wait();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

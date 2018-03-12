@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +9,9 @@ namespace DiplomaProject.Domain.Interfaces
 {
     public interface IDPRepository
     {
-        Task<T> GetById<T>(int id) where T: class;
+        T GetById<T>(int id) where T : class;
 
-        Task<IEnumerable<T>> GetAll<T>() where T : class;
+        DbSet<T> GetAll<T>() where T : class;
 
         Task<T> Insert<T>(T item) where T : class;
 

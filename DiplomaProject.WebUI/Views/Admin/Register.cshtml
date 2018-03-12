@@ -14,7 +14,7 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
                         <label asp-for="Username" class="control-label"></label>
-                        <input asp-for="Username" class="form-control" id="register-username"/>
+                        <input asp-for="Username" class="form-control" id="register-username" />
                         <span asp-validation-for="Username" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Password" class="control-label"></label>
-                        <input asp-for="Password" class="form-control" id="register-psw"/>
+                        <input asp-for="Password" class="form-control" id="register-psw" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -39,16 +39,16 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="LastName" class="control-label"></label>
-                        <input asp-for="LastName" class="form-control" id="register-lname"/>
+                        <input asp-for="LastName" class="form-control" id="register-lname" />
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="BirthDate" class="control-label"></label>
-                        <input asp-for="BirthDate" class="form-control" id="register-bdate"/>
+                        <input asp-for="BirthDate" class="form-control" id="register-bdate" />
                         <span asp-validation-for="BirthDate" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input id="register-btnSubmit" type="submit"  value="Register" class="btn btn-success text-center" />
+                        <input id="register-btnSubmit" type="submit" value="Register" class="btn btn-success text-center" />
                     </div>
                 </form>
             </div>
@@ -128,7 +128,7 @@
             });
 
             $("#register-bdate").focusout(function () {
-                if ($(this).val() == '' ) {
+                if ($(this).val() == '') {
                     $(this).css("border-color", "#FF0000");
                     $('#register-btnSubmit').attr('disabled', true);
                 }

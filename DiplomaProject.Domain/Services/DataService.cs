@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaProject.Domain.Services
 {
@@ -31,19 +32,19 @@ namespace DiplomaProject.Domain.Services
             await repository.DeleteById<T>(id);
         }
 
-        public async Task<IEnumerable<T>> GetAll<T>() where T : class
+        public DbSet<T> GetAll<T>() where T : class
         {
-            return await repository.GetAll<T>();
+            return repository.GetAll<T>();
         }
 
-        public async Task<T> GetById<T>(int id) where T : class
+        public T GetById<T>(int id) where T : class
         {
-            return await repository.GetById<T>(id);
+            return repository.GetById<T>(id);
         }
 
         public async Task Insert<T>(T item) where T : class
         {
-             await repository.Insert<T>(item);
+            await repository.Insert<T>(item);
         }
 
         public Task Update<T>(T item) where T : class
@@ -59,7 +60,7 @@ namespace DiplomaProject.Domain.Services
 
         public async Task SignOutAsync()
         {
-             await repository.SignOutAsync();
+            await repository.SignOutAsync();
         }
         public void Save()
         {

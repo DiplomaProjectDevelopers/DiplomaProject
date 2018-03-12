@@ -31,6 +31,7 @@ namespace DiplomaProject.Domain.ViewModels
         [Display(Name ="Date of birth")]
         [DataType(DataType.Date)]
         [Range(typeof (DateTime),"1900-01-01","2018-01-01")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? BirthDate { get; set; }
 
         [Display(Name = "First Name")]

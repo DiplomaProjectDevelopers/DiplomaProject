@@ -81,27 +81,42 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var user = await userManager.GetUserAsync(User);
+            var user = userManager.GetUserAsync(User).Result;
             if (userManager.IsInRoleAsync(user,"BaseAdmin").Result)
             {
-                var users = (await service.GetAll<User>()).Where(u => u.Id != user.Id && !userManager.IsInRoleAsync(u, "BaseAdmin").GetAwaiter().GetResult());
-                return View("BaseAdminMainPage",mapper.Map<IEnumerable<UserViewModel>>(users));
+                var users = service.GetAll<User>().ToList();
+                var model = users.Where(u => u.Id != user.Id && !userManager.IsInRoleAsync(u, "BaseAdmin").Result).Select(u => mapper.Map<UserViewModel>(u)).ToList();
+                return View("BaseAdminMainPage",model);
             }
             if (userManager.IsInRoleAsync(user, "PROFESSIONADMIN").Result)
             {
-                var outcomes = await service.GetAll<FinalOutCome>();
+                var outcomes = service.GetAll<FinalOutCome>().ToList();
                 var model = outcomes.Where(o => user.Professions.Select(p => p.Id).Contains(o.ProfessionId.Value)).Select(o => mapper.Map<OutcomeViewModel>(o));
                 return View("GraphPage",model);
             }   
             return NotFound();
         }
 
-        public async Task<IActionResult> BuildGraph(int professionId)
+        public IActionResult BuildGraph(int professionId)
         {
-            var outcomes = (await service.GetAll<FinalOutCome>()).Where(o => o.ProfessionId == professionId).ToList();
+            var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
             return View("GraphPage", outcomes);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(string userId)
+        {
+            if (userId is null)
+            {
+                return RedirectToAction("Index");
+            }
+            ViewBag.Roles = roleManager.Roles.Select(r => mapper.Map<RoleViewModel>(r)).ToList();
+            var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
+            var model = mapper.Map<UserViewModel>(user);
+            model.CurrentRoles = string.Join(",", userManager.GetRolesAsync(user).GetAwaiter().GetResult());
+            return View("EditUser", model);
         }
     }
 }

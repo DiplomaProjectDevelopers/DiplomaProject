@@ -41,6 +41,11 @@ namespace DiplomaProject.Domain.Initializer
 
 
                 //Create the Administartor Role
+                if (!_context.Roles.Any())
+                {
+                    _roleManager.CreateAsync(new Role("BaseAdmin")).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new Role("ProfessionAdmin")).GetAwaiter().GetResult();
+                }
 
                 //Create the default Admin account and apply the Administrator role
                 string password = "sa";
@@ -95,13 +100,6 @@ namespace DiplomaProject.Domain.Initializer
                     }
                     await _userManager.AddToRoleAsync(users[0], "BaseAdmin");
                     await _context.SaveChangesAsync();
-                }
-
-
-                if (!_context.Roles.Any())
-                {
-                    _roleManager.CreateAsync(new Role("BaseAdmin")).GetAwaiter().GetResult();
-                    _roleManager.CreateAsync(new Role("ProfessionAdmin")).GetAwaiter().GetResult();
                 }
 
                 if (!_context.Faculties.Any())

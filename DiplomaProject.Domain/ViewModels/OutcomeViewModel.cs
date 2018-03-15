@@ -14,6 +14,5 @@ namespace DiplomaProject.Domain.ViewModels
         public int? ProfessionId { get; set; }
         public bool? IsNew { get; set; }
         public int? SubjectId { get; set; }
-
     }
 }

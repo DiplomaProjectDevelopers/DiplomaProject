@@ -1,0 +1,56 @@
+﻿@using DiplomaProject.Domain.Entities
+@model Tuple<ProfessionViewModel, List<DiplomaProject.Domain.ViewModels.StakeHolderViewModel>, StakeHolderViewModel>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Հարցաթերթիկ 1</title>
+    <link rel="stylesheet" type="text/css" href="H1.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="icon" href="https://cdn1.iconfinder.com/data/icons/survey/500/Questionnaire_Archery-512.png"
+</head>
+<body>
+    <div class="block">
+        <div class="nav">
+            <div class="page">
+                <h2>Հարցաթերթիկի կազմում</h2>
+                <form asp-controller="Profession" asp-action="Index" method="post" class="profession" role="form">
+                    <h4>Ընտրել մասնագիտությունը</h4>
+                    <select asp-for="Item1.Id"
+                            class="Profession"
+                            asp-items="@(new SelectList(@ViewBag.ListofCountry, "Id", "Name"))"></select>
+                </form>
+                <form asp-controller="StakeHolderType" asp-action="Index" method="post" class="checkbox">
+                    <h4>Ընտրել շահակցին</h4>
+                    @{
+                        for (int i = 0; i < Model.Item2.Count(); i++)
+                        {
+                            <input type="checkbox" name="@Model.Item2[i].TypeName" />
+                            <label asp-for="@Model.Item2[i].Id">@Model.Item2[i].TypeName</label>
+                            <input asp-for="@Model.Item2[i].Id" type="hidden" />
+                            <input asp-for="@Model.Item2[i].TypeName" type="hidden" />
+                            <br />
+                        }
+                    }
+
+                </form>
+                <form asp-controller="StakeHolder" asp-action="Index" method="post" class="company">
+                    <h4>Ընտրել կազմակերպությունը</h4>
+
+                    <select asp-for="Item3.Id"
+                            class="Company"
+                            asp-items="@(new SelectList(ViewBag.ListofStakeHolder, "Id", "CompanyName"))"></select>
+                    <div class="Azat">
+                        <input class="btn btn-info" type="submit" value="Հաստատել" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

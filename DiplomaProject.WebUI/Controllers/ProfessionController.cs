@@ -19,14 +19,14 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(Profession profession)
+        public IActionResult Index(ProfessionViewModel profession)
         {
             if (profession.Id == 0) { }
             String selectValue = profession.Name;
             ViewBag.SelectValue = profession.Name;
-            List<Profession> professiօnlist = new List<Profession>();
-            professiօnlist = (from product in context.Professions select new Profession() { Id = product.Id, Name = product.Name }).ToList();
-            professiօnlist.Insert(0, new Profession { Id = 0, Name = "մասնագիտություն" });
+            List<ProfessionViewModel> professiօnlist = new List<ProfessionViewModel>();
+            professiօnlist = (from product in context.Professions select new ProfessionViewModel() { Id = product.Id, Name = product.Name }).ToList();
+            professiօnlist.Insert(0, new ProfessionViewModel { Id = 0, Name = "մասնագիտություն" });
             ViewBag.ListofProfession = professiօnlist;
             return View();
         }

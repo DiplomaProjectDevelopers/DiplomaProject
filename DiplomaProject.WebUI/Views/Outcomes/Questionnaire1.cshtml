@@ -1,18 +1,13 @@
-﻿@using DiplomaProject.Domain.Entities
-@model Tuple<ProfessionViewModel, List<DiplomaProject.Domain.ViewModels.StakeHolderViewModel>, StakeHolderViewModel>
+﻿@model Tuple<ProfessionViewModel, List<DiplomaProject.Domain.ViewModels.StakeHolderTypeViewModel>, StakeHolderViewModel>
 @{
     Layout = null;
 }
 
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Հարցաթերթիկ 1</title>
-    <link rel="stylesheet" type="text/css" href="H1.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="icon" href="https://cdn1.iconfinder.com/data/icons/survey/500/Questionnaire_Archery-512.png"
 </head>
 <body>
     <div class="block">
@@ -54,3 +49,9 @@
     </div>
 </body>
 </html>
+
+@section Styles {
+    <link href="~/Content/Outcomes/Questionnaire1.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="~/Content/Images/questionnaire.jpg" rel="icon" />
+}

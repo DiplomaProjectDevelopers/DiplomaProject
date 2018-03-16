@@ -1,0 +1,43 @@
+﻿.block {
+    height: 100%;
+    width: 100%;
+}
+
+.nav {
+    height: 20px;
+    width: 100%;
+    background-color: darkturquoise;
+    padding-top: 100px;
+    padding-bottom: 25px
+}
+
+.page {
+    border: inset;
+    border-color: darkgray;
+    height: 842px;
+    width: 595px;
+    margin-left: auto;
+    margin-right: auto
+}
+
+h2 {
+    text-align: center;
+}
+
+h4 {
+    padding-top: 50px;
+    padding-left: 60px;
+}
+
+.Radio {
+    padding-left: 150px;
+}
+
+.Subject {
+    padding-top: 50px;
+}
+
+.Azat {
+    padding-top: 530px;
+    padding-left: 400px;
+}

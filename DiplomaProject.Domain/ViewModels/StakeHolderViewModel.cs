@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DiplomaProject.Domain.ViewModels
 {
-    class StakeHolderViewModel
+    public class StakeHolderViewModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

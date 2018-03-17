@@ -19,7 +19,7 @@ namespace DiplomaProject.Domain.ViewModels
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Current Roles")]
-        public string CurrentRoles { get; set; }
+        public List<string> CurrentRoles { get; set; }
 
         public RoleViewModel Role { get; set; }
     }

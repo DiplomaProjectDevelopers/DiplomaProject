@@ -33,5 +33,15 @@ namespace DiplomaProject.WebUI.Controllers
             this.signInManager = signInManager;
             this.roleManager = roleManager;
         }
+
+
+        protected void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+
     }
 }

@@ -19,11 +19,13 @@ namespace DiplomaProject.Domain.ViewModels
 
         [Required]
         [Display(Name ="Password *")]
+        [DataType(DataType.Password)]
         [StringLength(32,  MinimumLength = 6)]
         public string Password { get; set; }
 
         [Required]
         [StringLength(32, MinimumLength = 6)]
+        [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "The fields Password and Confirm Password are different.")]
         [Display(Name = "Confirm password *")]
         public string ConfirmPassword { get; set; }
@@ -41,5 +43,8 @@ namespace DiplomaProject.Domain.ViewModels
         [Display(Name = "Last Name")]
         [StringLength(50, MinimumLength =2)]
         public string LastName { get; set; }
+
+
+        public bool? Gender { get; set; }
     }
 }

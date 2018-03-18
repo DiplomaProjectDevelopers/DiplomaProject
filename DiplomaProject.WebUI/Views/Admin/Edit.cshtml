@@ -45,8 +45,9 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="SelectedRoleId" class="control-label"></label>
-                        @Html.DropDownListFor(m => m.SelectedRoleId, new SelectList(ViewBag.Roles, "Id", "Name"), optionLabel: "Select role")
-                    </div>
+                        <select asp-for="SelectedRoleId" asp-items="@(new SelectList(ViewBag.Roles, "Id", "Name"))">
+                            <option>-- select --</option>
+                        </select>                    </div>
                     <div class="form-group">
                         <input type="submit" value="Save" class="btn btn-success" />
                         <a asp-action="GetUsers" class="btn btn-default">Back to List</a>

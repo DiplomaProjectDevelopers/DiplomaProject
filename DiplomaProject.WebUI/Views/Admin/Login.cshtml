@@ -1,7 +1,7 @@
 ﻿@model DiplomaProject.Domain.ViewModels.LoginViewModel
 
 @{
-    ViewData["Title"] = "View";
+    ViewData["Title"] = "Login Page";
 }
 
 <div class="row">
@@ -11,6 +11,7 @@
             <div class="panel-body">
             <form class="form-signin" asp-antiforgery="true" asp-controller="Admin" asp-action="Login" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @if (TempData.ContainsKey("UserRegistered")) { <label class="label-info">@TempData["UserRegistered"]</label> }
                 <div class="form-group">
                     <label asp-for="Username" class="control-label sr-only"></label>
                     <input asp-for="Username" placeholder="Username" class="form-control" />

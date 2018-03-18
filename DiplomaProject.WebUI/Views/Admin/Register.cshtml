@@ -43,12 +43,25 @@
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
+                        <label asp-for="PhoneNumber" class="control-label"></label>
+                        <input asp-for="PhoneNumber" class="form-control" id="register-bdate" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
                         <label asp-for="BirthDate" class="control-label"></label>
                         <input asp-for="BirthDate" class="form-control" id="register-bdate" />
                         <span asp-validation-for="BirthDate" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input id="register-btnSubmit" type="submit" value="Register" class="btn btn-success text-center" />            
+                        <label asp-for="Gender" class="input-group"></label>
+                        <label>Male</label>
+                        <input asp-for="Gender" type="radio" value="true" class="form-group" id="gender-male" />
+                        <label>FeMale</label>
+                        <input asp-for="Gender" type="radio" value="false" class="form-group" id="gender-female" />
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input id="register-btnSubmit" type="submit" value="Register" class="btn btn-success text-center" />
                     </div>
                 </form>
             </div>
@@ -100,40 +113,6 @@
                 }
                 else {
                     $(this).css("border-color", "#2eb82e");
-                    $('#register-btnSubmit').attr('disabled', false);
-                }
-
-            });
-            $("#register-lname").focusout(function () {
-                if ($(this).val() == '' || $(this).val().length < 2 || $(this).val() > 50) {
-                    $(this).css("border-color", "#FF0000");
-                    $('#register-btnSubmit').attr('disabled', true);
-                }
-                else {
-                    $(this).css({ "border-color": "#2eb82e" });
-                    $('#register-btnSubmit').attr('disabled', false);
-
-                }
-            });
-            $("#register-fname").focusout(function () {
-                if ($(this).val() == '' || $(this).val().length < 2 || $(this).val() > 40) {
-                    $(this).css("border-color", "#FF0000");
-                    $('#register-btnSubmit').attr('disabled', true);
-                }
-                else {
-                    $(this).css({ "border-color": "#2eb82e" });
-                    $('#register-btnSubmit').attr('disabled', false);
-                }
-
-            });
-
-            $("#register-bdate").focusout(function () {
-                if ($(this).val() == '') {
-                    $(this).css("border-color", "#FF0000");
-                    $('#register-btnSubmit').attr('disabled', true);
-                }
-                else {
-                    $(this).css({ "border-color": "#2eb82e" });
                     $('#register-btnSubmit').attr('disabled', false);
                 }
 

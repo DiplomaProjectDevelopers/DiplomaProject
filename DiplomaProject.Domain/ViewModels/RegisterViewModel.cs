@@ -44,6 +44,9 @@ namespace DiplomaProject.Domain.ViewModels
         [StringLength(50, MinimumLength =2)]
         public string LastName { get; set; }
 
+        [Phone]
+        [Display(Name ="Phone number")]
+        public string PhoneNumber { get; set; }
 
         public bool? Gender { get; set; }
     }

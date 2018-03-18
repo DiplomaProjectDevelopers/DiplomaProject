@@ -8,14 +8,21 @@
 
 <div class="table-responsive">
     <h4>Here is current users list</h4>
+    @if (TempData.ContainsKey("UserDeleted"))
+    {<label class="label-info">@TempData["UserDeleted"]</label>}
+    @if (TempData.ContainsKey("UserUpdated"))
+    {<label class="label-info">@TempData["UserUpdated"]</label>}
+
     <table id="user-tbl" class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th><input type="checkbox" id="checkall" /></th>
+                <th>@Html.DisplayNameFor(model => model.Username)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstName)</th>
                 <th>@Html.DisplayNameFor(model => model.LastName)</th>
                 <th>@Html.DisplayNameFor(model => model.Email)</th>
                 <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.Gender)</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -27,6 +34,9 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="checkthis" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => user.Username)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => user.FirstName)
@@ -41,8 +51,11 @@
                         @Html.DisplayFor(modelItem => user.PhoneNumber)
                     </td>
                     <td>
+                        <text>@(user.Gender == null ? "undefined" : user.Gender == true ? "Male" : "Female")</text>
+                    </td>
+                    <td>
                         <p data-placement="top" data-toggle="tooltip" title="Edit">
-                            <a asp-action="Edit" asp-route-userId="@user.Id" class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" >
+                            <a asp-action="Edit" asp-route-userId="@user.Id" class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal">
                                 <span class="glyphicon glyphicon-pencil"></span>
                             </a>
                         </p>

@@ -30,7 +30,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [NonAction]
-        public IActionResult Router()
+        private IActionResult Router()
         {
             var user = userManager.GetUserAsync(User).Result;
             if (userManager.IsInRoleAsync(user, "BaseAdmin").Result)
@@ -47,6 +47,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet("Users")]
+        [Authorize(Roles = "BaseAdmin")]
         public IActionResult GetUsers()
         {
             var user = userManager.GetUserAsync(User).Result;
@@ -76,7 +77,6 @@ namespace DiplomaProject.WebUI.Controllers
                 var result = await service.SignInAsync(model);
                 if (result.Succeeded)
                 {
-
                     return RedirectToAction("Index", "Admin");
                 }
                 else
@@ -96,7 +96,7 @@ namespace DiplomaProject.WebUI.Controllers
         public async Task<IActionResult> LogOut()
         {
             await service.SignOutAsync();
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(Index), "Home");
         }
 
         [HttpGet]
@@ -121,7 +121,7 @@ namespace DiplomaProject.WebUI.Controllers
                 var result = await userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    TempData["Message"] = "User was registered successfully!";
+                    TempData["UserRegistered"] = Messages.USER_ADDED_SUCCESSFULLY;
                     return RedirectToAction("Login");
                 }
                 else
@@ -133,6 +133,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "BaseAdmin")]
         public IActionResult Edit(string userId)
         {
             if (userId is null)
@@ -146,15 +147,27 @@ namespace DiplomaProject.WebUI.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [AllowAnonymous]
+        [HttpPost, ActionName("Edit")]
+        [Authorize(Roles = "BaseAdmin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit()
+        public async Task<IActionResult> EditConfirmed(UserViewModel model)
         {
-            throw new NotImplementedException();
+            if (ModelState.IsValid && model != null && model.Id != null && model.SelectedRoleId != null)
+            {
+                var user = await userManager.FindByIdAsync(model.Id);
+                var role = await roleManager.FindByIdAsync(model.SelectedRoleId);
+                if (user != null && role != null && userManager.IsInRoleAsync(user, role.Name).GetAwaiter().GetResult() == false)
+                {
+                    await userManager.AddToRoleAsync(user, role.Name);
+                }
+                TempData["UserUpdated"] = Messages.USER_UPDATED_SUCCESSFULLY;
+                return RedirectToAction(nameof(GetUsers));
+            }
+            throw new Exception();
         }
 
         [HttpGet]
+        [Authorize(Roles = "BaseAdmin")]
         public IActionResult Delete(string userId)
         {
             if (userId is null)
@@ -168,6 +181,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "BaseAdmin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string userId)
         {
@@ -179,7 +193,7 @@ namespace DiplomaProject.WebUI.Controllers
                     var result = await userManager.DeleteAsync(user);
                     if (result.Succeeded)
                     {
-                        TempData["userDeleted"] = Messages.USER_DELETED_SUCCESSFULLY;
+                        TempData["UserDeleted"] = Messages.USER_DELETED_SUCCESSFULLY;
                         return RedirectToAction(nameof(GetUsers));
                     }
                     else
@@ -229,6 +243,7 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
             }
+            TempData["Accountpdated"] = Messages.ACCOUNT_UPDATED_SUCCESSFULLY;
             return Router();
         }
 

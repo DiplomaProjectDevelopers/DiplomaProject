@@ -15,9 +15,10 @@
         <div class="panel panel-success">
             <div class="panel-heading">Update roles for the specified user.</div>
             <div class="panel-body">
-                <form asp-action="EditUser">
+                <form asp-action="Edit" asp-controller="Admin" asp-antiforgery="true">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+                    
+                    @Html.HiddenFor(m => m.Id)
                     <div class="form-group">
                         <label asp-for="Username" class="control-label"></label>
                         @Html.DisplayFor(m => m.Username)
@@ -43,8 +44,8 @@
                         @Html.DisplayFor(m => m.CurrentRoles)
                     </div>
                     <div class="form-group">
-                        <label asp-for="Role" class="control-label"></label>
-                        @Html.DropDownListFor(m => m.Role, new SelectList(ViewBag.Roles, "Id", "Name"))
+                        <label asp-for="SelectedRoleId" class="control-label"></label>
+                        @Html.DropDownListFor(m => m.SelectedRoleId, new SelectList(ViewBag.Roles, "Id", "Name"), optionLabel: "Select role")
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Save" class="btn btn-success" />

@@ -39,9 +39,7 @@ namespace DiplomaProject.WebUI.Controllers
             }
             if (userManager.IsInRoleAsync(user, "PROFESSIONADMIN").Result)
             {
-                var outcomes = service.GetAll<FinalOutCome>().ToList();
-                var model = outcomes.Where(o => user.Professions.Select(p => p.Id).Contains(o.ProfessionId.Value)).Select(o => mapper.Map<OutcomeViewModel>(o));
-                return View("GraphPage", model);
+                return RedirectToAction(nameof(OutcomesController.Index), "Outcomes");
             }
             return NotFound();
         }
@@ -52,6 +50,7 @@ namespace DiplomaProject.WebUI.Controllers
         {
             var user = userManager.GetUserAsync(User).Result;
             var users = service.GetAll<User>().ToList();
+            ViewBag.Roles = roleManager.Roles.Select(r => mapper.Map<RoleViewModel>(r)).ToList();
             var model = users.Where(u => u.Id != user.Id && !userManager.IsInRoleAsync(u, "BaseAdmin").Result).Select(u => mapper.Map<UserViewModel>(u)).ToList();
             return View("UserList", model);
         }
@@ -132,6 +131,12 @@ namespace DiplomaProject.WebUI.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task UpdateRole()
+        {
+
+        }
         [HttpGet]
         [Authorize(Roles = "BaseAdmin")]
         public IActionResult Edit(string userId)
@@ -141,6 +146,7 @@ namespace DiplomaProject.WebUI.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.Roles = roleManager.Roles.Select(r => mapper.Map<RoleViewModel>(r)).ToList();
+            ViewBag.Professions = service.GetAll<Profession>().ToList();
             var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
             var model = mapper.Map<UserViewModel>(user);
             model.CurrentRoles = userManager.GetRolesAsync(user).GetAwaiter().GetResult().ToList();
@@ -215,6 +221,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAccount(UpdateAccountViewModel model)
         {
             if (!ModelState.IsValid)

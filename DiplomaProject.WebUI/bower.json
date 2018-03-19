@@ -6,9 +6,8 @@
     "jquery": "2.2.0",
     "jquery-validation": "jquery-validate#1.17.0",
     "jquery-validation-unobtrusive": "3.2.6",
-    "vivagraphjs": "vivagraph#v0.10.0",
     "jquery-validator": "v1.0.0",
-    "font-awesome": "Font-Awesome#v4.7.0"
+    "graphdracula": "v1.1.2"
   },
   "resolutions": {
     "jquery-validation": "1.17.0"

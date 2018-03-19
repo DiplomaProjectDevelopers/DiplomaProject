@@ -23,7 +23,7 @@ namespace DiplomaProject.Domain.Entities
         public bool? MdpartTime { get; set; }
         public byte? MdpartTimeSemesters { get; set; }
         public int? DepartmentId { get; set; }
-        public int? AdminId { get; set; }
+        public string AdminId { get; set; }
 
         public User Admin { get; set; }
         public Department Department { get; set; }

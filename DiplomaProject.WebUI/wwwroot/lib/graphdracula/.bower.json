@@ -1,0 +1,35 @@
+{
+  "name": "graphdracula",
+  "version": "1.1.2",
+  "homepage": "https://github.com/strathausen/dracula",
+  "authors": [
+    "Johann Philipp Strathausen <strathausen@gmail.com>"
+  ],
+  "description": "Dracula Graph Library",
+  "main": "dracula.js",
+  "keywords": [
+    "graph",
+    "dracula",
+    "svg",
+    "network",
+    "visualisation"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "1.1.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.2",
+    "commit": "e537fe3b8df8c86d00b8518b81999e4acfae94c4"
+  },
+  "_source": "https://github.com/strathausen/dracula.git",
+  "_target": "v1.1.2",
+  "_originalSource": "graphdracula",
+  "_direct": true
+}

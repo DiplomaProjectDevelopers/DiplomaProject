@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DiplomaProject.Domain.Entities;
+using DiplomaProject.Domain.Extentions;
 using DiplomaProject.Domain.Helpers;
 using DiplomaProject.Domain.Interfaces;
 using DiplomaProject.Domain.ViewModels;
@@ -51,7 +52,18 @@ namespace DiplomaProject.WebUI.Controllers
             var user = userManager.GetUserAsync(User).Result;
             var users = service.GetAll<User>().ToList();
             ViewBag.Roles = roleManager.Roles.Select(r => mapper.Map<RoleViewModel>(r)).ToList();
-            var model = users.Where(u => u.Id != user.Id && !userManager.IsInRoleAsync(u, "BaseAdmin").Result).Select(u => mapper.Map<UserViewModel>(u)).ToList();
+            var model = users.Where(u => u.Id != user.Id && !userManager.IsInRoleAsync(u, "BaseAdmin").Result).
+                Select(async u =>
+                {
+                    var m = mapper.Map<UserViewModel>(u);
+                    var roleName = await userManager.GetRoleAsync(u);
+                    if (roleName != null)
+                    {
+                        m.SelectedRoleId = (await roleManager.FindByNameAsync(roleName)).Id;
+                    }
+                    return m;
+                }
+                ).Select(u => u.Result).ToList();
             return View("UserList", model);
         }
 
@@ -120,7 +132,7 @@ namespace DiplomaProject.WebUI.Controllers
                 var result = await userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    TempData["UserRegistered"] = Messages.USER_ADDED_SUCCESSFULLY;
+                    TempData["UserRegistered"] = Messages.USER_ADDED_SUCCESS;
                     return RedirectToAction("Login");
                 }
                 else
@@ -132,10 +144,32 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task UpdateRole()
+        [Authorize(Roles = "BaseAdmin")]
+        public async Task<IActionResult> UpdateRole([FromBody]UserRoleViewModel model)
         {
-
+            var userId = model.UserId;
+            var roleId = model.RoleId;
+            var user = await userManager.FindByIdAsync(userId);
+            var role = await roleManager.FindByIdAsync(roleId);
+            if (roleManager.Roles.Count() == 2)
+            {
+                await roleManager.CreateAsync(new Role
+                {
+                    Name = "TestRole",
+                    NormalizedName = "TESTROLE",
+                });
+            }
+            if (user != null && role != null)
+            {
+                if (await userManager.IsInRoleAsync(user, role.Name) == false)
+                {
+                    var roles = await userManager.GetRolesAsync(user);
+                    await userManager.RemoveFromRolesAsync(user, roles);
+                    await userManager.AddToRoleAsync(user, role.Name);
+                    return Json(new { Message = Messages.ROLE_UPDATED_SUCCESS, Type = "success" });
+                }
+            }
+            return Json(new { Message = Messages.ROLE_UPDATED_FAILURE, Type = "danger" });
         }
         [HttpGet]
         [Authorize(Roles = "BaseAdmin")]
@@ -166,7 +200,7 @@ namespace DiplomaProject.WebUI.Controllers
                 {
                     await userManager.AddToRoleAsync(user, role.Name);
                 }
-                TempData["UserUpdated"] = Messages.USER_UPDATED_SUCCESSFULLY;
+                TempData["UserUpdated"] = Messages.USER_UPDATED_SUCCESS;
                 return RedirectToAction(nameof(GetUsers));
             }
             throw new Exception();
@@ -199,7 +233,7 @@ namespace DiplomaProject.WebUI.Controllers
                     var result = await userManager.DeleteAsync(user);
                     if (result.Succeeded)
                     {
-                        TempData["UserDeleted"] = Messages.USER_DELETED_SUCCESSFULLY;
+                        TempData["UserDeleted"] = Messages.USER_DELETED_SUCCESS;
                         return RedirectToAction(nameof(GetUsers));
                     }
                     else
@@ -250,7 +284,7 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
             }
-            TempData["Accountpdated"] = Messages.ACCOUNT_UPDATED_SUCCESSFULLY;
+            TempData["Accountpdated"] = Messages.ACCOUNT_UPDATED_SUCCESS;
             return Router();
         }
 

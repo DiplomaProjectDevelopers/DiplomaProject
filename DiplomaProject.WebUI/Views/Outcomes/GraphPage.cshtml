@@ -16,16 +16,5 @@
 <div></div>
 
 @section Scripts {
-    <script src="~/lib/vivagraphjs/dist/vivagraph.js"></script>
-    <script src="~/Scripts/GraphBuilder.js"></script>
-    <script>
-        const array = @array;
-        const model = [];
-        array.foreach(item => {
-            model.push(JSON.parse(item));
-        });
-        $(document).ready(function () {
-            buildGraph(model);
-        });
-    </script>
+
 }

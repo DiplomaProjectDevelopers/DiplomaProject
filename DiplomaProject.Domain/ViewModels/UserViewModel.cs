@@ -25,7 +25,7 @@ namespace DiplomaProject.Domain.ViewModels
         [Display(Name = "Current Role")]
         public List<string> CurrentRoles { get; set; }
         [Required(ErrorMessage = "Please select a role before submitting.")]
-        [Display(Name = "Please select new role for current user.")]
+        [Display(Name= "User Role")]
         public string SelectedRoleId { get; set; }
     }
 }

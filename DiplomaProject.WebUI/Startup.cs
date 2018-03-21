@@ -9,6 +9,7 @@ using DiplomaProject.Domain.Initializer;
 using DiplomaProject.Domain.Interfaces;
 using DiplomaProject.Domain.Repositories;
 using DiplomaProject.Domain.Services;
+using DiplomaProject.WebUI.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -71,6 +72,7 @@ namespace DiplomaProject.WebUI
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
             }
+            app.UseExceptionMiddleware();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {

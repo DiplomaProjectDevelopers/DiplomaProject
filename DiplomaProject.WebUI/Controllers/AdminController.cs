@@ -179,26 +179,35 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 return RedirectToAction("Index");
             }
-            ViewBag.Roles = roleManager.Roles.Select(r => mapper.Map<RoleViewModel>(r)).ToList();
-            ViewBag.Professions = service.GetAll<Profession>().ToList();
             var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
-            var model = mapper.Map<UserViewModel>(user);
-            model.CurrentRoles = userManager.GetRolesAsync(user).GetAwaiter().GetResult().ToList();
-            return View(model);
+            var role = userManager.GetRoleAsync(user).GetAwaiter().GetResult();
+            switch (role.ToUpper())
+            {
+                case "PROFESSIONADMIN":
+                    ViewBag.Professions = service.GetAll<Profession>().ToList();
+                    var model = mapper.Map<ProfessionAdminViewModel>(user);
+                    model.CurrentRole = role;
+                    return View("EditProfessionAdmin", model);
+
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost, ActionName("EditProfessionAdmin")]
         [Authorize(Roles = "BaseAdmin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditConfirmed(UserViewModel model)
+        public async Task<IActionResult> EditConfirmed(ProfessionAdminViewModel model)
         {
-            if (ModelState.IsValid && model != null && model.Id != null && model.SelectedRoleId != null)
+            if (ModelState.IsValid && model != null && model.Id != null)
             {
                 var user = await userManager.FindByIdAsync(model.Id);
-                var role = await roleManager.FindByIdAsync(model.SelectedRoleId);
-                if (user != null && role != null && userManager.IsInRoleAsync(user, role.Name).GetAwaiter().GetResult() == false)
+                var userProfessions = service.GetAll<Profession>();
+                if (userProfessions.FirstOrDefault(p => p.Id == model.ProfessionId) != null)
                 {
-                    await userManager.AddToRoleAsync(user, role.Name);
+                    var profession = service.GetById<Profession>(model.ProfessionId);
+                    profession.AdminId = user.Id;
+                    await service.Update<Profession>(profession);
                 }
                 TempData["UserUpdated"] = Messages.USER_UPDATED_SUCCESS;
                 return RedirectToAction(nameof(GetUsers));
@@ -216,7 +225,7 @@ namespace DiplomaProject.WebUI.Controllers
             }
             var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
             var model = mapper.Map<UserViewModel>(user);
-            model.CurrentRoles = userManager.GetRolesAsync(user).GetAwaiter().GetResult().ToList();
+            model.CurrentRole = userManager.GetRoleAsync(user).GetAwaiter().GetResult();
             return View(model);
         }
 

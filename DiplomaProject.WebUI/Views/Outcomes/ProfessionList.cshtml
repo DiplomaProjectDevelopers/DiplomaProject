@@ -1,0 +1,50 @@
+﻿@model IEnumerable<DiplomaProject.Domain.ViewModels.ProfessionViewModel>
+
+@{
+    ViewData["Title"] = "Profession List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ProfessionList</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <td>
+                @Html.DisplayNameFor(model => model.Department)
+            </td>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Department)
+                </td>
+                <td>
+                    <p data-placement="top" data-toggle="tooltip">
+                        <a asp-action="Edit" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-success btn-xs" data-title="Edit">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                        <a asp-action="Details" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-info btn-xs" data-title="Details">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </a>
+                        <a asp-action="BuildGraph" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-primary btn-xs" data-title="Build Graph">
+                            <span class="glyphicon glyphicon-wrench"></span>
+                        </a>
+                    </p>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

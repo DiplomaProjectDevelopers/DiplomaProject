@@ -23,10 +23,24 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult Index()
         {
             var user = userManager.GetUserAsync(User).Result;
-            var outcomes = service.GetAll<FinalOutCome>().ToList();
+            //var outcomes = service.GetAll<FinalOutCome>().ToList();
             var professions = service.GetAll<Profession>().Where(e => e.AdminId == user.Id).ToList();
-            var model = outcomes.Where(o => user.Professions.Select(p => p.Id).Contains(o.ProfessionId.Value)).Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
-            return View("GraphPage", model);
+            var model = professions.Select(p =>
+            {
+                var profession = mapper.Map<ProfessionViewModel>(p);
+                profession.Department = service.GetById<Department>(profession.DepartmentId.Value).Name;
+                return profession;
+            });
+            //var model = outcomes.Where(o => user.Professions.Select(p => p.Id).Contains(o.ProfessionId.Value)).Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
+            return View("ProfessionList", model);
+        }
+
+        [HttpGet]
+        public IActionResult BuildGraph(int professionId)
+        {
+            var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId);
+            var model = outcomes.Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
+            return View("GraphView", model);
         }
     }
 }

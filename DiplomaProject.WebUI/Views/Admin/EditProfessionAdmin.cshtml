@@ -1,4 +1,4 @@
-﻿@model DiplomaProject.Domain.ViewModels.UserViewModel
+﻿@model DiplomaProject.Domain.ViewModels.ProfessionAdminViewModel
 
 @{
     ViewData["Title"] = $"Edit user {Model?.Username}";
@@ -15,9 +15,9 @@
         <div class="panel panel-success">
             <div class="panel-heading">Update roles for the specified user.</div>
             <div class="panel-body">
-                <form asp-action="Edit" asp-controller="Admin" asp-antiforgery="true">
+                <form asp-action="EditProfessionAdmin" asp-controller="Admin" asp-antiforgery="true">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    
+
                     @Html.HiddenFor(m => m.Id)
                     <div class="form-group">
                         <label asp-for="Username" class="control-label"></label>
@@ -40,14 +40,15 @@
                         @Html.DisplayFor(m => m.PhoneNumber)
                     </div>
                     <div class="form-group">
-                        <label asp-for="CurrentRoles" class="control-label"></label>
-                        @Html.DisplayFor(m => m.CurrentRoles)
+                        <label asp-for="CurrentRole" class="control-label"></label>
+                        @Html.DisplayFor(m => m.CurrentRole)
                     </div>
                     <div class="form-group">
-                        <label asp-for="SelectedRoleId" class="control-label"></label>
-                        <select asp-for="SelectedRoleId" asp-items="@(new SelectList(ViewBag.Roles, "Id", "Name"))">
-                            <option>-- select --</option>
-                        </select>                    </div>
+                        <label asp-for="ProfessionId" class="control-label"></label>
+                        <select asp-for="ProfessionId" asp-items="@(new SelectList(ViewBag.Professions, "Id", "Name"))">
+                            <option>--select profession--</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <input type="submit" value="Save" class="btn btn-success" />
                         <a asp-action="GetUsers" class="btn btn-default">Back to List</a>

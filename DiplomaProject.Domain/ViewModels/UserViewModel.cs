@@ -23,8 +23,7 @@ namespace DiplomaProject.Domain.ViewModels
         public DateTime? BirthDate { get; set; }
         public bool? Gender { get; set; }
         [Display(Name = "Current Role")]
-        public List<string> CurrentRoles { get; set; }
-        [Required(ErrorMessage = "Please select a role before submitting.")]
+        public string CurrentRole { get; set; }
         [Display(Name= "User Role")]
         public string SelectedRoleId { get; set; }
     }

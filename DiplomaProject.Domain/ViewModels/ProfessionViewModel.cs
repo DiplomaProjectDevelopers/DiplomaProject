@@ -19,6 +19,8 @@ namespace DiplomaProject.Domain.ViewModels
         public bool? MdpartTime { get; set; }
         public byte? MdpartTimeSemesters { get; set; }
         public int? DepartmentId { get; set; }
-        public int? AdminId { get; set; }
+        public string AdminId { get; set; }
+
+        public string Department { get; set; }
     }
 }

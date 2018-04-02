@@ -14,7 +14,7 @@ export default class Dracula {
   }
 
   /**
-   * Creator for the new haters :)
+   * `create` for the `new` haters :)
    *
    * @returns {Dracula} a new graph instance
    */
@@ -41,7 +41,7 @@ export default class Dracula {
     }
     if (!nodeData.id) {
       nodeData.id = uuid()
-      // Don't create a new node if it already exists
+    // Don't create a new node if it already exists
     } else if (this.nodes[nodeData.id]) {
       return this.nodes[nodeData.id]
     }
@@ -56,15 +56,15 @@ export default class Dracula {
    * @param {object|} (optional) edge data, e.g. styles
    * @returns {Edge}
    */
-  addEdge(source, target, edgeData = {}) {
-    const sourceNode = this.addNode(source)
-    const targetNode = this.addNode(target)
-    edgeData.source = sourceNode
-    edgeData.target = targetNode
-    this.edges.push(edgeData)
-    sourceNode.edges.push(edgeData)
-    targetNode.edges.push(edgeData)
-    return edgeData
+  addEdge(sourceNode, targetNode, opts = {}) {
+    const source = this.addNode(sourceNode)
+    const target = this.addNode(targetNode)
+    const style = opts.style || opts
+    const edge = { style, source, target }
+    this.edges.push(edge)
+    source.edges.push(edge)
+    target.edges.push(edge)
+    return edge
   }
 
   /**

@@ -3,20 +3,29 @@
 @{
     ViewData["Title"] = "GraphPage";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var list = Model.ToList();
-    List<string> array = new List<string>();
-    foreach (var item in Model.ToList())
-    {
-        array.Add(Newtonsoft.Json.JsonConvert.SerializeObject(item));
-    }
 }
 <br />
 <br />
-@Model.Count()
 <h2>Graph View</h2>
 
-<div></div>
+<div>
+    <div>
+
+    </div>
+    <div class="col-md-6">
+
+    </div>
+</div>
 
 @section Scripts {
 
+    <script src="~/custom_scripts/GraphBuilder.js"></script>
+    <script>
+        import buildArray from '../../wwwroot/custom_scripts/GraphBuilder'
+        $(document).ready(function ()
+        {
+            const outcomes = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))');
+            buildGraph(outcomes);
+    });
+    </script>
 }

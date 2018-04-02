@@ -8,24 +8,48 @@
 <br />
 <h2>Graph View</h2>
 
-<div>
     <div>
-
+        Selected Profession @ViewBag.ProfessionName
     </div>
-    <div class="col-md-6">
-
+    <div>
+        <div id="dependencies" class="col-md-6">
+        </div>
+        <div class="col-md-6">
+            Not Implemented
+        </div>
     </div>
-</div>
+    <div>
+        <button onclick="addDependency()">Add Dependency</button>
+    </div>
 
+@section Styles{ 
+    <link href="~/custom_contents/GraphView.css" />
+}
 @section Scripts {
 
     <script src="~/custom_scripts/GraphBuilder.js"></script>
     <script>
-        import buildArray from '../../wwwroot/custom_scripts/GraphBuilder'
         $(document).ready(function ()
         {
-            const outcomes = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))');
-            buildGraph(outcomes);
+            $(document).ready(() => {
+                if (!sessionStorage.getItem('edges')) {
+                     sessionStorage.setItem('edges', JSON.stringify([]));
+                    }
+                if (!sessionStorage.getItem('nextId')) {
+                    sessionStorage.setItem('nextId', '-1');
+
+                    }
+                if (!sessionStorage.getItem('nodes')) {
+                 sessionStorage.setItem('nodes', '@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))');
+                }
+                const edges = JSON.parse(sessionStorage.getItem('edges'));
+                updateDependencies(edges);
+                    });
+            //const outcomes = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))');
+            //buildGraph(outcomes);
     });
     </script>
-}
+    <script>
+
+    </script>
+}--

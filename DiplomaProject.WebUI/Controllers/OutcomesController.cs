@@ -39,6 +39,7 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult BuildGraph(int professionId)
         {
             var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId);
+            ViewBag.ProfessionName = service.GetById<Profession>(professionId).Name;
             var model = outcomes.Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
             return View("GraphView", model);
         }

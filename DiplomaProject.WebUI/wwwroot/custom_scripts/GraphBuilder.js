@@ -1,6 +1,6 @@
 ﻿function getOptions() {
     const array = JSON.parse(sessionStorage.getItem('nodes'));
-    array.push({ Id: -1, Name: '-select-' });
+    array.push({ Id: -1, Name: '-select outcome-' });
     array.sort((x, y) => x.Id - y.Id);
     return array;
 
@@ -20,14 +20,20 @@ function updateDependencies(edges) {
     sessionStorage.setItem('edges', JSON.stringify(edges));
     const fields = edges.map(edge => {
         let div = document.createElement('div');
-        div.setAttribute('class', 'dependencyRow')
+        div.setAttribute('class', 'dependencyRow');
+
         let fromSelect = document.createElement('select');
-        fromSelect.setAttribute('class', 'col-md-6 fromSelectDropdownList');
+        fromSelect.setAttribute('class', 'col-md-6 select-box');
         fromSelect.addEventListener('change', (e) => onChange(edge.id, 'fromNode', e.target.value));
+
         let toSelect = document.createElement('select');
-        toSelect.setAttribute('class', 'col-md-6 fromSelectDropdownList');
+        toSelect.setAttribute('class', 'col-md-6 select-box');
         toSelect.addEventListener('change', (e) => onChange(edge.id, 'toNode', e.target.value));
-        let options = getOptions();
+
+        fromSelect.value = edge.fromNode;
+        toSelect.value = edge.toNode;
+
+        const options = getOptions();
         (options || []).forEach(option => {
             const opt = document.createElement('option');
             opt.value = option.Id;
@@ -55,11 +61,11 @@ function addDependency() {
     const edges = getEdges();
     let isOK = true;
     for (let i = 0, length = edges.length; i < length; i++) {
-        if (!edges[i].fromNode || !edges[i].toNode) {
+        if (!edges[i].fromNode || edges[i].fromNode <0 || !edges[i].toNode || edges[i].toNode < 0) {
             isOK = false;
         }
     }
-    isOK && edges.push({ id: getNextId(), fromNode: "", toNode: "" });
+    isOK && edges.push({ id: getNextId(), fromNode: -1, toNode: -1 });
     updateDependencies(edges);
 }
 

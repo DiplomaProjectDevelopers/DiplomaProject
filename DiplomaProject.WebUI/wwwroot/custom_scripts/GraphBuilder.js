@@ -5,7 +5,7 @@
     return array;
 
 }
-function getEdges(){
+function getEdges() {
     const edges = sessionStorage.getItem('edges');
     return edges && JSON.parse(edges);
 }
@@ -20,7 +20,7 @@ function updateDependencies(edges) {
     sessionStorage.setItem('edges', JSON.stringify(edges));
     const fields = edges.map(edge => {
         let div = document.createElement('div');
-        div.setAttribute('class', 'dependencyRow');
+        div.setAttribute('class', 'dependencyRow row');
 
         let fromSelect = document.createElement('select');
         fromSelect.setAttribute('class', 'col-md-6 select-box');
@@ -35,14 +35,21 @@ function updateDependencies(edges) {
 
         const options = getOptions();
         (options || []).forEach(option => {
-            const opt = document.createElement('option');
-            opt.value = option.Id;
-            opt.text = option.Name;
-            fromSelect.appendChild(opt);
-            const o = document.createElement('option');
-            o.value = option.Id;
-            o.text = option.Name;
-            toSelect.appendChild(o);
+
+            const option1 = document.createElement('option');
+            option1.value = option.Id;
+            option1.text = option.Name;
+
+            const option2 = document.createElement('option');
+            option2.value = option.Id;
+            option2.text = option.Name;
+
+            if (option.IsNew) {
+                option1.setAttribute('class', 'isNewOutComeOption');
+                option2.setAttribute('class', 'isNewOutComeOption');
+            }
+            fromSelect.appendChild(option1);
+            toSelect.appendChild(option2);
         });
         fromSelect.value = edge.fromNode;
         toSelect.value = edge.toNode;
@@ -61,11 +68,20 @@ function addDependency() {
     const edges = getEdges();
     let isOK = true;
     for (let i = 0, length = edges.length; i < length; i++) {
-        if (!edges[i].fromNode || edges[i].fromNode <0 || !edges[i].toNode || edges[i].toNode < 0) {
+        if (!edges[i].fromNode || edges[i].fromNode < 0 || !edges[i].toNode || edges[i].toNode < 0) {
             isOK = false;
         }
     }
-    isOK && edges.push({ id: getNextId(), fromNode: -1, toNode: -1 });
+    let message;
+    if (isOK) {
+        edges.push({ id: getNextId(), fromNode: -1, toNode: -1 });
+        message = "";
+    }
+    else {
+        message = "There are no selected lists. Please select them and try again."
+    }
+    document.getElementById('message').innerText = message;
+
     updateDependencies(edges);
 }
 

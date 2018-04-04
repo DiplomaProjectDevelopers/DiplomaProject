@@ -8,21 +8,37 @@
 <br />
 <h2>Graph View</h2>
 
+<div>
+<div id="designer">
     <div>
-        Selected Profession @ViewBag.ProfessionName
+        <div>Selected Profession <em>@ViewBag.ProfessionName</em></div>
+        <div id="message" class="text-info"></div>
     </div>
-    <div>
-        <div id="dependencies" class="col-md-6">
+    <div class="row container">
+        <div id="dependencies" class="col-md-6 container">
         </div>
         <div class="col-md-6">
             Not Implemented
         </div>
     </div>
-    <div>
-        <button onclick="addDependency()">Add Dependency</button>
+    <div id="infoBlock" class="text-info">
+        <span style="color:darkslateblue">* Options with this color are added new.</span>
     </div>
-
-@section Styles{ 
+    <div class="row">
+        <div class="col-md-2">
+            <button onclick="addDependency()" class="btn btn-block btn-primary glyphicon-plus">Add Dependency</button>
+        </div>
+    </div>
+</div>
+    <div id="horLine">
+        <hr />
+    </div>
+<div>
+    <button class="btn btn-primary">Save</button>
+    <button  class="btn btn-default">Cancel</button>
+</div>
+    </div>
+@section Styles{
     <link rel="stylesheet" href="~/custom_contents/GraphView.css" />
 }
 @section Scripts {
@@ -52,4 +68,4 @@
     <script>
 
     </script>
-}--
+}

@@ -6,6 +6,18 @@
     outline: none;
 }
 
+.dependencyRow {
+    margin-bottom: 5px;
+}
+
+#designer {
+    padding: 10px 5px 10px 5px;
+    border: 2px dashed gray;
+}
+
+.dependencyRow select .isNewOutComeOption {
+    color: darkslateblue;
+}
 .select-box select {
     background: transparent;
     width: 200px;

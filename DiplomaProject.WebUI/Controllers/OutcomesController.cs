@@ -6,11 +6,13 @@ using AutoMapper;
 using DiplomaProject.Domain.Entities;
 using DiplomaProject.Domain.Interfaces;
 using DiplomaProject.Domain.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomaProject.WebUI.Controllers
 {
+    [Authorize(Roles = "ProfessionAdmin")]
     public class OutcomesController : BaseController
     {
         public OutcomesController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
@@ -38,10 +40,16 @@ namespace DiplomaProject.WebUI.Controllers
         [HttpGet]
         public IActionResult BuildGraph(int professionId)
         {
-            var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId);
+            var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
             ViewBag.ProfessionName = service.GetById<Profession>(professionId).Name;
             var model = outcomes.Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
             return View("GraphView", model);
+        }
+
+        [HttpPost]
+        public async Task GetOutcomeDepemdencies(List<EdgeViewModel> model)
+        {
+
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DiplomaProject.Domain.Entities;
 using DiplomaProject.Domain.Interfaces;
+using DiplomaProject.Domain.Services;
 using DiplomaProject.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,10 +16,11 @@ namespace DiplomaProject.WebUI.Controllers
     [Authorize(Roles = "ProfessionAdmin")]
     public class OutcomesController : BaseController
     {
-        public OutcomesController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
+        private OutcomesService outcomesService;
+        public OutcomesController(IDPService service, OutcomesService outcomesService, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
                         : base(service, mapper, userManager, signInManager, roleManager)
         {
-
+            this.outcomesService = outcomesService;
         }
 
         [HttpGet]
@@ -47,9 +49,13 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task GetOutcomeDepemdencies(List<EdgeViewModel> model)
+        public async Task SaveDependencies([FromBody]List<EdgeViewModel> model)
         {
-
+            if (model != null)
+            {
+                var data = model.Select(edge => mapper.Map<Edge>(edge)).ToList();
+                await outcomesService.SaveDependencies(data);
+            }
         }
     }
 }

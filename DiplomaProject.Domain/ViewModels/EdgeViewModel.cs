@@ -11,5 +11,7 @@ namespace DiplomaProject.Domain.ViewModels
         public int FromNode { get; set; }
 
         public int ToNode { get; set; }
+
+        public int ProfessionId { get; set; }
     }
 }

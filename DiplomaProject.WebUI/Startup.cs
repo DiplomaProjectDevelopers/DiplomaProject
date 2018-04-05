@@ -37,6 +37,7 @@ namespace DiplomaProject.WebUI
             services.AddTransient<IDPService, DataService>();
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddTransient<IDPRepository, DPRepository>();
+            services.AddTransient<OutcomesService>();
             services.AddDbContext<DiplomaProjectContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<User, Role>()

@@ -16,6 +16,23 @@ function onChange(edgeId, property, value) {
     updateDependencies(edges);
 }
 
+function onSubmit() {
+    const data = getEdges();
+    $.ajax({
+        type: "POST",
+        data: JSON.stringify(data),
+        url: "/Outcomes/SaveDependencies",
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (data) {
+            console.log(data.message);
+        },
+        error: function () {
+            alert("Error occured!!")
+        }
+    });
+}
+
 function updateDependencies(edges) {
     sessionStorage.setItem('edges', JSON.stringify(edges));
     const fields = edges.map(edge => {
@@ -74,7 +91,7 @@ function addDependency() {
     }
     let message;
     if (isOK) {
-        edges.push({ id: getNextId(), fromNode: -1, toNode: -1 });
+        edges.push({ id: getNextId(), fromNode: -1, toNode: -1, professionId });
         message = "";
     }
     else {

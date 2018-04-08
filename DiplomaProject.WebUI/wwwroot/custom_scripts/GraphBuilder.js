@@ -9,15 +9,22 @@ function getEdges() {
     const edges = sessionStorage.getItem('edges');
     return edges && JSON.parse(edges);
 }
+
 function onChange(edgeId, property, value) {
     const edges = getEdges();
-    const edge = edges.find(e => e.id === edgeId);
+    const edge = edges.find(e => e.Id === edgeId);
     edge[property] = parseInt(value);
     updateDependencies(edges);
 }
 
 function onSubmit() {
     const data = getEdges();
+    const isOK = isFull(data);
+    if (!isOK) {
+        const message = "There are no selected lists. Please select them and try again."
+        document.getElementById('message').innerText = message;
+        return;
+    }
     $.ajax({
         type: "POST",
         data: JSON.stringify(data),
@@ -25,30 +32,53 @@ function onSubmit() {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function (data) {
-            console.log(data.message);
+            const message = "Your changes were saved successfully!!!";
+            document.getElementById('message').innerText = message;
+            updateDependencies(data);
         },
-        error: function () {
-            alert("Error occured!!")
+        error: function (error) {
+            console.log("Error occured!!");
+            console.log(error);
         }
     });
 }
 
+function removeDependency(edge, index) {
+    const previousEdges = JSON.parse(sessionStorage.getItem('edges'));
+    const currentEdges = previousEdges.filter((item, index) => item.Id !== edge.Id);
+    updateDependencies(currentEdges);
+}
+
 function updateDependencies(edges) {
     sessionStorage.setItem('edges', JSON.stringify(edges));
-    const fields = edges.map(edge => {
-        let div = document.createElement('div');
+    const fields = edges.map((edge, index) => {
+        const div = document.createElement('div');
         div.setAttribute('class', 'dependencyRow row');
 
-        let fromSelect = document.createElement('select');
-        fromSelect.setAttribute('class', 'col-md-6 select-box');
-        fromSelect.addEventListener('change', (e) => onChange(edge.id, 'fromNode', e.target.value));
+        const fromDiv = document.createElement('div');
+        fromDiv.setAttribute('class', 'col-md-5');
 
-        let toSelect = document.createElement('select');
-        toSelect.setAttribute('class', 'col-md-6 select-box');
-        toSelect.addEventListener('change', (e) => onChange(edge.id, 'toNode', e.target.value));
+        const fromSelect = document.createElement('select');
+        fromSelect.setAttribute('class', 'select-box');
+        fromSelect.style.width = '100%';
+        fromSelect.addEventListener('change', (e) => onChange(edge.Id, 'FromNode', e.target.value));
 
-        fromSelect.value = edge.fromNode;
-        toSelect.value = edge.toNode;
+        const toDiv = document.createElement('div');
+        toDiv.setAttribute('class', 'col-md-5');
+
+        const toSelect = document.createElement('select');
+        toSelect.setAttribute('class', 'col-md-5 select-box');
+        toSelect.style.width = '100%';
+        toSelect.addEventListener('change', (e) => onChange(edge.Id, 'ToNode', e.target.value));
+
+        const deleteDiv = document.createElement('div');
+        deleteDiv.setAttribute('class', 'col-md-2');
+        const deleteLink = document.createElement('a');
+        deleteLink.addEventListener('click', (e) => removeDependency(edge, index));
+        const deleteIcon = document.createElement('span');
+        deleteIcon.setAttribute('class', 'glyphicon glyphicon-remove-circle');
+        deleteLink.appendChild(deleteIcon);
+        deleteDiv.appendChild(deleteLink);
 
         const options = getOptions();
         (options || []).forEach(option => {
@@ -68,10 +98,15 @@ function updateDependencies(edges) {
             fromSelect.appendChild(option1);
             toSelect.appendChild(option2);
         });
-        fromSelect.value = edge.fromNode;
-        toSelect.value = edge.toNode;
-        div.appendChild(fromSelect);
-        div.appendChild(toSelect);
+        fromSelect.value = edge.FromNode;
+        fromDiv.appendChild(fromSelect);
+
+        toSelect.value = edge.ToNode;
+        toDiv.appendChild(toSelect);
+
+        div.appendChild(fromDiv);
+        div.appendChild(toDiv);
+        div.appendChild(deleteDiv);
         return div;
     });
     const dependencies = document.getElementById('dependencies');
@@ -83,15 +118,10 @@ function updateDependencies(edges) {
 
 function addDependency() {
     const edges = getEdges();
-    let isOK = true;
-    for (let i = 0, length = edges.length; i < length; i++) {
-        if (!edges[i].fromNode || edges[i].fromNode < 0 || !edges[i].toNode || edges[i].toNode < 0) {
-            isOK = false;
-        }
-    }
+    const isOK = isFull(edges);
     let message;
     if (isOK) {
-        edges.push({ id: getNextId(), fromNode: -1, toNode: -1, professionId });
+        edges.push({ Id: getNextId(), FromNode: -1, ToNode: -1, professionId });
         message = "";
     }
     else {
@@ -100,6 +130,16 @@ function addDependency() {
     document.getElementById('message').innerText = message;
 
     updateDependencies(edges);
+}
+
+function isFull(edges) {
+    let isOK = true;
+    for (let i = 0, length = edges.length; i < length; i++) {
+        if (!edges[i].FromNode || edges[i].FromNode < 0 || !edges[i].ToNode || edges[i].ToNode < 0) {
+            isOK = false;
+        }
+    }
+    return isOK;
 }
 
 function getNextId() {

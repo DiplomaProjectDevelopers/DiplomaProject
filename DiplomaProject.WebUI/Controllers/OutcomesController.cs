@@ -10,6 +10,8 @@ using DiplomaProject.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace DiplomaProject.WebUI.Controllers
 {
@@ -43,19 +45,31 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult BuildGraph(int professionId)
         {
             var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
-            ViewBag.ProfessionName = service.GetById<Profession>(professionId).Name;
+            ViewBag.Profession = new ProfessionViewModel
+            {
+                Id = professionId,
+                Name = service.GetById<Profession>(professionId).Name
+            };
             var model = outcomes.Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
-            return View("GraphView", model);
+            ViewBag.Outcomes = model;
+            var edges = service.GetAll<Edge>().Where(e => e.ProfessionId == professionId).ToList();
+            var viewModel = edges.Select(e => mapper.Map<EdgeViewModel>(e));
+            return View("GraphView", viewModel);
         }
 
         [HttpPost]
-        public async Task SaveDependencies([FromBody]List<EdgeViewModel> model)
+        public async Task<IActionResult> SaveDependencies([FromBody]List<EdgeViewModel> model)
         {
             if (model != null)
             {
                 var data = model.Select(edge => mapper.Map<Edge>(edge)).ToList();
-                await outcomesService.SaveDependencies(data);
+                var processedData = await outcomesService.SaveDependencies(data);
+                var processedModel = processedData.Select(d => mapper.Map<EdgeViewModel>(d));
+                return Json(model, new JsonSerializerSettings {
+                    ContractResolver = new DefaultContractResolver()
+                });
             }
+            return Json("Error");
         }
     }
 }

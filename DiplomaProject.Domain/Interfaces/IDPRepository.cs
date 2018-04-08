@@ -23,6 +23,6 @@ namespace DiplomaProject.Domain.Interfaces
 
         Task<SignInResult> SignInAsync(string username, string password, bool rememberme, bool lockoutOnFailure = false);
         Task SignOutAsync();
-        void Save();
+        Task Save();
     }
 }

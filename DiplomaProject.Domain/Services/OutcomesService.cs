@@ -17,28 +17,30 @@ namespace DiplomaProject.Domain.Services
             this.dataService = dataService;
         }
 
-        public async Task SaveDependencies(List<Edge> model)
+        public async Task<IEnumerable<Edge>> SaveDependencies(List<Edge> model)
         {
             var professionId = model.First()?.ProfessionId;
-            var dbDependencies = dataService.GetAll<Edge>().Where(e => e.ProfessionId == professionId).Select(e => e.Id);
-            var deletedDependencies = dbDependencies.Except(model.Select(e => e.Id));
+            var dbDependencies = dataService.GetAll<Edge>().Where(e => e.ProfessionId == professionId).Select(e => e.Id).ToList();
+            var deletedDependencies = dbDependencies.Except(model.Select(e => e.Id)).ToList();
 
             foreach (var edge in deletedDependencies)
             {
                 await dataService.DeleteById<Edge>(edge);
             }
-            var inserted = model.Where(e => e.Id <= 0);
-            var updated = model.Where(e => e.Id > 0);
+            var inserted = model.Where(e => e.Id <= 0).ToList();
+            var updated = model.Where(e => e.Id > 0).ToList();
 
-            foreach (var edge in inserted)
+            for (int i = 0; i < inserted.Count; ++i)
             {
-                await dataService.Insert<Edge>(edge);
+                inserted[i].Id = 0;
+                inserted[i] = await dataService.Insert<Edge>(inserted[i]);
             }
 
-            foreach (var edge in updated)
+            for (int i = 0; i < updated.Count; ++i)
             {
-                await dataService.Update<Edge>(edge);
+               updated[i] = await dataService.Update<Edge>(updated[i]);
             }
+            return model;
         }
     }
 }

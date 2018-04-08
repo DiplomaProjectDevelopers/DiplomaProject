@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ProfessionList</h2>
+<h2>Profession List</h2>
 
 <table class="table">
     <thead>
@@ -33,13 +33,13 @@
                 </td>
                 <td>
                     <p data-placement="top" data-toggle="tooltip">
-                        <a asp-action="Edit" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-success btn-xs" data-title="Edit">
+                        <a asp-action="Edit" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-success btn-xs" data-toggle="tooltip"  title="Կատարել հարցում">
                             <span class="glyphicon glyphicon-edit"></span>
                         </a>
-                        <a asp-action="Details" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-info btn-xs" data-title="Details">
+                        <a asp-action="Details" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-info btn-xs" data-toggle="tooltip" title="Details">
                             <span class="glyphicon glyphicon-info-sign"></span>
                         </a>
-                        <a asp-action="BuildGraph" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-primary btn-xs" data-title="Build Graph">
+                        <a asp-action="BuildGraph" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-primary btn-xs" data-toggle="tooltip" title="Վերջնարդյունքների կապերը">
                             <span class="glyphicon glyphicon-wrench"></span>
                         </a>
                     </p>

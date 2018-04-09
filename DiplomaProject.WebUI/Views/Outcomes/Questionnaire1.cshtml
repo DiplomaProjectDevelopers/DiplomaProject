@@ -1,57 +1,65 @@
-﻿@model Tuple<ProfessionViewModel, List<DiplomaProject.Domain.ViewModels.StakeHolderTypeViewModel>, StakeHolderViewModel>
-@{
+﻿@model Tuple<ProfessionViewModel, StakeHolderTypeViewModel, StakeHolderViewModel>
+    @{
+    ViewBag.Title = "Questionnaire1";
     Layout = null;
-}
+    }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Հարցաթերթիկ 1</title>
-</head>
-<body>
-    <div class="block">
-        <div class="nav">
-            <div class="page">
-                <h2>Հարցաթերթիկի կազմում</h2>
-                <form asp-controller="Profession" asp-action="Index" method="post" class="profession" role="form">
-                    <h4>Ընտրել մասնագիտությունը</h4>
-                    <select asp-for="Item1.Id"
-                            class="Profession"
-                            asp-items="@(new SelectList(@ViewBag.ListofCountry, "Id", "Name"))"></select>
-                </form>
-                <form asp-controller="StakeHolderType" asp-action="Index" method="post" class="checkbox">
-                    <h4>Ընտրել շահակցին</h4>
-                    @{
-                        for (int i = 0; i < Model.Item2.Count(); i++)
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Հարցաթերթիկ 1</title>
+    </head>
+    <body>
+        <div class="block">
+            <div class="nav">
+                <div class="page">
+                    <h2>Հարցաթերթիկի կազմում</h2>
+                    <form asp-controller="Profession" asp-action="Index" method="post" class="profession" role="form">
+                        <h4>Ընտրել մասնագիտությունը</h4>
+                        <select asp-for="Item1.Id"
+                                class="Profession"
+                                asp-items="@(new SelectList(@ViewBag.ListOfProfession," Name"))"></select>
+                    </form>
+                    <div asp-controller="StakeHolderType" asp-action="Index" method="post" class="checkbox">
+                        <h4>Ընտրել շահակցին</h4>
+                        @foreach (var item in ViewBag.ListOfStakeHolderType)
                         {
-                            <input type="checkbox" name="@Model.Item2[i].TypeName" />
-                            <label asp-for="@Model.Item2[i].Id">@Model.Item2[i].TypeName</label>
-                            <input asp-for="@Model.Item2[i].Id" type="hidden" />
-                            <input asp-for="@Model.Item2[i].TypeName" type="hidden" />
-                            <br />
+                        <li class="list-group-item">
+                            <div class="checkbox">
+                                <input type="checkbox" id="Check_@item.Id" />
+                                <label for="Check_@item.Id">@item.TypeName</label>
+                            </div>
+                        </li>
+                        @*<input type="checkbox" name="@Model.Item2[i].TypeName" />
+                        <label asp-for="@Model.Item2[i].Id">@Model.Item2[i].TypeName</label>
+                        <input asp-for="@Model.Item2[i].Id" type="hidden" />
+                        <input asp-for="@Model.Item2[i].TypeName" type="hidden" />
+                        <br />*@
                         }
-                    }
 
-                </form>
-                <form asp-controller="StakeHolder" asp-action="Index" method="post" class="company">
-                    <h4>Ընտրել կազմակերպությունը</h4>
 
-                    <select asp-for="Item3.Id"
-                            class="Company"
-                            asp-items="@(new SelectList(ViewBag.ListofStakeHolder, "Id", "CompanyName"))"></select>
-                    <div class="Azat">
-                        <input class="btn btn-info" type="submit" value="Հաստատել" />
                     </div>
-                </form>
+                    <form asp-controller="StakeHolder" asp-action="Index" method="post" class="company">
+                        <h4>Ընտրել կազմակերպությունը</h4>
+                        <select class="Company"
+                                asp-items="@(new SelectList(@ViewBag.ListofStakeHolder," CompanyName"))"></select>
+                        <div class="Azat">
+                            <input class="btn btn-info" type="submit" value="Հաստատել" id="Hastatel" onclick="redirectOnClick()" />
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>
 
 @section Styles {
-    <link href="~/Content/Outcomes/Questionnaire1.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link href="~/Content/Images/questionnaire.jpg" rel="icon" />
+<link href="~/Content/Outcomes/Questionnaire1.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="~/Content/Images/questionnaire.jpg" rel="icon" />
+}
+
+@section Scripts{
+<script src="/Scripts/Questionnaire1.js" type="text/javascript"></script>
 }

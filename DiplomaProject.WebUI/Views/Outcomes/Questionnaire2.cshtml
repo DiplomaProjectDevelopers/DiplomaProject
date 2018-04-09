@@ -1,4 +1,4 @@
-﻿@model Tuple<List<DiplomaProject.Domain.ViewModels.SubjectViewModel>, List<DiplomaProject.Domain.ViewModels.OutcomeViewModel>>
+﻿@model Tuple<ProfessionViewModel, SubjectViewModel, OutcomeViewModel>
 @{
     Layout = null;
 }
@@ -18,42 +18,45 @@
             <div class="page">
                 <h2>@ViewBag.SelectValue մասնագետի վերջնարդյունքի հարցում</h2>
                 <form class="Form">
-                    @for (int i = 0; i < Model.Item1.Count(); i++)
+                    @foreach (var subject in ViewBag.ListOfSubject)
                     {
-                        <p class="Subject">Առարկա՝ @Model.Item1[i].Name</p>
-                        @for (int j = 0; j < Model.Item2.Count(); j++)
+                        @if (subject.ProfessionId == ViewBag.SelectId)
                         {
-                            if (@Model.Item2[j].SubjectId == Model.Item1[i].Id)
+                            <p class="Subject">Առարկա՝ @subject.Name </p>
+                            @foreach (var outcome in ViewBag.ListOfOutcomes)
                             {
-                                int k=1;
-                                <p>@k @Model.Item2[j].Name</p>
-                                <div class="Radio">
-                                    <label style="margin-left:15px">1</label>
-                                    <label style="margin-left:20px">2</label>
-                                    <label style="margin-left:20px">3</label>
-                                    <label style="margin-left:19px">4</label>
-                                    <label style="margin-left:19px">5</label>
-                                    <label style="margin-left:19px">6</label>
-                                    <label style="margin-left:19px">7</label>
-                                    <label style="margin-left:19px">8</label>
-                                    <label style="margin-left:19px">9</label>
-                                    <label style="margin-left:15px">10</label>
-                                    <br />
-                                    <input style="margin-left:14px" type="radio" name="mek" value="1" />
-                                    <input style="margin-left:14px" type="radio" name="erku" value="2" />
-                                    <input style="margin-left:14px" type="radio" name="ereq" value="3" />
-                                    <input style="margin-left:14px" type="radio" name="chors" value="4" />
-                                    <input style="margin-left:14px" type="radio" name="hing" value="5" />
-                                    <input style="margin-left:14px" type="radio" name="vec" value="6" />
-                                    <input style="margin-left:14px" type="radio" name="yot" value="7" />
-                                    <input style="margin-left:14px" type="radio" name="ut" value="8" />
-                                    <input style="margin-left:14px" type="radio" name="iny" value="9" />
-                                    <input style="margin-left:14px" type="radio" name="tas" value="10" />
-                                </div>
-                                k++;
+                                if (subject.SubjectId == outcome.Id)
+                                {
+                                    int k = 1;
+                                    <p>@k @outcome.Name</p>
+                                    <div class="Radio">
+                                        <label style="margin-left:15px">1</label>
+                                        <label style="margin-left:20px">2</label>
+                                        <label style="margin-left:20px">3</label>
+                                        <label style="margin-left:19px">4</label>
+                                        <label style="margin-left:19px">5</label>
+                                        <label style="margin-left:19px">6</label>
+                                        <label style="margin-left:19px">7</label>
+                                        <label style="margin-left:19px">8</label>
+                                        <label style="margin-left:19px">9</label>
+                                        <label style="margin-left:15px">10</label>
+                                        <br />
+                                        <input style="margin-left:14px" type="radio" name="mek" value="1" />
+                                        <input style="margin-left:14px" type="radio" name="erku" value="2" />
+                                        <input style="margin-left:14px" type="radio" name="ereq" value="3" />
+                                        <input style="margin-left:14px" type="radio" name="chors" value="4" />
+                                        <input style="margin-left:14px" type="radio" name="hing" value="5" />
+                                        <input style="margin-left:14px" type="radio" name="vec" value="6" />
+                                        <input style="margin-left:14px" type="radio" name="yot" value="7" />
+                                        <input style="margin-left:14px" type="radio" name="ut" value="8" />
+                                        <input style="margin-left:14px" type="radio" name="iny" value="9" />
+                                        <input style="margin-left:14px" type="radio" name="tas" value="10" />
+                                    </div>
+                                    k++;
+                                }
                             }
-                         }   
-                     }
+                        }
+                    }
                     <div class="Azat">
                         <input class="btn btn-info" type="submit" value="Հաստատել" />
                     </div>

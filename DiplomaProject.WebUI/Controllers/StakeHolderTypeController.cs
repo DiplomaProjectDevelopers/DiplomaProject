@@ -1,26 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DiplomaProject.Domain.Entities;
+using DiplomaProject.Domain.Interfaces;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using DiplomaProject.Domain.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DiplomaProject.WebUI.Controllers
 {
-    public class StakeHolderTypeController : Controller
+    public class StakeHolderTypeController : BaseController
     {
-        private readonly DiplomaProjectContext context;
-        public StakeHolderTypeController(DiplomaProjectContext context)
+        public StakeHolderTypeController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
+            : base(service, mapper, userManager, signInManager, roleManager)
         {
-            this.context = context;
+
         }
+
         public IActionResult Index()
         {
-            List<StakeHolderType> stakeHolderTypeList = new List<StakeHolderType>();
-            stakeHolderTypeList = (from product in context.StakeHolderTypes select product).ToList();
-            return View(stakeHolderTypeList);
+            var stakeHolderType = service.GetAll<StakeHolderType>().ToList();
+            var model = stakeHolderType.Select(st => mapper.Map<StakeHolderTypeViewModel>(st));
+            List<StakeHolderTypeViewModel> stakeHolderTypeList = model.Select(st => new StakeHolderTypeViewModel { Id = st.Id, TypeName = st.TypeName }).ToList();
+            ViewBag.ListOfStakeHolderType = stakeHolderTypeList;
+            return View("Questionnaire1", model);
         }
     }
 }
+

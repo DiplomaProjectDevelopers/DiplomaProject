@@ -43,8 +43,21 @@ namespace DiplomaProject.Domain.Initializer
                 //Create the Administartor Role
                 if (!_context.Roles.Any())
                 {
-                    _roleManager.CreateAsync(new Role("BaseAdmin")).GetAwaiter().GetResult();
-                    _roleManager.CreateAsync(new Role("ProfessionAdmin")).GetAwaiter().GetResult();
+                    var roles = new List<Role>
+                    {
+                        new Role
+                        {
+                            Name = "BaseAdmin"
+                        },
+                        new Role
+                        {
+                            Name="ProfessionAdmin"
+                        }
+                    };
+                    foreach (var role in roles)
+                    {
+                        await _roleManager.CreateAsync(role);
+                    }
                 }
 
                 //Create the default Admin account and apply the Administrator role
@@ -88,7 +101,7 @@ namespace DiplomaProject.Domain.Initializer
                         LastName = "Sargsyan",
                         UserName = "kim_sargsyan",
                         Email = "kim.sargsian@gmail.com",
-                        EmailConfirmed = true
+                        EmailConfirmed = true                        
                     }
                 };
                 if (!_context.Users.Any())
@@ -96,7 +109,7 @@ namespace DiplomaProject.Domain.Initializer
                     foreach (var user in users)
                     {
                         await _userManager.CreateAsync(user, password);
-                        await _userManager.AddToRolesAsync(user, new[] { "ProfessionAdmin" });
+                        await _userManager.AddToRoleAsync(user, "ProfessionAdmin");
                     }
                     await _userManager.AddToRoleAsync(users[0], "BaseAdmin");
                     await _context.SaveChangesAsync();

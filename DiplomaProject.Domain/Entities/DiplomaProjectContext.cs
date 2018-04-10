@@ -9,7 +9,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace DiplomaProject.Domain.Entities
 {
-    public class DiplomaProjectContext : IdentityDbContext<User, Role, string>
+    public class DiplomaProjectContext 
+        : IdentityDbContext<User, Role, string, IdentityUserClaim<string>, IdentityUserRole<string>, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public DiplomaProjectContext(DbContextOptions<DiplomaProjectContext> options) : base(options)
         {
@@ -29,7 +30,7 @@ namespace DiplomaProject.Domain.Entities
         public virtual DbSet<StakeHolderType> StakeHolderTypes { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        {         
             modelBuilder.Entity<Edge>()
                .HasOne(m => m.LeftOutCome)
                .WithMany(t => t.LeftSideOutComes)
@@ -40,18 +41,8 @@ namespace DiplomaProject.Domain.Entities
                 .WithMany(t => t.RightSideOutComes)
                 .HasForeignKey(m => m.RightOutComeId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<IdentityUserRole<string>>().HasDiscriminator().HasValue("Text");
             base.OnModelCreating(modelBuilder);
-        }
-    }
-
-    public class BloggingContextFactory : IDesignTimeDbContextFactory<DiplomaProjectContext>
-    {
-        public DiplomaProjectContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<DiplomaProjectContext>();
-            optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=DiplomaProject;Trusted_Connection=True;");
-
-            return new DiplomaProjectContext(optionsBuilder.Options);
         }
     }
 }

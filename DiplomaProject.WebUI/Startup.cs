@@ -61,6 +61,19 @@ namespace DiplomaProject.WebUI
                 // User settings
                 options.User.RequireUniqueEmail = true;
             });
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                // If the LoginPath isn't set, ASP.NET Core defaults 
+                // the path to /Account/Login.
+                options.LoginPath = "/Admin/Login";
+                // If the AccessDeniedPath isn't set, ASP.NET Core defaults 
+                // the path to /Account/AccessDenied.
+                options.AccessDeniedPath = "/Admin/AccessDenied";
+                options.SlidingExpiration = true;
+            });
             services.AddMvc();
             services.AddAutoMapper();
         }

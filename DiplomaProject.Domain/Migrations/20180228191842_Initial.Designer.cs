@@ -473,16 +473,11 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.Property<string>("RoleId");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserRole<string>");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -507,7 +502,6 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.ToTable("UserRoles");
 
-                    b.HasDiscriminator().HasValue("UserRole");
                 });
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.Department", b =>

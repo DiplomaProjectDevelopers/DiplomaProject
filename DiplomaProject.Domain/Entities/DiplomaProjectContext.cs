@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 namespace DiplomaProject.Domain.Entities
 {
     public class DiplomaProjectContext 
-        : IdentityDbContext<User, Role, string, IdentityUserClaim<string>, IdentityUserRole<string>, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
+        : IdentityDbContext<User, Role, string, IdentityUserClaim<string>, UserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public DiplomaProjectContext(DbContextOptions<DiplomaProjectContext> options) : base(options)
         {
@@ -41,8 +41,7 @@ namespace DiplomaProject.Domain.Entities
                 .WithMany(t => t.RightSideOutComes)
                 .HasForeignKey(m => m.RightOutComeId)
                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<IdentityUserRole<string>>().HasDiscriminator().HasValue("Text");
-            base.OnModelCreating(modelBuilder);
+           base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -10,9 +10,8 @@ namespace DiplomaProject.Domain.Entities
         public int? LeftOutComeId { get; set; }
         public int? RightOutComeId { get; set; }
 
-        //[ForeignKey("LeftOutComeId")]
+        public int ProfessionId { get; set; }
         public FinalOutCome LeftOutCome { get; set; }
-        //[ForeignKey("RightOutComeId")]
         public FinalOutCome RightOutCome { get; set; }
     }
 }

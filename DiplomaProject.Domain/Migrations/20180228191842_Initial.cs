@@ -175,9 +175,7 @@ namespace DiplomaProject.Domain.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false),
-                    Discriminator = table.Column<string>(nullable: false)
-                },
+                    RoleId = table.Column<string>(nullable: false)                },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });

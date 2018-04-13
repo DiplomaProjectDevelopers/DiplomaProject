@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 
 namespace DiplomaProject.WebUI
 {
@@ -37,6 +38,7 @@ namespace DiplomaProject.WebUI
             services.AddTransient<IDPService, DataService>();
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddTransient<IDPRepository, DPRepository>();
+            services.AddTransient<OutcomesService>();
             services.AddDbContext<DiplomaProjectContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<User, Role>()
@@ -59,38 +61,54 @@ namespace DiplomaProject.WebUI
                 // User settings
                 options.User.RequireUniqueEmail = true;
             });
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                // If the LoginPath isn't set, ASP.NET Core defaults 
+                // the path to /Account/Login.
+                options.LoginPath = "/Admin/Login";
+                // If the AccessDeniedPath isn't set, ASP.NET Core defaults 
+                // the path to /Account/AccessDenied.
+                options.AccessDeniedPath = "/Admin/AccessDenied";
+                options.SlidingExpiration = true;
+            });
             services.AddMvc();
             services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDbInitializer dbInitializer)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDbInitializer dbInitializer, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
             }
+            app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
             app.UseExceptionMiddleware();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory())
             });
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "Content")),
-                RequestPath = "/Content"
-            });
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(
+            //        Path.Combine(Directory.GetCurrentDirectory(), "Content")),
+            //    RequestPath = "/Content"
+            //});
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "Scripts")),
-                RequestPath = "/Scripts"
-            });
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(
+            //        Path.Combine(Directory.GetCurrentDirectory(), "Scripts")),
+            //    RequestPath = "/Scripts"
+            //});
             app.UseAuthentication();
             dbInitializer.Initialize().Wait();
             app.UseMvc(routes =>
@@ -101,7 +119,9 @@ namespace DiplomaProject.WebUI
             });
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                context.Response.StatusCode = 404;
+                await Task.FromResult(0);
+                //await context.Respons.WriteAsync("Hello World!");
             });
         }
     }

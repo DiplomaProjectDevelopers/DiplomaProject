@@ -49,9 +49,9 @@ namespace DiplomaProject.Domain.Repositories
         /// <param name = "item" ></ param >
         /// < returns ></ returns >
         public async Task<T> Insert<T>(T item) where T : class
-        {
+        {           
             await context.Set<T>().AddAsync(item);
-            await Task.Run(() => Save());
+            await Save();
             return item;
         }
 
@@ -63,7 +63,8 @@ namespace DiplomaProject.Domain.Repositories
         {
             T entityToDelete =  GetById<T>(id);
             if (entityToDelete == null) return;
-            await Task.Run(() => Delete(entityToDelete));
+            await Delete<T>(entityToDelete);
+            await Save();
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace DiplomaProject.Domain.Repositories
                 context.Set<T>().Attach(entityToDelete);
             }
             context.Set<T>().Remove(entityToDelete);
-            await Task.Run(() => Save());
+            await Save();
         }
 
 
@@ -100,7 +101,7 @@ namespace DiplomaProject.Domain.Repositories
         {
             context.Set<T>().Attach(item);
             context.Entry(item).State = EntityState.Modified;
-            await Task.Run(() => Save());
+            await Save();
             return item;
         }
 
@@ -116,7 +117,7 @@ namespace DiplomaProject.Domain.Repositories
         /// <summary>
         ///Save changes in database.
         /// </summary>
-        public async void Save()
+        public async Task Save()
         {
             try
             {

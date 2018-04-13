@@ -42,12 +42,12 @@ namespace DiplomaProject.Domain.Services
             return repository.GetById<T>(id);
         }
 
-        public async Task Insert<T>(T item) where T : class
+        public async Task<T> Insert<T>(T item) where T : class
         {
-            await repository.Insert<T>(item);
+            return await repository.Insert<T>(item);
         }
 
-        public Task Update<T>(T item) where T : class
+        public Task<T> Update<T>(T item) where T : class
         {
             return repository.Update<T>(item);
         }

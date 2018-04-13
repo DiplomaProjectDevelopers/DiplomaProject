@@ -11,14 +11,14 @@
   ],
   "name": "graphdracula",
   "description": "JavaScript Graph Layouting and Drawing",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "homepage": "https://www.graphdracula.net",
   "scripts": {
     "start": "npm run build:dev",
-    "build": "npm run build:node; npm run build:dev; npm run build:prod",
+    "build": "npm run build:node; npm run build:prod",
     "build:node": "babel src -d lib",
-    "build:dev": "watchify main.js -v --standalone Dracula --ignore raphael -t babelify --debug -o dist/dracula.dev.js",
-    "build:prod": "browserify main.js --standalone Dracula --ignore raphael -t babelify --debug | uglifyjs > dist/dracula.min.js",
+    "build:dev": "watchify src -v --standalone Dracula --ignore raphael -t babelify --debug -o dist/dracula.dev.js",
+    "build:prod": "browserify src --standalone Dracula --ignore raphael -t babelify --debug | uglifyjs > dist/dracula.min.js",
     "pretest": "npm run check",
     "prebuild": "npm test",
     "test": "mocha --compilers js:babel-register src/**/*.spec.js src/*.spec.js",
@@ -33,7 +33,7 @@
     "dist/*",
     "README.md"
   ],
-  "main": "index.js",
+  "main": "lib/index.js",
   "bugs": {
     "email": "philipp@stratha.us",
     "url": "https://github.com/strathausen/dracula/issues"
@@ -60,9 +60,8 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "babel": "^6.5.2",
     "babel-cli": "^6.11.4",
-    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-env": "^1.6.1",
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
     "eslint": "^3.12.2",
@@ -73,7 +72,7 @@
     "randomcolor": "^0.4.4",
     "raphael": "^2.2.1",
     "sinon": "^1.17.5",
-    "uglifyjs": "^2.4.10",
+    "uglify-js": "^3.2.0",
     "watchify": "^3.7.0"
   },
   "peerDependencies": {

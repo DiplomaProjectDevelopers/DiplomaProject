@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System;
 
 namespace DiplomaProject.Domain.Migrations
@@ -70,6 +71,8 @@ namespace DiplomaProject.Domain.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int?>("LeftOutComeId");
+
+                    b.Property<int>("ProfessionId");
 
                     b.Property<int?>("RightOutComeId");
 
@@ -229,6 +232,8 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.Property<byte?>("BdpartTimeSemesters");
 
+                    b.Property<int?>("BranchId");
+
                     b.Property<int?>("DepartmentId");
 
                     b.Property<string>("Description");
@@ -246,6 +251,8 @@ namespace DiplomaProject.Domain.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AdminId");
+
+                    b.HasIndex("BranchId");
 
                     b.HasIndex("DepartmentId");
 
@@ -572,6 +579,10 @@ namespace DiplomaProject.Domain.Migrations
                     b.HasOne("DiplomaProject.Domain.Entities.User", "Admin")
                         .WithMany("Professions")
                         .HasForeignKey("AdminId");
+
+                    b.HasOne("DiplomaProject.Domain.Entities.Branch", "Branch")
+                        .WithMany("Professions")
+                        .HasForeignKey("BranchId");
 
                     b.HasOne("DiplomaProject.Domain.Entities.Department", "Department")
                         .WithMany("Professions")

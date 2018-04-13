@@ -16,9 +16,9 @@ namespace DiplomaProject.Domain.Interfaces
 
         DbSet<T> GetAll<T>() where T : class;
 
-        Task Insert<T>(T item) where T : class;
+        Task<T> Insert<T>(T item) where T : class;
 
-        Task Update<T>(T item) where T : class;
+        Task<T> Update<T>(T item) where T : class;
 
         Task DeleteById<T>(int id) where T : class;
 

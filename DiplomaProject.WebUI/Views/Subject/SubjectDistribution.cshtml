@@ -13,26 +13,13 @@
     <div class="row">
         <div class="col-sm">
             <label>Առարկաներ</label><br>
-            <select title="Choose game" class="selectpicker form-control">
-                <optgroup label="Մասնագիտական">
-                    <option>Առարկա1</option>
-                    <option>Առարկա1</option>
-                    <option>Առարկա3</option>
-                </optgroup>
-                <optgroup label="Ոչմասնագիտական">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                </optgroup>
+            <select
+                    class="Profession"
+                    asp-items="@(new SelectList(ViewBag.ListofSubject," Name"))">
             </select>
         </div>
         <div class="col-sm ">
-            <label>Քաշ</label><br>
-            <input type="text" name="selectarray" value="քաշ" size="3" class="form-control" readonly>
-        </div>
-        <div class="col-sm form">
-            <label>Վերջնարդյունք</label><br>
-            <input type="text" name="selectarray" value="Վերջնարդյունք" class="form-control" readonly>
+            <laselectarray" value="Վերջնարդյունք" class="form-control" readonly>
         </div>
     </div>
 </div>

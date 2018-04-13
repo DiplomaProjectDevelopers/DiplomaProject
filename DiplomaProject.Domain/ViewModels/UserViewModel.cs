@@ -28,3 +28,4 @@ namespace DiplomaProject.Domain.ViewModels
         public string SelectedRoleId { get; set; }
     }
 }
+                                                                                                                                                                                                                                                  

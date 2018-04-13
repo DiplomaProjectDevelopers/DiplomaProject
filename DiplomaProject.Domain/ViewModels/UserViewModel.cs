@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +8,7 @@ namespace DiplomaProject.Domain.ViewModels
 {
     public class UserViewModel
     {
-        [HiddenInput(DisplayValue = false)]
+        //[HiddenInput(DisplayValue = false)]
         public string Id { get; set; }
         public string Username { get; set; }
         [Display(Name = "First Name")]

@@ -25,4 +25,8 @@ namespace DiplomaProject.WebUI.Controllers
             return View();
         }
     }
-}
+  /*  public IActionResult Index()
+    {
+
+    } */
+    }

@@ -24,7 +24,7 @@ namespace DiplomaProject.WebUI.Controllers
         {
             var subject = service.GetAll<Subject>().ToList();
             var model = subject.Select(sb => mapper.Map<SubjectViewModel>(sb));
-            List<SubjectViewModel> subjectlist = model.Select(sb => new SubjectViewModel { Id = sb.Id, Name = sb.Name, ProfessionId = sb.ProfessionId }).ToList();
+            var subjectlist = model.Select(sb => sb.Name).ToList();
             ViewBag.ListofSubject = subjectlist;
             return View();
         }

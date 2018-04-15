@@ -1,6 +1,8 @@
 ﻿using DiplomaProject.Domain.Entities;
 using DiplomaProject.Domain.Interfaces;
 using DiplomaProject.Domain.ViewModels;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +31,6 @@ namespace DiplomaProject.Domain.Services
             }
             var inserted = model.Where(e => e.Id <= 0).ToList();
             var updated = model.Where(e => e.Id > 0).ToList();
-
             for (int i = 0; i < inserted.Count; ++i)
             {
                 inserted[i].Id = 0;

@@ -29,7 +29,6 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult Index()
         {
             var user = userManager.GetUserAsync(User).Result;
-            //var outcomes = service.GetAll<FinalOutCome>().ToList();
             var professions = service.GetAll<Profession>().Where(e => e.AdminId == user.Id).ToList();
             var model = professions.Select(p =>
             {
@@ -37,12 +36,11 @@ namespace DiplomaProject.WebUI.Controllers
                 profession.Department = service.GetById<Department>(profession.DepartmentId.Value).Name;
                 return profession;
             });
-            //var model = outcomes.Where(o => user.Professions.Select(p => p.Id).Contains(o.ProfessionId.Value)).Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
             return View("ProfessionList", model);
         }
 
         [HttpGet]
-        public IActionResult BuildGraph(int professionId)
+        public IActionResult MakeDependencies(int professionId)
         {
             var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
             ViewBag.Profession = new ProfessionViewModel
@@ -54,9 +52,23 @@ namespace DiplomaProject.WebUI.Controllers
             ViewBag.Outcomes = model;
             var edges = service.GetAll<Edge>().Where(e => e.ProfessionId == professionId).ToList();
             var viewModel = edges.Select(e => mapper.Map<EdgeViewModel>(e));
-            return View("GraphView", viewModel);
+            return View("DependencyBuilder", viewModel);
         }
 
+        public IActionResult GraphViewer(int professionId)
+        {
+            var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
+            ViewBag.Profession = new ProfessionViewModel
+            {
+                Id = professionId,
+                Name = service.GetById<Profession>(professionId).Name
+            };
+            var model = outcomes.Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
+            ViewBag.Outcomes = model;
+            var edges = service.GetAll<Edge>().Where(e => e.ProfessionId == professionId).ToList();
+            var viewModel = edges.Select(e => mapper.Map<EdgeViewModel>(e));
+            return View("GraphViewer", viewModel);
+        }
         [HttpPost]
         public async Task<IActionResult> SaveDependencies([FromBody]List<EdgeViewModel> model)
         {

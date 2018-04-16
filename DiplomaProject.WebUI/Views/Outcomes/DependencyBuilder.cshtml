@@ -51,10 +51,15 @@
         $(document).ready(function ()
         {
                 $(document).ready(() => {
-                    let edges = '@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))';
-                    if (!sessionStorage.getItem('edges'))
-                    {
-                        sessionStorage.setItem('edges', edges || JSON.stringify([]));
+                    const edges = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))');
+                    const nodes = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Outcomes)))');
+                    nodes.forEach(node => {
+                        if (node.Subject)
+                            node.Name = `${node.Name}(${node.Subject})`;
+
+                    });
+                    if (!sessionStorage.getItem('edges')) {
+                        sessionStorage.setItem('edges', JSON.stringify(edges || []));
                     }
                     if (!sessionStorage.getItem('nextId'))
                     {
@@ -62,9 +67,9 @@
                     }
                     if (!sessionStorage.getItem('nodes'))
                     {
-                        sessionStorage.setItem('nodes', '@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Outcomes)))');
+                        sessionStorage.setItem('nodes', JSON.stringify(nodes || []));
                     }
-                    edges = JSON.parse(sessionStorage.getItem('edges'));
+                    //edges = JSON.parse(sessionStorage.getItem('edges'));
                     updateDependencies(edges);
                  });
     });

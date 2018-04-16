@@ -7,7 +7,7 @@
     nodes.forEach((node, index) => {
         graph.nodes.push({
             id: node.Id,
-            label: node.Name,
+            label: node.Subject ? `${node.Name}(${node.Subject})` : node.Name,
             x: Math.random(),
             y: Math.random(),
             size: Math.random(),
@@ -30,7 +30,7 @@
         container: 'graph-container',
         settings: {
             labelColor: 'yellow',
-            autoResize: false,
+            autoResize: true,
             autoRescale: true,
             maxNodeSize: 8,
             minNodeSize: 8,

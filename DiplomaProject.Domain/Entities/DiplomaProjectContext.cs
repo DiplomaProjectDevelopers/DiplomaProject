@@ -29,6 +29,10 @@ namespace DiplomaProject.Domain.Entities
         public virtual DbSet<StakeHolder> StakeHolders { get; set; }
         public virtual DbSet<StakeHolderType> StakeHolderTypes { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
+        public virtual DbSet<SubjectModule> SubjectModules { get; set; }
+
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {         
             modelBuilder.Entity<Edge>()

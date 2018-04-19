@@ -108,7 +108,7 @@ namespace DiplomaProject.Domain.Initializer
                         LastName = "Sargsyan",
                         UserName = "kim_sargsyan",
                         Email = "kim.sargsian@gmail.com",
-                        EmailConfirmed = true                        
+                        EmailConfirmed = true
                     }
                 };
                 if (!_context.Users.Any())
@@ -123,6 +123,47 @@ namespace DiplomaProject.Domain.Initializer
                     await _context.SaveChangesAsync();
                 }
 
+                if (!_context.StakeHolderTypes.Any())
+                {
+                    var types = new List<StakeHolderType>
+                    {
+                        new StakeHolderType
+                        {
+                            TypeName = "Գործատու",
+                            ProfessionName = "Տնօրեն",
+                            Coefficient = 1
+                        },
+                        new StakeHolderType
+                        {
+                            TypeName = "Գործատու",
+                            ProfessionName = "Թիմի ղեկավար",
+                            Coefficient = 5
+                        },
+                        new StakeHolderType
+                        {
+                            TypeName = "Գործատու",
+                            ProfessionName = "Ծրագրավորող",
+                            Coefficient = 4
+                        },
+                        new StakeHolderType
+                        {
+                            TypeName = "Դասախոս",
+                            Coefficient = 5
+                        },
+                        new StakeHolderType
+                        {
+                            TypeName = "Ուսանող",
+                            Coefficient = 2
+                        },
+                        new StakeHolderType
+                        {
+                            TypeName = "Շրջանավարտ",
+                            Coefficient = 3
+                        }
+                    };
+                    _context.StakeHolderTypes.AddRange(types);
+                    _context.SaveChanges();
+                }
                 if (!_context.Faculties.Any())
                 {
                     var faculties = new List<Faculty>

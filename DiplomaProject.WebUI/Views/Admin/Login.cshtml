@@ -1,7 +1,7 @@
 ﻿@model DiplomaProject.Domain.ViewModels.LoginViewModel
 
 @{
-    ViewData["Title"] = "Login Page";
+    ViewData["Title"] = "Մւոտք գործել";
 }
 
 <div class="row">
@@ -9,30 +9,31 @@
         <div class="panel panel-primary">
             <div class="panel-heading">Please sign in</div>
             <div class="panel-body">
-            <form class="form-signin" asp-antiforgery="true" asp-controller="Admin" asp-action="Login" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                @if (TempData.ContainsKey("UserRegistered")) { <label class="label-info">@TempData["UserRegistered"]</label> }
-                <div class="form-group">
-                    <label asp-for="Username" class="control-label sr-only"></label>
-                    <input asp-for="Username" placeholder="Username" class="form-control" />
-                    <span asp-validation-for="Username" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Password" class="control-label sr-only"></label>
-                    <input asp-for="Password" placeholder="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div class="checkbox mb-3">
-                    <label>
-                        <input type="checkbox" value="remember-me" />
-                        Remember me
-                    </label>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Sign in" class="btn btn-lg btn-primary btn-block" />
-                </div>
-            </form>
-                </div>
+                <form class="form-signin" asp-antiforgery="true" asp-controller="Admin" asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @if (TempData.ContainsKey("UserRegistered"))
+                    {<label class="label-info">@TempData["UserRegistered"]</label>}
+                    <div class="form-group">
+                        <label asp-for="Username" class="control-label sr-only"></label>
+                        <input asp-for="Username" placeholder="Username" class="form-control" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label sr-only"></label>
+                        <input asp-for="Password" placeholder="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" value="remember-me" />
+                            Հիշել
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Մուտք" class="btn btn-lg btn-primary btn-block" />
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

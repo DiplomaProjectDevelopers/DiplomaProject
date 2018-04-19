@@ -1,15 +1,15 @@
 ﻿@model UserViewModel
 
 @{
-    ViewData["Title"] = $"Delete user {Model?.Username}";
+    ViewData["Title"] = $"Ջնջել {Model?.Username} օգտագործողին";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>You are going to delete the user @Model?.Username</h3>
+<h3>Դուք պատրաստվում եք ջնջել @Model?.Username օգտատիրոջը</h3>
 
-<h4>Are you sure you want to continue ?</h4>
+<h4>Շարունակել ամեն դեպքում</h4>
 <div class="panel panel-danger">
-    <div class="panel-heading">User details</div>
+    <div class="panel-heading">Օգտատիրոջ տվյալները</div>
     <hr />
     <div class="panel-body">
         <dl class="dl-horizontal">
@@ -20,7 +20,7 @@
                 @Html.DisplayFor(model => model.Username)
             </dd>
             <dt>
-                @Html.DisplayNameFor(model => model.CurrentRoles)
+                @Html.DisplayNameFor(model => model.CurrentRole)
             </dt>
             <dd>
                 @Html.DisplayFor(model => model.Username)
@@ -53,8 +53,8 @@
 
         <form method="post" asp-action="Delete" asp-controller="Admin" asp-antiforgery="true">
             @Html.Hidden("userId", Model.Id)
-            <input type="submit" value="Delete" class="btn btn-danger" /> |
-            <a asp-action="GetUsers" class="btn btn-default">Back to List</a>
+            <input type="submit" value="Ջնջել" class="btn btn-danger" /> |
+            <a asp-action="GetUsers" class="btn btn-default">Վերադառնալ ցանկին</a>
         </form>
     </div>
 </div>

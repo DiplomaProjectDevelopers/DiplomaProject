@@ -1,6 +1,6 @@
 ﻿function getOptions() {
     const array = JSON.parse(sessionStorage.getItem('nodes'));
-    array.push({ Id: -1, Name: '-select outcome-' });
+    array.push({ Id: -1, Name: '-ընտրեք վերջնարդյունքը-' });
     array.sort((x, y) => x.Id - y.Id);
     return array;
 
@@ -21,7 +21,7 @@ function onSubmit() {
     const data = getEdges();
     const isOK = isFull(data);
     if (!isOK) {
-        const message = "There are no selected lists. Please select them and try again."
+        const message = "Ոչ բոլոր զույգերն են ամբողջությամբ լրացված: Լրացրեք բոլորը և փորձեք կրկին"
         document.getElementById('message').innerText = message;
         return;
     }
@@ -32,7 +32,7 @@ function onSubmit() {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function (data) {
-            const message = "Your changes were saved successfully!!!";
+            const message = "Փոփոխությունները հաջողությամբ պահպանվեցին!!!";
             document.getElementById('message').innerText = message;
             updateDependencies(data);
         },
@@ -127,7 +127,7 @@ function addDependency() {
         message = "";
     }
     else {
-        message = "There are no selected lists. Please select them and try again."
+        message = "Ոչ բոլոր զույգերն են ամբողջությամբ լրացված: Լրացրեք բոլորը և փորձեք կրկին"
     }
     document.getElementById('message').innerText = message;
 

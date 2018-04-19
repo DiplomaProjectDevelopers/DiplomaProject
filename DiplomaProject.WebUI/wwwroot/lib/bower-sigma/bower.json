@@ -1,0 +1,22 @@
+{
+  "name": "bower-sigma",
+  "version": "1.0.3",
+  "authors": [
+    "Marco Vettorello <vettorello.marco@gmail.com>"
+  ],
+  "description": "A JavaScript library dedicated to graph drawing.",
+  "main": "sigma.min.js",
+  "keywords": [
+    "sigma",
+    "graph"
+  ],
+  "license": "MIT",
+  "homepage": "http://sigmajs.org",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

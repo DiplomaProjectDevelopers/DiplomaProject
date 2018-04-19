@@ -1,0 +1,77 @@
+﻿@model IEnumerable<EdgeViewModel>
+
+@{
+    ViewData["Title"] = "GraphPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Outcomes dependencies</h2>
+<p>Make dependencies between outcomes for the selected profession.</p>
+<div>
+    <div>
+        <div>
+            <div>
+                <span>
+                    Selected Profession <em>@ViewBag.Profession?.Name</em>
+                </span>
+                <a class="btn btn-link text-right" onclick="location.href ='@Url.Action("GraphViewer", "Outcomes", new { professionId = ViewBag.Profession?.Id})'">
+                    Graph viewer
+                </a>
+            </div>
+            <div id="message" class="text-info"></div>
+        </div>
+        <div id="dependencies">
+        </div>
+        <div id="infoBlock" class="text-info">
+            <span style="color:darkslateblue">* Options with this color are added new.</span>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <a onclick="addDependency()" class="btn btn-default glyphicon-plus">Add Dependency</a>
+            </div>
+        </div>
+    </div>
+    <div id="horLine">
+        <hr />
+    </div>
+    <div>
+        <a class="btn btn-primary" onclick="onSubmit()">Save</a>
+        <a class="btn btn-link" onclick="location.href='@Url.Action("Index", "Outcomes" )'">Cancel</a>
+    </div>
+</div>
+@section Styles{
+    <link rel="stylesheet" href="~/custom_contents/DependencyBuilder.css" />
+}
+@section Scripts {
+    <script src="~/custom_scripts/DependencyBuilder.js" type="text/javascript"></script>
+    <script>
+        window.onbeforeunload = () => {
+            sessionStorage.clear();
+        }
+        var professionId = @(ViewBag.Profession?.Id);
+        $(document).ready(function ()
+        {
+                $(document).ready(() => {
+                    const edges = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))');
+                    const nodes = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Outcomes)))');
+                    nodes.forEach(node => {
+                        if (node.Subject)
+                            node.Name = `${node.Name}(${node.Subject})`;
+
+                    });
+                    if (!sessionStorage.getItem('edges')) {
+                        sessionStorage.setItem('edges', JSON.stringify(edges || []));
+                    }
+                    if (!sessionStorage.getItem('nextId'))
+                    {
+                        sessionStorage.setItem('nextId', '-1');
+                    }
+                    if (!sessionStorage.getItem('nodes'))
+                    {
+                        sessionStorage.setItem('nodes', JSON.stringify(nodes || []));
+                    }
+                    //edges = JSON.parse(sessionStorage.getItem('edges'));
+                    updateDependencies(edges);
+                 });
+    });
+    </script>
+}

@@ -1,0 +1,32 @@
+﻿.dependencyRow select .isNewOutComeOption {
+    color: darkslateblue;
+}
+
+.select-box select {
+    background: transparent;
+    width: 200px;
+    height: 35px;
+    padding: 5px;
+    font-size: 16px;
+    line-height: 1;
+    border: 0;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+
+.select-box {
+    width: 50%;
+    height: 35px;
+    overflow: hidden;
+    background: url(https://dl.dropbox.com/u/122540013/img/arrow.png) no-repeat right #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px 5px 5px 3px;
+}
+
+.select-box select {
+    padding-right: 0;
+    vertical-align: top !important;
+    text-align: left;
+    height: auto;
+    line-height: 1em;
+}

@@ -47,11 +47,18 @@ namespace DiplomaProject.Domain.Initializer
                     {
                         new Role
                         {
-                            Name = "BaseAdmin"
+                            Name = "DefaultRole",
+                            Priority = 5
                         },
                         new Role
                         {
-                            Name="ProfessionAdmin"
+                            Name = "BaseAdmin",
+                            Priority = 1
+                        },
+                        new Role
+                        {
+                            Name="ProfessionAdmin",
+                            Priority = 3
                         }
                     };
                     foreach (var role in roles)
@@ -111,6 +118,7 @@ namespace DiplomaProject.Domain.Initializer
                         await _userManager.CreateAsync(user, password);
                         await _userManager.AddToRoleAsync(user, "ProfessionAdmin");
                     }
+                    await _userManager.RemoveFromRolesAsync(users[0], await _userManager.GetRolesAsync(users[0]));
                     await _userManager.AddToRoleAsync(users[0], "BaseAdmin");
                     await _context.SaveChangesAsync();
                 }
@@ -220,7 +228,7 @@ namespace DiplomaProject.Domain.Initializer
                         },
                         new InitialOutCome
                         {
-                            Name = "Խրագրային ապահովման թեստավորման հմտություն",
+                            Name = "Ծրագրային ապահովման թեստավորման հմտություն",
                             SubjectId = 1,
                             TypeId = 3
                         },

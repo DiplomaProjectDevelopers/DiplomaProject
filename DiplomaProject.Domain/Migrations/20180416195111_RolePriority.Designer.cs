@@ -11,9 +11,10 @@ using System;
 namespace DiplomaProject.Domain.Migrations
 {
     [DbContext(typeof(DiplomaProjectContext))]
-    partial class DiplomaProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20180416195111_RolePriority")]
+    partial class RolePriority
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -344,15 +345,11 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.Property<int>("Level");
 
-                    b.Property<int?>("ModuleId");
-
                     b.Property<string>("Name");
 
                     b.Property<int?>("PracticalHours");
 
                     b.Property<int?>("ProfessionId");
-
-                    b.Property<int?>("SubjectModuleId");
 
                     b.Property<int?>("TotalHours");
 
@@ -360,21 +357,7 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.HasIndex("ProfessionId");
 
-                    b.HasIndex("SubjectModuleId");
-
                     b.ToTable("Subjects");
-                });
-
-            modelBuilder.Entity("DiplomaProject.Domain.Entities.SubjectModule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SubjectModules");
                 });
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.User", b =>
@@ -624,10 +607,6 @@ namespace DiplomaProject.Domain.Migrations
                     b.HasOne("DiplomaProject.Domain.Entities.Profession", "Profession")
                         .WithMany()
                         .HasForeignKey("ProfessionId");
-
-                    b.HasOne("DiplomaProject.Domain.Entities.SubjectModule", "SubjectModule")
-                        .WithMany("Subjects")
-                        .HasForeignKey("SubjectModuleId");
                 });
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.UserRole", b =>

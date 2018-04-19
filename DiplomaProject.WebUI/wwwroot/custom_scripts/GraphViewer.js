@@ -7,10 +7,11 @@
     nodes.forEach((node, index) => {
         graph.nodes.push({
             id: node.Id,
-            label: node.Name,
+            label: node.Subject ? `${node.Name}(${node.Subject})` : node.Name,
             x: Math.random(),
             y: Math.random(),
             size: Math.random(),
+            type: 'cycle',
             color: node.IsNew ? '#33ccff' : '#00cc66'
         });
     });
@@ -29,14 +30,18 @@
         container: 'graph-container',
         settings: {
             labelColor: 'yellow',
-            autoResize: false,
+            autoResize: true,
             autoRescale: true,
-            maxNodeSize: 4,
-            minNodeSize: 4,
+            maxNodeSize: 8,
+            minNodeSize: 8,
             maxEdgeSize: 2,
             minEdgeSize: 2,
             minArrowSize: 5,
+            doubleClickEnabled: false,
+            mouseEnabled: true,
+            mouseWheelEnabled: false,
             borderColor: '#eee'
         }
-    })
+    });
+    var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
 }

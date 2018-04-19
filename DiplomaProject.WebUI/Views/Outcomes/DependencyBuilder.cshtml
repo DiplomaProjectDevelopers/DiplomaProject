@@ -1,20 +1,20 @@
 ﻿@model IEnumerable<EdgeViewModel>
 
 @{
-    ViewData["Title"] = "GraphPage";
+    ViewData["Title"] = "Կառուցել կապերը";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>Outcomes dependencies</h2>
-<p>Make dependencies between outcomes for the selected profession.</p>
+<h2>Վերջնարդյունքների կապեր</h2>
+<p>Կառուցեք վերջնարդյունքների միջև կապերը ընտրված մասնագիտության համար</p>
 <div>
     <div>
         <div>
             <div>
                 <span>
-                    Selected Profession <em>@ViewBag.Profession?.Name</em>
+                    Ընտրված մասնագիտությունը՝ <em>@ViewBag.Profession?.Name</em>
                 </span>
                 <a class="btn btn-link text-right" onclick="location.href ='@Url.Action("GraphViewer", "Outcomes", new { professionId = ViewBag.Profession?.Id})'">
-                    Graph viewer
+                    Դիտել գրաֆիկական ներկայացումը
                 </a>
             </div>
             <div id="message" class="text-info"></div>
@@ -22,11 +22,11 @@
         <div id="dependencies">
         </div>
         <div id="infoBlock" class="text-info">
-            <span style="color:darkslateblue">* Options with this color are added new.</span>
+            <span style="color:darkslateblue">* Այս գույնով նշված տարբերակները հանդիսանում են նոր վերջնարդյունքներ</span>
         </div>
         <div class="row">
             <div class="col-md-2">
-                <a onclick="addDependency()" class="btn btn-default glyphicon-plus">Add Dependency</a>
+                <a onclick="addDependency()" class="btn btn-default glyphicon-plus">Ավելացնել նոր կապ</a>
             </div>
         </div>
     </div>
@@ -34,8 +34,8 @@
         <hr />
     </div>
     <div>
-        <a class="btn btn-primary" onclick="onSubmit()">Save</a>
-        <a class="btn btn-link" onclick="location.href='@Url.Action("Index", "Outcomes" )'">Cancel</a>
+        <a class="btn btn-primary" onclick="onSubmit()">Պահպանել</a>
+        <a class="btn btn-link" onclick="location.href='@Url.Action("Index", "Outcomes" )'">Չեղարկել</a>
     </div>
 </div>
 @section Styles{
@@ -51,10 +51,15 @@
         $(document).ready(function ()
         {
                 $(document).ready(() => {
-                    let edges = '@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))';
-                    if (!sessionStorage.getItem('edges'))
-                    {
-                        sessionStorage.setItem('edges', edges || JSON.stringify([]));
+                    const edges = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))');
+                    const nodes = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Outcomes)))');
+                    nodes.forEach(node => {
+                        if (node.Subject)
+                            node.Name = `${node.Name}(${node.Subject})`;
+
+                    });
+                    if (!sessionStorage.getItem('edges')) {
+                        sessionStorage.setItem('edges', JSON.stringify(edges || []));
                     }
                     if (!sessionStorage.getItem('nextId'))
                     {
@@ -62,9 +67,8 @@
                     }
                     if (!sessionStorage.getItem('nodes'))
                     {
-                        sessionStorage.setItem('nodes', '@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Outcomes)))');
+                        sessionStorage.setItem('nodes', JSON.stringify(nodes || []));
                     }
-                    edges = JSON.parse(sessionStorage.getItem('edges'));
                     updateDependencies(edges);
                  });
     });

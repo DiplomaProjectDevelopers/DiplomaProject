@@ -34,15 +34,20 @@ namespace DiplomaProject.WebUI.Controllers
         private IActionResult Router()
         {
             var user = userManager.GetUserAsync(User).Result;
-            if (userManager.IsInRoleAsync(user, "BaseAdmin").Result)
+            var roles = roleManager.Roles.Where(r => userManager.GetRolesAsync(user).Result.Contains(r.Name));
+            var primaryRole = roles.OrderBy(r => r.Priority).First();
+            switch (primaryRole?.Name?.ToLower())
             {
-                return RedirectToAction("GetUsers");
+                case "baseadmin":
+                    return RedirectToAction("GetUsers");
+                case "professionadmin":
+                    return RedirectToAction(nameof(OutcomesController.Index), "Outcomes");
+                case "defaultrole":
+                    var model = mapper.Map<UserViewModel>(user);
+                    return View("DefaultRoleUserPage", model);
+                default:
+                    return NotFound();
             }
-            if (userManager.IsInRoleAsync(user, "PROFESSIONADMIN").Result)
-            {
-                return RedirectToAction(nameof(OutcomesController.Index), "Outcomes");
-            }
-            return NotFound();
         }
 
         [HttpGet("Users")]
@@ -104,6 +109,7 @@ namespace DiplomaProject.WebUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> LogOut()
         {
             await service.SignOutAsync();
@@ -129,9 +135,10 @@ namespace DiplomaProject.WebUI.Controllers
             if (ModelState.IsValid)
             {
                 var user = mapper.Map<User>(model);
-                var result = await userManager.CreateAsync(user);
+                var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(user, "DefaultRole");
                     TempData["UserRegistered"] = Messages.USER_ADDED_SUCCESS;
                     return RedirectToAction("Login");
                 }
@@ -151,14 +158,6 @@ namespace DiplomaProject.WebUI.Controllers
             var roleId = model.RoleId;
             var user = await userManager.FindByIdAsync(userId);
             var role = await roleManager.FindByIdAsync(roleId);
-            if (roleManager.Roles.Count() == 2)
-            {
-                await roleManager.CreateAsync(new Role
-                {
-                    Name = "TestRole",
-                    NormalizedName = "TESTROLE",
-                });
-            }
             if (user != null && role != null)
             {
                 if (await userManager.IsInRoleAsync(user, role.Name) == false)

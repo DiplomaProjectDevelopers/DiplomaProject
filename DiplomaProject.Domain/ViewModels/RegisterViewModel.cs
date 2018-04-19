@@ -7,18 +7,18 @@ namespace DiplomaProject.Domain.ViewModels
 {
     public class RegisterViewModel
     {
-        [Required(ErrorMessage = "This field can't be empty")]
-        [Display(Name = "Username *")]
+        [Required(ErrorMessage = "Այդ դաշտը չի կարող դատարկ լինել")]
+        [Display(Name = "Մուտքանուն *")]
         [StringLength(32, MinimumLength =3)]
         public string Username { get; set; }
 
-        [EmailAddress(ErrorMessage ="Incorrect email format")]
-        [Required(ErrorMessage ="This field can't be empty")]
+        [EmailAddress(ErrorMessage ="Էլփոստի սխալ ֆորմատ")]
+        [Required(ErrorMessage = "Այդ դաշտը չի կարող դատարկ լինել")]
         [Display(Name ="Email *")]
         public string Email { get; set; }
 
         [Required]
-        [Display(Name ="Password *")]
+        [Display(Name ="Գաղտնաբառ *")]
         [DataType(DataType.Password)]
         [StringLength(32,  MinimumLength = 6)]
         public string Password { get; set; }
@@ -26,28 +26,29 @@ namespace DiplomaProject.Domain.ViewModels
         [Required]
         [StringLength(32, MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "The fields Password and Confirm Password are different.")]
-        [Display(Name = "Confirm password *")]
+        [Compare("Password", ErrorMessage = "<<\"Գաղտնաբառ\" և \"Հաստատել գաղտնաբառը\" դաշտերի պարունակությունը չեն համընկնում")]
+        [Display(Name = "Հաստատել գաղտնաբառը *")]
         public string ConfirmPassword { get; set; }
 
-        [Display(Name ="Date of birth")]
+        [Display(Name ="Ծննդյան տարեթիվ")]
         [DataType(DataType.Date)]
         [Range(typeof (DateTime),"1900-01-01","2018-01-01")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? BirthDate { get; set; }
 
-        [Display(Name = "First Name")]
+        [Display(Name = "Անուն")]
         [StringLength(40, MinimumLength =2)]
         public string FirstName { get; set; }
 
-        [Display(Name = "Last Name")]
+        [Display(Name = "Ազգանուն")]
         [StringLength(50, MinimumLength =2)]
         public string LastName { get; set; }
 
         [Phone]
-        [Display(Name ="Phone number")]
+        [Display(Name ="Հեռախոսահամար")]
         public string PhoneNumber { get; set; }
 
+        [Display(Name = "Սեռ")]
         public bool? Gender { get; set; }
     }
 }

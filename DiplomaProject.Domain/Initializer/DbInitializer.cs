@@ -47,11 +47,18 @@ namespace DiplomaProject.Domain.Initializer
                     {
                         new Role
                         {
-                            Name = "BaseAdmin"
+                            Name = "DefaultRole",
+                            Priority = 5
                         },
                         new Role
                         {
-                            Name="ProfessionAdmin"
+                            Name = "BaseAdmin",
+                            Priority = 1
+                        },
+                        new Role
+                        {
+                            Name="ProfessionAdmin",
+                            Priority = 3
                         }
                     };
                     foreach (var role in roles)
@@ -101,7 +108,7 @@ namespace DiplomaProject.Domain.Initializer
                         LastName = "Sargsyan",
                         UserName = "kim_sargsyan",
                         Email = "kim.sargsian@gmail.com",
-                        EmailConfirmed = true                        
+                        EmailConfirmed = true
                     }
                 };
                 if (!_context.Users.Any())
@@ -111,10 +118,52 @@ namespace DiplomaProject.Domain.Initializer
                         await _userManager.CreateAsync(user, password);
                         await _userManager.AddToRoleAsync(user, "ProfessionAdmin");
                     }
+                    await _userManager.RemoveFromRolesAsync(users[0], await _userManager.GetRolesAsync(users[0]));
                     await _userManager.AddToRoleAsync(users[0], "BaseAdmin");
                     await _context.SaveChangesAsync();
                 }
 
+                if (!_context.StakeHolderTypes.Any())
+                {
+                    var types = new List<StakeHolderType>
+                    {
+                        new StakeHolderType
+                        {
+                            TypeName = "Գործատու",
+                            ProfessionName = "Տնօրեն",
+                            Coefficient = 1
+                        },
+                        new StakeHolderType
+                        {
+                            TypeName = "Գործատու",
+                            ProfessionName = "Թիմի ղեկավար",
+                            Coefficient = 5
+                        },
+                        new StakeHolderType
+                        {
+                            TypeName = "Գործատու",
+                            ProfessionName = "Ծրագրավորող",
+                            Coefficient = 4
+                        },
+                        new StakeHolderType
+                        {
+                            TypeName = "Դասախոս",
+                            Coefficient = 5
+                        },
+                        new StakeHolderType
+                        {
+                            TypeName = "Ուսանող",
+                            Coefficient = 2
+                        },
+                        new StakeHolderType
+                        {
+                            TypeName = "Շրջանավարտ",
+                            Coefficient = 3
+                        }
+                    };
+                    _context.StakeHolderTypes.AddRange(types);
+                    _context.SaveChanges();
+                }
                 if (!_context.Faculties.Any())
                 {
                     var faculties = new List<Faculty>
@@ -220,7 +269,7 @@ namespace DiplomaProject.Domain.Initializer
                         },
                         new InitialOutCome
                         {
-                            Name = "Խրագրային ապահովման թեստավորման հմտություն",
+                            Name = "Ծրագրային ապահովման թեստավորման հմտություն",
                             SubjectId = 1,
                             TypeId = 3
                         },

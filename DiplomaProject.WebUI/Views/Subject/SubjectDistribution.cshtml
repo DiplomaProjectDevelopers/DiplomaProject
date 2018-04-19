@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<SubjectViewModel>
 @{
     ViewData["Title"] = "SubjectDistribution";
 }
@@ -19,9 +19,18 @@
             </select>
         </div>
         <div class="col-sm ">
-            <laselectarray" value="Վերջնարդյունք" class="form-control" readonly>
+            <laselectarray" value="Վերջնաարդյունք" class="form-control" readonly>
         </div>
     </div>
 </div>
 
+@foreach(var item in ViewBag.ListOfFinalOutcome)
+{
+    if (item.TotalWeight == 5)    //տոկոս?
+    {
 
+
+    }
+
+
+}

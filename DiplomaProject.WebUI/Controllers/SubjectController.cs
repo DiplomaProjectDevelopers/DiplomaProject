@@ -23,10 +23,33 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult Index(SubjectViewModel profession)
         {
             var subject = service.GetAll<Subject>().ToList();
-            var model = subject.Select(sb => mapper.Map<SubjectViewModel>(sb));
-            var subjectlist = model.Select(sb => sb.Name).ToList();
+            var sbmodel = subject.Select(sb => mapper.Map<SubjectViewModel>(sb)).ToList();
+            var subjectlist = sbmodel.Select(sb => sb.Name).ToList();
             ViewBag.ListofSubject = subjectlist;
-            return View();
+            var finaloutcome = service.GetAll<FinalOutCome>().ToList();
+            var fomodel = finaloutcome.Select(fo => mapper.Map<FinalOutcomeViewModel>(fo));
+            ViewBag.ListOfFinalOutcome = finaloutcome;
+            return View("SubjectDistribution",fomodel);
         }
+   
+        //[HttpGet]
+        //public IActionResult Distribution()
+        //{
+        //    var finaloutcome = service.GetAll<FinalOutCome>().ToList();
+        //    var fomodel = finaloutcome.Select(fo => mapper.Map<FinalOutcomeViewModel>(fo)).ToList();
+        //    var finaloutcomelist = fomodel.Where(o => o.SubjectId = SubjectId && o.TypeId == Wkid);
+        //    var finaloutcomelist1 = fomodel.Where(o => o.SubjectId = SubjectId && o.TypeId == Wsid);
+        //    var finaloutcomelist2 = fomodel.Where(o => o.SubjectId = SubjectId && o.TypeId == Waid);
+
+        //    var sum = finaloutcomelist + finaloutcomelist1 + finaloutcomelist2;
+        //    var mijin_wk = finaloutcomelist * 100 / sum;
+        //    var mijin_ws = finaloutcomelist1 * 100 / sum;
+        //    var mijin_wa = finaloutcomelist2 * 100 / sum;
+        //    return View();
+           
+        //}
+
+      
+
     }
 }

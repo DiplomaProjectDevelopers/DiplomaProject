@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "Հարցաթերթիկ";
+}
+
+<div class="space">
+    <div class="page">
+        <h2>@ViewBag.SelectValue մասնագետի վերջնարդյունքի հարցում</h2>
+        <div asp-action="Index" method="get" class="profession" role="form">
+            <h4>Խնդում ենք նախ ընտրել Ձեր պաշտոնը</h4>
+            <select id="Branch"
+                    class="Branchclass"
+                    asp-items="@(new SelectList(ViewBag.ListOfTypeName,"Id","TypeName"))"></select>
+        </div>
+        <form class="Form">
+            @foreach (var subject in ViewBag.ListOfSubject)
+            {
+            int k = 1;
+        @*@if (subject.ProfessionId == ViewBag.SelectId)
+    {*@
+        <p class="Subject">Առարկա՝ @subject.Name </p>
+        @foreach (var outcome in ViewBag.ListOfOutcomes)
+                                    {
+                                        if (outcome.SubjectId == subject.Id)
+                                        {
+                                            <p>@k. @outcome.Name</p>
+                                            <div class="Radio">
+                                                <label style="margin-left:15px">1</label>
+                                                <label style="margin-left:20px">2</label>
+                                                <label style="margin-left:20px">3</label>
+                                                <label style="margin-left:19px">4</label>
+                                                <label style="margin-left:19px">5</label>
+                                                <label style="margin-left:19px">6</label>
+                                                <label style="margin-left:19px">7</label>
+                                                <label style="margin-left:19px">8</label>
+                                                <label style="margin-left:19px">9</label>
+                                                <label style="margin-left:15px">10</label>
+                                                <br />
+                                                <input style="margin-left:14px" type="radio" name="mek" value="1" />
+                                                <input style="margin-left:14px" type="radio" name="erku" value="2" />
+                                                <input style="margin-left:14px" type="radio" name="ereq" value="3" />
+                                                <input style="margin-left:14px" type="radio" name="chors" value="4" />
+                                                <input style="margin-left:14px" type="radio" name="hing" value="5" />
+                                                <input style="margin-left:14px" type="radio" name="vec" value="6" />
+                                                <input style="margin-left:14px" type="radio" name="yot" value="7" />
+                                                <input style="margin-left:14px" type="radio" name="ut" value="8" />
+                                                <input style="margin-left:14px" type="radio" name="iny" value="9" />
+                                                <input style="margin-left:14px" type="radio" name="tas" value="10" />
+                                            </div>
+                                            k++;
+                                        }
+                                    }
+        @*}*@
+            }
+            <div class="Azat">
+                <input class="btn btn-info" type="submit" value="Հաստատել" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Styles {
+    <link href="~/Content/Outcomes/Questionnaire2.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="~/Content/Images/questionnaire.jpg" rel="icon" />
+}

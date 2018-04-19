@@ -19,57 +19,57 @@ namespace DiplomaProject.WebUI.Controllers
 
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
+            var branch = service.GetAll<Branch>().ToList();
+            var branchmodel = branch.Select(b => mapper.Map<BranchViewModel>(b)).ToList();
+            ViewBag.ListOfBranch = branchmodel;
+            var professions = service.GetAll<Profession>().ToList();
+            var proffmodel = professions.Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            ViewBag.ListofProfession = proffmodel;
             var stakeHolders = service.GetAll<StakeHolder>().ToList();
-            var model = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s));
-            List<StakeHolderViewModel> stakeHoldersList = model.Select(s => new StakeHolderViewModel { CompanyName = s.CompanyName }).ToList();
-            stakeHoldersList.Insert(0, new StakeHolderViewModel { Id = 0, CompanyName = "կազմակերպություն" });
-            ViewBag.ListofStakeHolder = stakeHoldersList;
-            return View("Questionnaire1", model);
+            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s));
+            ViewBag.ListofCompany = sthmodel;
+            var stakeHoldersType = service.GetAll<StakeHolderType>().ToList();
+            var sthtmodel = stakeHoldersType.Select(st => mapper.Map<StakeHolderTypeViewModel>(st)).ToList();
+            ViewBag.ListOfTypeName = sthtmodel.Distinct();
+            return View("Questionnaire1");
         }
 
+        [HttpPost]
+        public IActionResult Index(int branchid)
+        {
+            var professions = service.GetAll<Profession>().ToList();
+            var proffmodel = professions.Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            var stakeHolders = service.GetAll<StakeHolder>().ToList();
+            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s));
+            if (branchid != 0)
+            {
+                ViewBag.ListofProfession = proffmodel.Where(p => p.BranchId.HasValue && p.BranchId.Value == branchid);
+                ViewBag.ListofCompany = sthmodel.Where(s => s.BranchId.HasValue && s.BranchId.Value == branchid);
+            }
+            else
+            {
+                var profflist = proffmodel.Select(p => p.Name).ToList();
+                ViewBag.ListofProfession = profflist;
+            }
+            return View("Questionnaire1");
+        }
 
-        //private readonly DiplomaProjectContext context;
-        //public StakeHolderController(DiplomaProjectContext context)
-        //{
-        //    this.context = context;
-        //}
+       public IActionResult Outecome()
+        {
+            var stakeHoldersType = service.GetAll<StakeHolderType>().ToList();
+            var sthtmodel = stakeHoldersType.Select(st => mapper.Map<StakeHolderTypeViewModel>(st)).ToList();
+            ViewBag.ListOfTypeName = sthtmodel.Distinct();
+            var subject = service.GetAll<InitialSubject>().ToList();
+            var subjectmodel = subject.Select(sb => mapper.Map<InitialSubjectViewModel>(sb)).ToList();
+            ViewBag.ListOfSubject = subjectmodel;
+            var outcome = service.GetAll<InitialOutCome>().ToList();
+            var outcomemodel = outcome.Select(o => mapper.Map<InitialOutcomeViewModel>(o)).ToList();
+            ViewBag.ListOfOutcomes = outcomemodel;
 
-        //[HttpPost]
-        //public IActionResult Index(StakeHolder stakeHolder)
-        //{
-        //    String selectValue = stakeHolder.CompanyName;
-        //    ViewBag.SelectValue = stakeHolder.CompanyName;
-        //    List<StakeHolder> stakeHolderList = new List<StakeHolder>();
-        //    stakeHolderList = (from product in context.StakeHolders select product).ToList();
-        //    stakeHolderList.Insert(0, new StakeHolder { Id = 0, CompanyName = "կազմակերպություն" });
-        //    ViewBag.ListofStakeHolder = stakeHolderList;
-        //    return View("Questionnaire1");
-        //}
-
-
-        //public StakeHolderController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
-        //    : base(service, mapper, userManager, signInManager, roleManager)
-        //{
-
-        //}
-
-        //public IActionResult Index()
-        //{
-        //    return Questionnaire();
-        //}
-
-        //[NonAction]
-        //private IActionResult Questionnaire()
-        //{
-        //    var user = userManager.GetUserAsync(User).Result;
-        //    var stakeHolders = service.GetAll<StakeHolder>().ToList();
-        //    var model = stakeHolders.Where(o => user.StakeHolderTypes.Select(p => p.Id).Contains(o.TypeId.Value)).Select(o => mapper.Map<StakeHolderViewModel>(o));
-
-
-        //    return View("Questionnaire1", model);
-        //}
+            return View("Questionnaire2");
+        }
     }
 }
-

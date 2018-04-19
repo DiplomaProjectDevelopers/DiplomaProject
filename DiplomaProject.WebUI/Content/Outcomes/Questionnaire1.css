@@ -1,12 +1,7 @@
-﻿.block {
-    height: 100%;
-    width: 100%;
-}
-
-.nav {
+﻿.space {
+    max-width: 100%;
     height: 20px;
-    width: 100%;
-    background-color: darkturquoise;
+    background-color:darkturquoise;
     padding-top: 100px;
     padding-bottom: 25px
 }
@@ -26,11 +21,15 @@ h2 {
 
 h4 {
     padding-top: 50px;
-    padding-left: 60px;
+    padding-left: 150px;
 }
 
 select {
     width: 300px;
+}
+
+.branch {
+    padding-left: 150px;
 }
 
 .profession {
@@ -46,6 +45,7 @@ select {
 }
 
 .Azat {
-    padding-top: 270px;
+    padding-top: 200px;
     padding-left: 270px;
 }
+

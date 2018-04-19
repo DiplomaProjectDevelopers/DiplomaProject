@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "Հարցաթերթիկի կազմում";
+}
+
+<div class="space">
+    <div class="page">
+        <form asp-controller="StakeHolder">
+            <h2>Հարցաթերթիկի կազմում</h2>
+            <div asp-action="Index" method="get" class="profession" role="form">
+                <h4>Ընտրել ճյուղը</h4>
+                <select id="Branch"
+                        class="Branchclass"
+                        asp-items="@(new SelectList(ViewBag.ListOfBranch,"Id","Name"))"></select>
+            </div>
+            <div asp-action="Index" method="post" class="profession" role="form">
+                <h4>Ընտրել մասնագիտությունը</h4>
+                <select id="Profession"
+                        class="Professionclass"
+                        asp-items="@(new SelectList(ViewBag.ListofProfession,"Id","Name"))"></select>
+            </div>
+            <div asp-action="Index" method="get" class="checkbox">
+                <h4>Ընտրել շահակցին</h4>
+                @foreach (var item in ViewBag.ListOfTypeName)
+        {
+            <input class="Checkbox" type="checkbox" id="@item.Id" value="@item.TypeName" />@item.TypeName<br />
+}
+            </div>
+            <div asp-action="Index" method="get" class="company">
+                <h4>Ընտրել կազմակերպությունը</h4>
+                <select id="Company"
+                        asp-items="@(new SelectList(ViewBag.ListofCompany,"Id", "CompanyName"))"></select>
+                <div class="Azat">
+                    <input class="btn btn-info" type="submit" value="Հաստատել" id="Hastatel" onclick="redirectOnClick()" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Styles {
+    <link href="~/Content/Outcomes/Questionnaire1.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="~/Content/Images/questionnaire.png" rel="icon" />
+}
+
+@section Scripts{
+        <script src="/Scripts/Questionnaire1.js" type="text/javascript"></script>
+       <script>
+            $(function () {
+                $('#Branch').change(function () {
+                    var selectedBranch = $('#Branch option:selected').index();
+                    $.ajax({
+                        type: "POST",
+                        url: "/StakeHolder/Index",
+                        contentType: "application/json; charset=utf-8",
+                        data: '{"branchid":"' + selectedBranch +'"}',
+                        dataType: "html",
+                        success: function (result, status, xhr) {
+                            $("#Profession").html(result);
+                        },
+                    });
+
+                })
+            });
+        </script>
+    }

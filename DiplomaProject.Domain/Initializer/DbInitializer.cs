@@ -192,6 +192,67 @@ namespace DiplomaProject.Domain.Initializer
                     _context.SaveChanges();
                 }
 
+                if (!_context.Branches.Any())
+                {
+                    var branches = new List<Branch>
+                    {
+                        new Branch
+                        {
+                            Name = "Տեղեկատվական ոլորտ"
+                        },
+                        new Branch
+                        {
+                            Name = "Տեխնոլոգիական ոլորտ"
+                        }
+                    };
+                    _context.Branches.AddRange(branches);
+                    _context.SaveChanges();
+                }
+
+                if (!_context.StakeHolders.Any())
+                {
+                    var stakeholders = new List<StakeHolder>
+                    {
+                        new StakeHolder
+                        {
+                            FirstName = "Hakob",
+                            LastName = "Papazyan",
+                            CompanyName = "Factumsoft LLC",
+                            BranchId = 1,
+                            Email = "hakobpapazyan2@gmail.com",
+                            TypeId = 5
+                        },
+                        new StakeHolder
+                        {
+                            FirstName = "Kim",
+                            LastName = "Sargsyan",
+                            BranchId = 1,
+                            Email = "kim.sargsian@gmail.com",
+                            TypeId = 2
+                        },
+                        new StakeHolder
+                        {
+                            FirstName = "Kristine",
+                            LastName = "Serobyan",
+                            CompanyName = "Appa",
+                            BranchId = 1,
+                            Email = "serobyanqristine@gmail.com",
+                            TypeId = 3
+                        },
+                        new StakeHolder
+                        {
+                            FirstName = "Lian",
+                            LastName = "Grigoryan",
+                            CompanyName = "NPUA",
+                            BranchId = 1,
+                            Email = "lgrigoryan25@gmail.com",
+                            TypeId = 2
+                        }
+                    };
+                    _context.AddRange(stakeholders);
+                    _context.SaveChanges();
+                }
+
                 if (!_context.Professions.Any())
                 {
                     var professions = new List<Profession>
@@ -200,11 +261,13 @@ namespace DiplomaProject.Domain.Initializer
                         {
                             Name = "Տեղեկատվական անվտանգություն",
                             DepartmentId = 1,
+                            BranchId = 1
                         },
                         new Profession
                         {
                             Name = "Ինֆորմատիկա և ծրագրավորում",
-                            DepartmentId = 1
+                            DepartmentId = 1,
+                            BranchId = 1
                         }
                     };
                     _context.Professions.AddRange(professions);
@@ -258,44 +321,44 @@ namespace DiplomaProject.Domain.Initializer
                         new InitialOutCome
                         {
                             Name = "Կիրառական ծրագրերի գործնական նախագծման կարողություն",
-                            SubjectId = 1,
-                            TypeId = 2
+                            InitialSubjectId = 1,
+                            OutComeTypeId = 2
                         },
                         new InitialOutCome
                         {
                             Name = "Պաշտպանված ծրագրային ապահովման նախագծման կարողություն",
-                            SubjectId = 1,
-                            TypeId = 2
+                            InitialSubjectId = 1,
+                            OutComeTypeId = 2
                         },
                         new InitialOutCome
                         {
                             Name = "Ծրագրային ապահովման թեստավորման հմտություն",
-                            SubjectId = 1,
-                            TypeId = 3
+                            InitialSubjectId = 1,
+                            OutComeTypeId = 3
                         },
                         new InitialOutCome
                         {
                             Name ="Մասնագիտական գործնական գիտելիքներ",
-                            SubjectId = 1,
-                            TypeId = 1
+                            InitialSubjectId = 1,
+                            OutComeTypeId = 1
                         },
                         new InitialOutCome
                         {
                             Name= "Մասնագիտական գործնական հմտություններ",
-                            SubjectId = 1,
-                            TypeId = 3
+                            InitialSubjectId = 1,
+                            OutComeTypeId = 3
                         },
                         new InitialOutCome
                         {
                             Name = "Պաշտպանված քոմփյութերային համակարգերի նախագծման կարողություններ",
-                            SubjectId = 2,
-                            TypeId = 2
+                            InitialSubjectId = 2,
+                            OutComeTypeId = 2
                         },
                         new InitialOutCome
                         {
                             Name = "Մասնագիտական գործնական գիտելիքներ",
-                            SubjectId = 2,
-                            TypeId = 1
+                            InitialSubjectId = 2,
+                            OutComeTypeId = 1
                         }
                     };
                     _context.InitialOutComes.AddRange(outComes);

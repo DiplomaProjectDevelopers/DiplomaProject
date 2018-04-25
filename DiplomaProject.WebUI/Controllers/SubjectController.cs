@@ -28,5 +28,20 @@ namespace DiplomaProject.WebUI.Controllers
             ViewBag.ListofSubject = subjectlist;
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveSubjects(SubjectListViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                throw new Exception();
+            }
+            foreach (var vm in model.Subjects)
+            {
+                var subject = mapper.Map<Subject>(vm);
+
+            }
+            return View("~/Views/Outcomes/SubjectListPreview", model);
+        }
     }
 }

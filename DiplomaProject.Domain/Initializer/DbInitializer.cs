@@ -209,6 +209,60 @@ namespace DiplomaProject.Domain.Initializer
                     _context.SaveChanges();
                 }
 
+                if (!_context.SubjectModules.Any())
+                {
+                    var modules = new List<SubjectModule>()
+                    {
+                        new SubjectModule
+                        {
+                            Name = "Լեզուների մոդուլ",
+                            Group = "Ընդհանուր կրթության կառուցամաս"
+                        },
+                        new SubjectModule
+                        {
+                            Name = "Հումանիտար դասընթացների մոդուլ",
+                            Group = "Ընդհանուր կրթության կառուցամաս"
+                        },
+                        new SubjectModule
+                        {
+                            Name = "Կազմակերպատնտեսագիտական դասընթացների մոդուլ",
+                            Group = "Ընդհանուր կրթության կառուցամաս"
+                        },
+                        new SubjectModule
+                        {
+                            Name = "Մաթեմատիկական և բնագիտական դասընթացների մոդուլ",
+                            Group = "Ընդհանուր կրթության կառուցամաս"
+                        },
+                        new SubjectModule
+                        {
+                            Name = "Ճարտարագիտական դասընթացների մոդուլ",
+                            Group = "Ընդհանուր կրթության կառուցամաս"
+                        },
+                        new SubjectModule
+                        {
+                            Name = "Բնագավառի պարտադիր ուսուցման դասընթացների մոդուլներ",
+                            Group = "Մասնագիտական կրթության կառուցամաս"
+                        },
+                        new SubjectModule
+                        {
+                            Name = "Մասնագիտական պարտադիր ուսուցման դասընթացների մոդուլներ",
+                            Group = "Մասնագիտական կրթության կառուցամաս"
+                        },
+                        new SubjectModule
+                        {
+                            Name = "Մասնագիտացման պարտադիր ուսուցման դասընթացների մոդուլներ",
+                            Group = "Մասնագիտական կրթության կառուցամաս"
+                        },
+                        new SubjectModule
+                        {
+                            Name = "Մասնագիտացման կամընտրական ուսուցման դասընթացների մոդուլ",
+                            Group = "Մասնագիտական կրթության կառուցամաս"
+                        }
+                    };
+                    _context.SubjectModules.AddRange(modules);
+                    _context.SaveChanges();
+                    
+                }
                 if (!_context.StakeHolders.Any())
                 {
                     var stakeholders = new List<StakeHolder>

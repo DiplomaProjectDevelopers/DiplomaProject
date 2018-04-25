@@ -14,6 +14,8 @@ namespace DiplomaProject.Domain.Entities
 
         public string Name { get; set; }
 
+        public string Group { get; set; }
+
         public ICollection<Subject> Subjects { get; set; }
     }
 }

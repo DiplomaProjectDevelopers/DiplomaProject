@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DiplomaProject.Domain.Entities;
 using DiplomaProject.Domain.Interfaces;
+using DiplomaProject.Domain.Models;
 using DiplomaProject.Domain.Services;
 using DiplomaProject.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -64,6 +66,7 @@ namespace DiplomaProject.WebUI.Controllers
             return View("DependencyBuilder", viewModel);
         }
 
+        [HttpGet]
         public IActionResult GraphViewer(int professionId)
         {
             ViewBag.Profession = new ProfessionViewModel
@@ -89,6 +92,7 @@ namespace DiplomaProject.WebUI.Controllers
             return View("GraphViewer", viewModel);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveDependencies([FromBody]List<EdgeViewModel> model)
         {
             if (model != null)
@@ -101,6 +105,44 @@ namespace DiplomaProject.WebUI.Controllers
                 });
             }
             return Json("Error");
+        }
+
+        [HttpGet]
+        public IActionResult BuildSubgraphs(int professionId)
+        {
+            var vertices = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).Select(o => o.Id).ToList();
+            var edges = service.GetAll<Edge>().Where(e => e.ProfessionId == professionId).ToList();
+            var graph = new Graph(vertices.Count);
+            foreach (var edge in edges)
+            {
+                var index1 = vertices.FindIndex(v => edge.LeftOutComeId.Value == v);
+                var index2 = vertices.FindIndex(v => edge.RightOutComeId.Value == v);
+                graph.AddEdge(index1, index2);
+            }
+
+            var subgraphs = graph.PrintSCCs();
+            var subjectList = new SubjectListViewModel
+            {
+                ProfessionName = service.GetById<Profession>(professionId)?.Name
+            };
+            for (int i = 0; i < subgraphs.Count; i++)
+            {
+                var subject = new SubjectViewModel
+                {
+                    Id = -(i + 1),
+                    Name = $"Subject_{i}",
+                    ProfessionId = professionId
+                };
+                for (int j = 0; j < subgraphs[i].Count; j++)
+                {
+                    var outcome = service.GetById<FinalOutCome>(vertices[subgraphs[i][j]]);
+                    var model = mapper.Map<OutcomeViewModel>(outcome);
+                    subject.Outcomes.Add(model);
+                }
+                subjectList.Subjects.Add(subject);
+            }
+            ViewBag.Modules = service.GetAll<SubjectModule>().Select(m => mapper.Map<SubjectModuleViewModel>(m)).ToList();
+            return View("SubjectListPreview", subjectList);
         }
 
         [HttpPost]

@@ -6,7 +6,7 @@
 }
 <հ2>Առաջարկվող առարկաները  "@Model.ProfessionName" մասնագիտության համար</հ2>
 <p>Վերջնարդյունքների կապերի  հիման վրա ձևավորել ենք հետևյալ առարկաները</p>
-<form asp-action="SaveSubjects" asp-controller="Subject" method="post">
+<div>
     <div class="row container" id="card-list">
         @*@for (int i = 0; i < Model.Subjects.Count; i++)
             {
@@ -57,10 +57,10 @@
         </div>
     </div>
     <div class="row">
-        <button type="submit" value="Save subjects" class="btn btn-primary">Save subjects</button>
+        <button type="submit" value="Save subjects" class="btn btn-primary" onclick="onSave()">Save subjects</button>
         <button type="button" value="Cancel" asp-action="Cancel" class="btn btn-default">Cancel</button>
     </div>
-</form>
+</div>
 
 @section Scripts{
     <script>
@@ -70,14 +70,12 @@
             model = @Html.Raw(Json.Serialize(Model));
             modules = @Html.Raw(Json.Serialize(ViewBag.Modules));
             renderCards();
-            console.log(model);
-        })
+        });
+
         function onModalLoad(outcomeId, subjectId){
             sessionStorage.clear();
+            sessionStorage.setItem('subjectId', subjectId.toString());
             sessionStorage.setItem('outcomeId', outcomeId.toString());
-            sessionStorage.setItem('subject', subjectId.toString());
-            $('.modal-body select').val(subjectId);
-
         }
 
         $('#moveModal').on('hidden.bs.modal', function () {
@@ -90,7 +88,19 @@
 
         function moveOutcome() {
             const outcomeId = parseInt(sessionStorage.getItem('outcomeId'));
-            const subject = parseInt(sessionStorage.getItem('subjectId'));
+            const subjectId = parseInt(sessionStorage.getItem('subjectId'));
+            const toSubjectId = parseInt(sessionStorage.getItem('toSubjectId'));
+            const currentSubject = model.subjects.find(s => s.id == subjectId);
+            const currentOutcomeIndex = currentSubject.outcomes.findIndex(o => o.id == outcomeId);
+            const currentOutcome = currentSubject.outcomes[currentOutcomeIndex];
+            currentSubject.outcomes.splice(currentOutcomeIndex, 1);
+            const newSubject = model.subjects.find(s => s.id == toSubjectId);
+            newSubject.outcomes.push(currentOutcome);
+            if (!currentSubject.outcomes.length) {
+                const index = model.subjects.findIndex(s => s.id == currentSubject.id);
+                model.subjects.splice(index, 1);
+            }
+            renderCards();
 
         }
     </script>
@@ -118,6 +128,9 @@
                 moduleLabel.innerText = 'Առարկայական մոդուլ';
                 module.appendChild(moduleLabel);
                 const moduleSelect = document.createElement('select');
+                moduleSelect.addEventListener('change', e => {
+                    model.subjects[i].module = e.target.value;                   
+                });
                 moduleSelect.setAttribute('class', 'form-control');
                 const emptyOption = document.createElement('option');
                 emptyOption.value = -1;
@@ -129,9 +142,10 @@
                     option.text = module.name;
                     moduleSelect.appendChild(option);
                 });
+                moduleSelect.value = model.subjects[i].module || -1;
                 module.appendChild(moduleSelect);
                 const span = document.createElement('span');
-                span.setAttribute('class', 'text=danger');
+                span.setAttribute('class', 'text-danger');
                 module.appendChild(span);
                 body.appendChild(module);
 
@@ -143,6 +157,10 @@
                 name.appendChild(nameLabel);
                 const nameInput = document.createElement('input');
                 nameInput.setAttribute('class', 'form-control');
+                nameInput.addEventListener('change', e => {
+                    model.subjects[i].name = e.target.value;
+                });
+                nameInput.value = model.subjects[i].name;
                 name.appendChild(nameInput);
                 const nameSpan = document.createElement('span');
                 nameSpan.setAttribute('class', 'text=danger');
@@ -160,7 +178,10 @@
                     a.setAttribute('data-id', model.subjects[i].outcomes[j].id);
                     const span = document.createElement('span');
                     span.setAttribute('class', 'glyphicon glyphicon-share');
-                    span.addEventListener('click', onModalLoad(model.subjects[i].outcomes[j].id, model.subjects[i].id));
+                    span.onclick = e => {
+                        e.preventDefault();
+                        onModalLoad(model.subjects[i].outcomes[j].id, model.subjects[i].id);
+                    }
                     a.appendChild(span);
                     p.appendChild(a);
                     body.appendChild(p);
@@ -178,18 +199,45 @@
             label.innerText = 'Ընտրեք առարկան, որի մեջ ցանկանում եք տեղափոխել';
             const select = document.createElement('select');
             select.setAttribute('class', 'form-control');
+            const empOption = document.createElement('option');
+            empOption.value = 'NS';
+            empOption.text = 'Ընտրեք առարկան';
+            select.appendChild(empOption);
             model.subjects.forEach(subject => {
                 const option = document.createElement('option');
                 option.value = subject.id;
                 option.text = subject.name;
                 select.appendChild(option);
             });
+            select.addEventListener('change', e => {
+                sessionStorage.setItem('toSubjectId', e.target.value);
+            });
+            select.value = parseInt(sessionStorage.getItem('toSubjectId')) || 'NS';
             const modal = document.getElementById('moveModal_body');
             while (modal.firstChild) {
                 modal.removeChild(modal.firstChild);
             }
             modal.appendChild(label);
             modal.appendChild(select);
+        }
+        function onSave() {
+            const data = model;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify(data),
+                url: "/Subject/SaveSubjects",
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    const message = "Առարկաները հաջողությամբ պահպանվեցին!!!";
+                    document.getElementById('message').innerText = message;
+                    renderCards(data);
+                },
+                error: function (error) {
+                    console.log("Error occured!!");
+                    console.log(error);
+                }
+            });
         }
     </script>
 }

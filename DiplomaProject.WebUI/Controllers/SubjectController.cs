@@ -59,7 +59,7 @@ namespace DiplomaProject.WebUI.Controllers
                 for (int j = 0; j< subject.FinalOutComes.Count; ++j)
                 {
                     var outcome = subject.FinalOutComes.ToList()[j];
-                    outcome.SubjectId = subject.Id;
+                    //outcome.SubjectId = subject.Id;
                     await service.Update(outcome);
                     model.Subjects[i].Outcomes[j] = mapper.Map<OutcomeViewModel>(outcome);
                 }

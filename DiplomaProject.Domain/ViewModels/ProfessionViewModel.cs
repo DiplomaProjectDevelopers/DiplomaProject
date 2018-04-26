@@ -21,6 +21,7 @@ namespace DiplomaProject.Domain.ViewModels
         public byte? MdfullTimeSemesters { get; set; }
         public bool? MdpartTime { get; set; }
         public byte? MdpartTimeSemesters { get; set; }
+        public int? BranchId { get; set; }
         public int? DepartmentId { get; set; }
         public string AdminId { get; set; }
         [Display(Name = "Ամբիոն")]

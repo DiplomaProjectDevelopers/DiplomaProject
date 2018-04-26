@@ -19,6 +19,21 @@ namespace DiplomaProject.WebUI.Controllers
 
         }
 
+        public class Data
+        {
+            public string selectedBranch { get; set; }
+            public string selectedProfession { get; set; }
+            public string selectedStakeholder { get; set; }
+            public string selectedCompany { get; set; }
+        }
+
+        public class DataSecond
+        {
+            public string name { get; set; }
+            public double value { get; set; }
+            public int branch { get; set; }
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -28,40 +43,38 @@ namespace DiplomaProject.WebUI.Controllers
             var professions = service.GetAll<Profession>().ToList();
             var proffmodel = professions.Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
             ViewBag.ListofProfession = proffmodel;
+            ViewBag.ListOfTypeName = service.GetAll<StakeHolderType>().Select(s => new StakeHolderTypeViewModel
+            {
+                Id = s.Id,
+                TypeName = s.ProfessionName ?? s.TypeName
+            });
             var stakeHolders = service.GetAll<StakeHolder>().ToList();
             var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s));
             ViewBag.ListofCompany = sthmodel;
-            var stakeHoldersType = service.GetAll<StakeHolderType>().ToList();
-            var sthtmodel = stakeHoldersType.Select(st => mapper.Map<StakeHolderTypeViewModel>(st)).ToList();
-            ViewBag.ListOfTypeName = sthtmodel.Distinct();
             return View("Questionnaire1");
         }
 
         [HttpPost]
-        public IActionResult Index(int branchid)
+        public JsonResult IndexSel(Data data)
         {
-            var professions = service.GetAll<Profession>().ToList();
-            var proffmodel = professions.Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
-            var stakeHolders = service.GetAll<StakeHolder>().ToList();
-            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s));
-            if (branchid != 0)
+            string[] listSTH = data.selectedStakeholder.Split(",");
+
+            foreach (var item in listSTH)
             {
-                ViewBag.ListofProfession = proffmodel.Where(p => p.BranchId.HasValue && p.BranchId.Value == branchid);
-                ViewBag.ListofCompany = sthmodel.Where(s => s.BranchId.HasValue && s.BranchId.Value == branchid);
+
             }
-            else
-            {
-                var profflist = proffmodel.Select(p => p.Name).ToList();
-                ViewBag.ListofProfession = profflist;
-            }
-            return View("Questionnaire1");
+            ViewBag.ProfessionId = data.selectedProfession;
+            return Json("");
         }
 
-       public IActionResult Outecome()
+        [HttpGet]
+       public IActionResult Outcome()
         {
-            var stakeHoldersType = service.GetAll<StakeHolderType>().ToList();
-            var sthtmodel = stakeHoldersType.Select(st => mapper.Map<StakeHolderTypeViewModel>(st)).ToList();
-            ViewBag.ListOfTypeName = sthtmodel.Distinct();
+            ViewBag.ListOfTypeName = service.GetAll<StakeHolderType>().Select(s => new StakeHolderTypeViewModel
+            {
+                Id = s.Id,
+                TypeName = s.ProfessionName ?? s.TypeName
+            });
             var subject = service.GetAll<InitialSubject>().ToList();
             var subjectmodel = subject.Select(sb => mapper.Map<InitialSubjectViewModel>(sb)).ToList();
             ViewBag.ListOfSubject = subjectmodel;
@@ -70,6 +83,19 @@ namespace DiplomaProject.WebUI.Controllers
             ViewBag.ListOfOutcomes = outcomemodel;
 
             return View("Questionnaire2");
+        }
+
+        [HttpPost]
+        public IActionResult Outcome(DataSecond dataSecond)
+        {
+            var stakeHolders = service.GetAll<StakeHolder>().ToList();
+            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
+            var typeid = sthmodel.Find(s => s.BranchId.Equals(dataSecond.branch)).S
+            var stakeHolderType = service.GetAll<StakeHolderType>().ToList();
+            var sthtypemodel = stakeHolderType.Select(st => mapper.Map<StakeHolderTypeViewModel>(st)).ToList();
+            var coefficient = sthtypemodel.Find(st => st.Id.Equals(typeid)).Select(st => st.Coefficient.Value);
+            int outcomeWeight = dataSecond.value * coefficient;
+            return View();
         }
     }
 }

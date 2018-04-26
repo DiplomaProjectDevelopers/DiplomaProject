@@ -5,33 +5,33 @@
 
 <div class="space">
     <div class="page">
-        <form asp-controller="StakeHolder">
+        <form asp-controller="StakeHolder" asp-action="Index" method="get">
             <h2>Հարցաթերթիկի կազմում</h2>
-            <div asp-action="Index" method="get" class="profession" role="form">
+            <div id="BranchDiv" class="profession" role="form">
                 <h4>Ընտրել ճյուղը</h4>
                 <select id="Branch"
                         class="Branchclass"
                         asp-items="@(new SelectList(ViewBag.ListOfBranch,"Id","Name"))"></select>
             </div>
-            <div asp-action="Index" method="post" class="profession" role="form">
+            <div id="ProfessionDiv" class="profession" role="form">
                 <h4>Ընտրել մասնագիտությունը</h4>
                 <select id="Profession"
                         class="Professionclass"
-                        asp-items="@(new SelectList(ViewBag.ListofProfession,"Id","Name"))"></select>
+                        asp-items="@(new SelectList(ViewBag.ListofProfession, "Id", "Name"))"></select>
             </div>
-            <div asp-action="Index" method="get" class="checkbox">
+            <div id="StakeHolder" class="checkbox">
                 <h4>Ընտրել շահակցին</h4>
                 @foreach (var item in ViewBag.ListOfTypeName)
         {
             <input class="Checkbox" type="checkbox" id="@item.Id" value="@item.TypeName" />@item.TypeName<br />
 }
             </div>
-            <div asp-action="Index" method="get" class="company">
+            <div id="CompanyDiv" class="company">
                 <h4>Ընտրել կազմակերպությունը</h4>
                 <select id="Company"
                         asp-items="@(new SelectList(ViewBag.ListofCompany,"Id", "CompanyName"))"></select>
                 <div class="Azat">
-                    <input class="btn btn-info" type="submit" value="Հաստատել" id="Hastatel" onclick="redirectOnClick()" />
+                    <input class="btn btn-info" type="submit" value="Հաստատել" id="Hastatel" onclick="SaveItems" />
                 </div>
             </div>
         </form>
@@ -46,8 +46,59 @@
 }
 
 @section Scripts{
-        <script src="/Scripts/Questionnaire1.js" type="text/javascript"></script>
-       <script>
+    @*<script src="/Scripts/Questionnaire1.js" type="text/javascript"></script>*@
+    <script>
+        var SaveItems = function () {
+            $("#Branch").change(function (evt) {
+                var branchid = $("#Branch").val();
+                var branchtext = $("#Branch option:selected").text();
+                alert(branchid);
+                alert(branchtext);
+            });
+            $("#Profession").change(function (evt) {
+                var proffid = $("#Profession").val();
+                var profftext = $("#Profession option:selected").text();
+                alert(proffid);
+                alert(profftext);
+            });
+            $("#Company").change(function (evt) {
+                var companyid = $("#Company").val();
+                var companytext = $("#Company option:selected").text();
+                alert(companyid);
+                alert(comanytext);
+            });
+
+            var selected = [];
+            var str = "";
+            $('#StakeHolder input:checked').each(function () {
+                selected.push($(this).attr('id'));
+            });
+
+            if (selected.length != 0) {
+                str = selected.toString();
+                alert(str);
+            }
+
+            var data = {
+                selectedBranch: branchid,
+                selectedProfession: profftext,
+                selectedStakeholder: str,
+                selectedCompany: companyid
+
+            };
+            $.ajax({
+                url: "/StakeHolder/IndexSel",
+                type: 'POST',
+                content: "application/json; charset=utf-8",
+                dataType: "json",
+                data: data,
+                success: function (response) {
+
+                }
+            });
+        }
+    </script>
+       @*<script>
             $(function () {
                 $('#Branch').change(function () {
                     var selectedBranch = $('#Branch option:selected').index();
@@ -64,5 +115,5 @@
 
                 })
             });
-        </script>
+        </script>*@
     }

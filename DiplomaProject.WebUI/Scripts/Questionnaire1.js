@@ -1,3 +1,3 @@
 ﻿function redirectOnClick() {
-    document.location = "Views/Outcomes/Questionaire2";
+    //window.location.href = '/StakeHolder/Outcome/'
 }

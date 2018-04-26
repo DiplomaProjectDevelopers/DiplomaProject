@@ -34,6 +34,7 @@ namespace DiplomaProject.WebUI.Controllers
         private IActionResult Router()
         {
             var user = userManager.GetUserAsync(User).Result;
+            if (user is null) return NotFound();
             var roles = roleManager.Roles.Where(r => userManager.GetRolesAsync(user).Result.Contains(r.Name));
             var primaryRole = roles.OrderBy(r => r.Priority).First();
             switch (primaryRole?.Name?.ToLower())

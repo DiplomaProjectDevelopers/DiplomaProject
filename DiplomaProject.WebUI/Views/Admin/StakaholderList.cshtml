@@ -1,0 +1,71 @@
+﻿@model IEnumerable<StakeHolderViewModel>
+
+    @{
+    ViewData["Title"] = "Շահակիցներ";
+    }
+    <div>
+        @Html.Partial("_BaseAdminSideMenu")
+        <div class="table-responsive col-md-9 col-sm-8">
+            <button class="btn btn-link"><span class="glyphicon glyphicon-plus"></span>Ավելացնել շահակից</button>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LastName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TypeName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Phone)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CompanyName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.BranchName)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Phone)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CompanyName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BranchName)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Փոփոխել", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Մանրամասն", "Details", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Ջնջել", "Delete", new { /* id=item.PrimaryKey */ })
+                        </td>
+                    </tr>
+}
+                </tbody>
+            </table>
+        </div>
+    </div>

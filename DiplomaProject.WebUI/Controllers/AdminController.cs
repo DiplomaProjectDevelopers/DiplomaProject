@@ -40,7 +40,7 @@ namespace DiplomaProject.WebUI.Controllers
             switch (primaryRole?.Name?.ToLower())
             {
                 case "baseadmin":
-                    return RedirectToAction("GetUsers");
+                    return RedirectToAction("Users");
                 case "professionadmin":
                     return RedirectToAction(nameof(OutcomesController.Index), "Outcomes");
                 case "defaultrole":
@@ -51,7 +51,7 @@ namespace DiplomaProject.WebUI.Controllers
             }
         }
 
-        [HttpGet("Users")]
+        [HttpGet,ActionName("Users")]
         [Authorize(Roles = "BaseAdmin")]
         public IActionResult GetUsers()
         {
@@ -72,6 +72,27 @@ namespace DiplomaProject.WebUI.Controllers
                 ).Select(u => u.Result).ToList();
             return View("UserList", model);
         }
+
+        [HttpGet, ActionName("Stakeholders")]
+        [Authorize(Roles = "BaseAdmin")]
+        public IActionResult GetStakeholders()
+        {
+            var stakeholders = service.GetAll<StakeHolder>().Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
+            foreach (var s in stakeholders)
+            {
+                if (s.BranchId.HasValue && s.BranchId.Value > 0)
+                {
+                    s.BranchName = service.GetById<Branch>(s.BranchId.Value)?.Name;
+                }
+                if (s.TypeId.HasValue && s.TypeId.Value > 0)
+                {
+                    var type = service.GetById<StakeHolderType>(s.TypeId.Value);
+                    s.TypeName = type.ProfessionName ?? type.TypeName;
+                }
+            }
+            return View("StakaholderList", stakeholders);
+        }
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -252,7 +273,7 @@ namespace DiplomaProject.WebUI.Controllers
                     }
                 }
             }
-            return RedirectToAction("GetUsers");
+            return RedirectToAction("Users");
         }
 
         [HttpGet]
@@ -293,7 +314,7 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
             }
-            TempData["Accountpdated"] = Messages.ACCOUNT_UPDATED_SUCCESS;
+            TempData["AccountUpdated"] = Messages.ACCOUNT_UPDATED_SUCCESS;
             return Router();
         }
 

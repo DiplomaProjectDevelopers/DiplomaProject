@@ -32,6 +32,14 @@ $(document).ready(function () {
             });
         }
     });
-
     $("[data-toggle=tooltip]").tooltip();
 });
+
+function oncheck() {
+    if ($("#user-tbl input:checkbox:checked").length > 0) {
+        $('.btn-group-sm button').removeAttr('disabled');
+    }
+    else {
+        $('.btn-group-sm button').attr('disabled', 'disabled');
+    }
+}

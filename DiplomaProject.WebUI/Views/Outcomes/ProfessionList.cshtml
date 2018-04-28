@@ -33,14 +33,14 @@
                 </td>
                 <td>
                     <p data-placement="top" data-toggle="tooltip">
-                        <a asp-action="Edit" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-success btn-xs" data-toggle="tooltip"  title="Կատարել հարցում">
+                        <a asp-action="Edit" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-success btn-xs" data-toggle="tooltip" title="Կատարել հարցում">
                             <span class="glyphicon glyphicon-edit"></span>
-                        </a>
-                        <a asp-action="BuildSubgraphs" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-info btn-xs" data-toggle="tooltip" title="Details">
-                            <span class="glyphicon glyphicon-info-sign"></span>
                         </a>
                         <a asp-action="MakeDependencies" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-primary btn-xs" data-toggle="tooltip" title="Վերջնարդյունքների կապերը">
                             <span class="glyphicon glyphicon-wrench"></span>
+                        </a>
+                        <a asp-action="BuildSubgraphs" asp-controller="Outcomes" asp-route-professionId="@item.Id" class="btn btn-info btn-xs" data-toggle="tooltip" title="Առարկաների կազմում">
+                            <span class="glyphicon glyphicon-book"></span>
                         </a>
                     </p>
                 </td>

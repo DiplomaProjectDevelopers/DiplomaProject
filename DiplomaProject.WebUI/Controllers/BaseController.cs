@@ -43,5 +43,15 @@ namespace DiplomaProject.WebUI.Controllers
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                service.Dispose();
+
+            }
+            base.Dispose(disposing);
+        }
+
     }
 }

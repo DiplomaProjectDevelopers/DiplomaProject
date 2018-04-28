@@ -12,8 +12,8 @@ namespace DiplomaProject.Domain.Profiles
         public SubjectProfile()
         {
             CreateMap<SubjectModule, SubjectModuleViewModel>();
-            CreateMap<Subject, SubjectViewModel>().ForMember(s => s.SubjectModuleId, opt => opt.MapFrom(m => m.ModuleId));
-            CreateMap<SubjectViewModel, Subject>().ForMember(m => m.ModuleId, opt => opt.MapFrom(s => s.SubjectModuleId));
+            CreateMap<Subject, SubjectViewModel>();
+            CreateMap<SubjectViewModel, Subject>();
         }
     }
 }

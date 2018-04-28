@@ -3,6 +3,7 @@
     while (cards.firstChild) {
         cards.removeChild(cards.firstChild);
     }
+    const blocks = [];
     for (let i = 0; i < model.subjects.length; i++) {
         const block = document.createElement('div');
         block.setAttribute('class', 'col-md-3 col-md-offset-1');
@@ -22,7 +23,7 @@
         module.appendChild(moduleLabel);
         const moduleSelect = document.createElement('select');
         moduleSelect.addEventListener('change', e => {
-            model.subjects[i].module = e.target.value;
+            model.subjects[i].subjectModuleId = e.target.value;
         });
         moduleSelect.setAttribute('class', 'form-control');
         moduleSelect.required = true;
@@ -42,7 +43,7 @@
             });
             moduleSelect.appendChild(optgroup);
         });
-        moduleSelect.value = model.subjects[i].module || -1;
+        moduleSelect.value = model.subjects[i].subjectModuleId || -1;
         module.appendChild(moduleSelect);
         const span = document.createElement('span');
         span.setAttribute('class', 'text-danger');
@@ -90,8 +91,18 @@
         panel.appendChild(body);
         block.appendChild(panel);
 
-        cards.appendChild(block);
+        blocks.push(block);
     }
+
+    const subArrays = chunkArray(blocks, 3);
+    subArrays.forEach((array) => {
+        const row = document.createElement('div');
+        row.setAttribute('class', row);
+        array.forEach((block) => {
+            row.appendChild(block);
+        });
+        cards.appendChild(row);
+    });
 
 }
 
@@ -123,47 +134,68 @@ function renderModal() {
     modal.appendChild(select);
 }
 
+
+function addSubject() {
+    let minId = model.subjects.length ? model.subjects.sort((x, y) => x.id - y.id)[0].id - 1 : -1;
+    if (minId >= 0) minId = -1;
+    const subject = {
+        id: minId,
+        name: `Առարկա-${model.subjects.length + 1}`,
+        subjectModuleId: -1,
+        professionId: model.profession.id,
+        outcomes: []
+    }
+    model.subjects.push(subject);
+    renderCards();
+}
 function onSave() {
     const data = model;
+    const errorMessages = [];
     model.subjects.forEach(subject => {
         if (subject.subjectModuleId <= 0) {
-
+            errorMessages.push(`Մոդուլը ընտրված չէ ՛${subject.name}՛ առարկայի համար:`);
+        }
+        if (!subject.name) {
+            errorMessages.push(`Անունը ներմուծված չէ ՛${subject.name}՛ առարկայի համար:`);
         }
     });
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(data),
-        url: "/Subject/SaveSubjects",
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (data) {
-            const message = "Առարկաները հաջողությամբ պահպանվեցին!!!";
-            document.getElementById('message').innerText = message;
-            renderCards(data);
-        },
-        error: function (error) {
-            console.log("Error occured!!");
-            console.log(error);
-        }
-    });
+    if (errorMessages.length !== 0) {
+        document.getElementById('message').innerText = errorMessages.join('\n');
+    }
+    else {
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify(data),
+            url: "/Subject/SaveSubjects",
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                const message = "Առարկաները հաջողությամբ պահպանվեցին!!!";
+                document.getElementById('message').innerText = message;
+                renderCards(data);
+            },
+            error: function (error) {
+                console.log("Error occured!!");
+                console.log(error);
+            }
+        });
+    }
 }
 
 function moveOutcome() {
     const outcomeId = parseInt(sessionStorage.getItem('outcomeId'));
     const subjectId = parseInt(sessionStorage.getItem('subjectId'));
     const toSubjectId = parseInt(sessionStorage.getItem('toSubjectId'));
-    const currentSubject = model.subjects.find(s => s.id == subjectId);
-    const currentOutcomeIndex = currentSubject.outcomes.findIndex(o => o.id == outcomeId);
+    const currentSubject = model.subjects.find(s => s.id === subjectId);
+    const currentOutcomeIndex = currentSubject.outcomes.findIndex(o => o.id === outcomeId);
     const currentOutcome = currentSubject.outcomes[currentOutcomeIndex];
     currentSubject.outcomes.splice(currentOutcomeIndex, 1);
-    const newSubject = model.subjects.find(s => s.id == toSubjectId);
+    const newSubject = model.subjects.find(s => s.id === toSubjectId);
     newSubject.outcomes.push(currentOutcome);
     if (!currentSubject.outcomes.length) {
-        const index = model.subjects.findIndex(s => s.id == currentSubject.id);
+        const index = model.subjects.findIndex(s => s.id === currentSubject.id);
         model.subjects.splice(index, 1);
     }
     renderCards();
 
 }
-
-

@@ -11,3 +11,15 @@
     });
     return map;
 }
+
+function chunkArray(array, chunk_size) {
+    const arrayLength = array.length;
+    const tempArray = [];
+
+    for (let index = 0; index < arrayLength; index += chunk_size) {
+        const myChunk = array.slice(index, index + chunk_size);
+        tempArray.push(myChunk);
+    }
+
+    return tempArray;
+}

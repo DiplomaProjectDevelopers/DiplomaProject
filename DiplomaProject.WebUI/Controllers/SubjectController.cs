@@ -34,12 +34,12 @@ namespace DiplomaProject.WebUI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                throw new Exception();
+                ModelState.AddModelError("", "Առարկայական մոդուլ և առարկայի անուն դաշտերը պարտադիր են");
             }
-            for (int i=0; i<model.Subjects.Count;++i)
+            for (int i = 0; i < model.Subjects.Count; ++i)
             {
-                var vm = model.Subjects[i];
-                var subject = mapper.Map<Subject>(vm);
+                var outcomes = model.Subjects[i].Outcomes;
+                var subject = mapper.Map<Subject>(model.Subjects[i]);
                 if (subject.Id > 0)
                 {
                     await service.Update(subject);
@@ -48,23 +48,26 @@ namespace DiplomaProject.WebUI.Controllers
                 {
                     subject.Id = 0;
                     await service.Insert(subject);
-                    model.Subjects[i] = mapper.Map<SubjectViewModel>(subject);
+                    model.Subjects[i].Id = subject.Id;
                 }
-                foreach (var outcome in vm.Outcomes)
+                model.Subjects[i].Outcomes = outcomes;
+                List<FinalOutCome> list = new List<FinalOutCome>();
+                for (int j = 0; j < model.Subjects[i].Outcomes.Count; ++j)
                 {
-                    var fo = mapper.Map<FinalOutCome>(outcome);
-                    subject.FinalOutComes.Add(fo);
+                    var outcome = model.Subjects[i].Outcomes[j];
+                    var dboutcome = service.GetById<FinalOutCome>(outcome.Id);
+                    dboutcome.SubjectId = subject.Id;
+                    list.Add(dboutcome);
+                    model.Subjects[i].Outcomes[j] = mapper.Map<OutcomeViewModel>(dboutcome);
                 }
-
-                for (int j = 0; j< subject.FinalOutComes.Count; ++j)
-                {
-                    var outcome = subject.FinalOutComes.ToList()[j];
-                    //outcome.SubjectId = subject.Id;
-                    await service.Update(outcome);
-                    model.Subjects[i].Outcomes[j] = mapper.Map<OutcomeViewModel>(outcome);
-                }
+                await service.UpdateRange(list);
             }
-            return View("~/Views/Outcomes/SubjectListPreview", model);
+            var subjects = service.GetAll<Subject>().Where(s => s.ProfessionId == model.Profession.Id && model.Subjects.FindIndex(e => e.Id == s.Id) == -1).Select(s => s.Id).ToList();
+            foreach (var s in subjects)
+            {
+                await service.DeleteById<Subject>(s);
+            }
+            return Json(model);
         }
     }
 }

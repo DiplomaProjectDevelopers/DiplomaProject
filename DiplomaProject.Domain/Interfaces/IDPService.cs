@@ -4,22 +4,24 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DiplomaProject.Domain.Interfaces
 {
-    public interface IDPService
+    public interface IDPService : IDisposable
     {
         T GetById<T>(int id) where T : class;
 
-        DbSet<T> GetAll<T>() where T : class;
+        IQueryable<T> GetAll<T>() where T : class;
 
         Task<T> Insert<T>(T item) where T : class;
 
         Task<T> Update<T>(T item) where T : class;
 
+        Task<IEnumerable<T>> UpdateRange<T>(IEnumerable<T> entities) where T :class;
         Task DeleteById<T>(int id) where T : class;
 
         Task Delete<T>(T item) where T : class;

@@ -4,61 +4,42 @@
     ViewData["Title"] = "Առարկաների նախադիտում";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<հ2>Առաջարկվող առարկաները  "@Model.ProfessionName" մասնագիտության համար</հ2>
-<p>Վերջնարդյունքների կապերի  հիման վրա ձևավորել ենք հետևյալ առարկաները</p>
+
+
+<h3 class="row">Առաջարկվող առարկաները  "@Model.Profession.Name" մասնագիտության համար</h3>
+<div class="row">
+    <div class="col-md-6">
+        <p>
+            Վերջնարդյունքների կապերի  հիման վրա ձևավորել ենք հետևյալ առարկաները
+        </p>
+        <div id="message" class="text-info"></div>
+    </div>
+    <div class="col-md-6">
+        <div class="row pull-right">
+            <button class=" btn btn-link" onclick="addSubject()"><span class="glyphicon glyphicon-plus "></span>Ավելացնել առարկա</button>
+            <button type="submit" value="Save subjects" class="btn btn-primary" onclick="onSave()">Պահպանել</button>
+            <button type="button" value="Cancel" asp-action="Cancel" class="btn btn-default">Չեղարկել</button>
+        </div>
+    </div>
+</div>
 <div>
-    <div class="row container" id="card-list">
-        @*@for (int i = 0; i < Model.Subjects.Count; i++)
-            {
-                <div class="col-md-3 col-md-offset-1">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">@Model.Subjects[i].Name</div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label asp-for="@Model.Subjects[i].SubjectModuleId" class="control-label"></label>
-                                <select asp-for="@Model.Subjects[i].SubjectModuleId" asp-items="@(new SelectList(ViewBag.Modules, "Id", "Name"))" class="form-control">
-                                    <option>--ընտրեք առարկայական մոդուլը--</option>
-                                </select>
-                                <span asp-validation-for="@Model.Subjects[i].SubjectModuleId" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.Subjects[i].Name" class="control-label"></label>
-                                <input asp-for="@Model.Subjects[i].Name" class="form-control" />
-                                <span asp-validation-for="@Model.Subjects[i].Name" class="text-danger"></span>
-                            </div>
-                            @for (int j = 0, length = Model.Subjects[i].Outcomes.Count; j < length; j++)
-                            {
-                                <p class="thumbnail">
-                                    @Model.Subjects[i].Outcomes[j].Name
-                                    <a class="moveBtn" data-toggle="modal" data-target="#moveModal" data-id="@Model.Subjects[i].Outcomes[j].Id">
-                                        <span class="glyphicon glyphicon-share" onclick="onModalLoad(@Model.Subjects[i].Outcomes[j].Id, @Model.Subjects[i].Id)"></span>
-                                    </a>
-                                </p>
-                            }
-                        </div>
-                    </div>
-                </div>
-            }*@
+    <div class="row container pre-scrollable" id="card-list">
     </div>
     <div class="modal fade" id="moveModal" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Move outcome to</h4>
+                    <h4 class="modal-title">Տեղափոխել վերջնարդյունքը դեպի</h4>
                 </div>
                 <div id="moveModal_body" class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="moveOutcome()">Move</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="moveOutcome()">Տեղափոխել</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Փակել</button>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <button type="submit" value="Save subjects" class="btn btn-primary" onclick="onSave()">Save subjects</button>
-        <button type="button" value="Cancel" asp-action="Cancel" class="btn btn-default">Cancel</button>
     </div>
 </div>
 

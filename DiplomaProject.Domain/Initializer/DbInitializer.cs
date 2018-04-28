@@ -427,43 +427,43 @@ namespace DiplomaProject.Domain.Initializer
                         new FinalOutCome
                         {
                             Name = "Կիրառական ծրագրերի գործնական նախագծման կարողություն",
-                            TypeId = 2,
+                            OutComeTypeId = 2,
                             ProfessionId = 1
                         },
                         new FinalOutCome
                         {
                             Name = "Պաշտպանված ծրագրային ապահովման նախագծման կարողություն",
-                            TypeId = 2,
+                            OutComeTypeId = 2,
                             ProfessionId = 1
                         },
                         new FinalOutCome
                         {
-                            Name = "Խրագրային ապահովման թեստավորման հմտություն",
-                            TypeId = 3,
+                            Name = "Ծրագրային ապահովման թեստավորման հմտություն",
+                            OutComeTypeId = 3,
                             ProfessionId = 1
                         },
                         new FinalOutCome
                         {
                             Name ="Մասնագիտական գործնական գիտելիքներ",
-                            TypeId = 1,
+                            OutComeTypeId = 1,
                             ProfessionId = 1
                         },
                         new FinalOutCome
                         {
                             Name= "Մասնագիտական գործնական հմտություններ",
-                            TypeId = 3,
+                            OutComeTypeId = 3,
                             ProfessionId = 1
                         },
                         new FinalOutCome
                         {
                             Name = "Պաշտպանված քոմփյութերային համակարգերի նախագծման կարողություններ",
-                            TypeId = 2,
+                            OutComeTypeId = 2,
                             ProfessionId = 1
                         },
                         new FinalOutCome
                         {
                             Name = "Մասնագիտական գործնական գիտելիքներ",
-                            TypeId = 1,
+                            OutComeTypeId = 1,
                             ProfessionId = 1,
                             IsNew = true
                         }

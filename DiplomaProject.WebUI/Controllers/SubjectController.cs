@@ -29,27 +29,42 @@ namespace DiplomaProject.WebUI.Controllers
             var finaloutcome = service.GetAll<FinalOutCome>().ToList();
             var fomodel = finaloutcome.Select(fo => mapper.Map<FinalOutcomeViewModel>(fo));
             ViewBag.ListOfFinalOutcome = finaloutcome;
-            return View("SubjectDistribution",fomodel);
+            return View("SubjectDistribution", fomodel);
         }
-   
-        //[HttpGet]
-        //public IActionResult Distribution()
-        //{
-        //    var finaloutcome = service.GetAll<FinalOutCome>().ToList();
-        //    var fomodel = finaloutcome.Select(fo => mapper.Map<FinalOutcomeViewModel>(fo)).ToList();
-        //    var finaloutcomelist = fomodel.Where(o => o.SubjectId = SubjectId && o.TypeId == Wkid);
-        //    var finaloutcomelist1 = fomodel.Where(o => o.SubjectId = SubjectId && o.TypeId == Wsid);
-        //    var finaloutcomelist2 = fomodel.Where(o => o.SubjectId = SubjectId && o.TypeId == Waid);
 
-        //    var sum = finaloutcomelist + finaloutcomelist1 + finaloutcomelist2;
-        //    var mijin_wk = finaloutcomelist * 100 / sum;
-        //    var mijin_ws = finaloutcomelist1 * 100 / sum;
-        //    var mijin_wa = finaloutcomelist2 * 100 / sum;
-        //    return View();
-           
-        //}
+        [HttpGet]
+        public IActionResult Distribution(int professionId)
+       
+        {
+            var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList();
+            for (int i = 0; i < finalSubjects.Count; i++)
+            {
 
-      
+                var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubjects[i].Id);
+                var giteliq = outcomes.Where(o => o.TypeId == 1);
+                var karoxutyun = outcomes.Where(o => o.TypeId == 2);
+                var hmtutyun = outcomes.Where(o => o.TypeId == 3);
+                var credit = 0;
+                var totalHours = 0;
+                var gWeight = giteliq.Sum(g => g.TotalWeight);
+                var kWeight = karoxutyun.Sum(k => k.TotalWeight);
+                var hWeight = hmtutyun.Sum(h => h.TotalWeight);
+                var sum = gWeight + kWeight + hWeight;
+                finalSubjects[i].Credit = credit;
+                finalSubjects[i].TotalHours = totalHours;
+                service.Update(finalSubjects[i]);
 
+                var mG = gWeight * 100 / sum;  //popoxakan 
+                var mK = kWeight * 100 / sum;
+                var mH = hWeight * 100 / sum;
+                credit = 30 * sum / CourseHourse; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
+                totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
+                return View();
+
+            }
+
+
+
+        }
     }
 }

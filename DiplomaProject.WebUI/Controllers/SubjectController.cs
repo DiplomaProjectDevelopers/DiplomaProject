@@ -69,5 +69,21 @@ namespace DiplomaProject.WebUI.Controllers
             }
             return Json(model);
         }
+
+        public IActionResult GetSubjectsequence(int professionId)
+        {
+            var finaloutcomes = service.GetAll<FinalOutCome>().Select(o => mapper.Map<FinalOutCome>(o)).ToList();
+            var subjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).Select(s => mapper.Map<SubjectViewModel>(s)).ToList();
+            var edges = service.GetAll<Edge>().Where(e => e.ProfessionId == professionId).Select(s  => mapper.Map<EdgeViewModel>(s)).ToList();
+            foreach (var edge in edges)
+            {
+                var s1 = finaloutcomes.Find(o => o.Id == edge.FromNode).SubjectId;
+                var s2 = finaloutcomes.Find(o => o.Id == edge.ToNode).SubjectId;
+                if (s1.HasValue && s2.HasValue && s1 != s2)
+                {
+                    subjects.Find(s => s.Id == s1).DependentSubjects.Add(s2.Value);
+                }
+            }
+        }
     }
 }

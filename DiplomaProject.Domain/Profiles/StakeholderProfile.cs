@@ -13,6 +13,7 @@ namespace DiplomaProject.Domain.Profiles
         {
             CreateMap<StakeHolder, StakeHolderViewModel>();
             CreateMap<StakeHolderViewModel, StakeHolder>();
+            CreateMap<Branch, BranchViewModel>();
         }
     }
 }

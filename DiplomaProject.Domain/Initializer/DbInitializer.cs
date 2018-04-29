@@ -47,19 +47,57 @@ namespace DiplomaProject.Domain.Initializer
                     {
                         new Role
                         {
-                            Name = "DefaultRole",
-                            Priority = 5
-                        },
+                            Name = "BaseAdmin",
+                            DisplayName = "Գլխավոր ադմին",
+                            Priority = 1
+                        }, //BaseAdmin
                         new Role
                         {
-                            Name = "BaseAdmin",
-                            Priority = 1
-                        },
+                            Name = "FacultyAdmin",
+                            Priority = 2,
+                            DisplayName = "Ֆակուլտետի ադմին"
+                        }, //FacultyAdmin
+                        new Role
+                        {
+                            Name = "DepartmentAdmin",
+                            DisplayName = "Ամբիոնի ադմին",
+                            Priority = 3
+                        }, //DepartmentAdmin
                         new Role
                         {
                             Name="ProfessionAdmin",
-                            Priority = 3
-                        }
+                            Priority = 4,
+                            DisplayName = "Մասնագիտության ադմին"
+                        }, //ProfessionAdmin
+                        new Role
+                        {
+                            Name="RequestSender",
+                            Priority = 5,
+                            DisplayName = "Հարցում կատարող"
+                        }, //RequestSender
+                        new Role
+                        {
+                            Name="SubjectMaker",
+                            DisplayName = "Առարկաներ ձևավորող",
+                            Priority = 5
+                        }, //subjectMaker
+                        new Role
+                        {
+                            Priority = 5,
+                            Name = "LaborMaker",
+                            DisplayName = "Աշխատատարություն որոշող"
+                        }, //LaborMaker
+                        new Role
+                        {
+                            Priority = 5,
+                            Name = "CurriculumMaker",
+                            DisplayName = "Ուսումնական պլան կազմող"
+                        }, //CurriculumMaker
+                        new Role
+                        {
+                            Name = "DefaultRole",
+                            Priority = 6
+                        } //Defaultrole
                     };
                     foreach (var role in roles)
                     {
@@ -109,6 +147,13 @@ namespace DiplomaProject.Domain.Initializer
                         UserName = "kim_sargsyan",
                         Email = "kim.sargsian@gmail.com",
                         EmailConfirmed = true
+                    },
+                    new User
+                    {
+                        FirstName = "DepartmentAdmin",
+                        Email = "da@sa.com",
+                        UserName = "da",
+                        EmailConfirmed = true
                     }
                 };
                 if (!_context.Users.Any())
@@ -116,10 +161,18 @@ namespace DiplomaProject.Domain.Initializer
                     foreach (var user in users)
                     {
                         await _userManager.CreateAsync(user, password);
-                        await _userManager.AddToRoleAsync(user, "ProfessionAdmin");
                     }
-                    await _userManager.RemoveFromRolesAsync(users[0], await _userManager.GetRolesAsync(users[0]));
-                    await _userManager.AddToRoleAsync(users[0], "BaseAdmin");
+                    await _userManager.AddToRoleAsync(users[0], "SubjectMaker");
+                    await _context.SaveChangesAsync();
+                    await _userManager.AddToRoleAsync(users[1], "DefaultRole");
+                    await _context.SaveChangesAsync();
+                    await _userManager.AddToRoleAsync(users[2], "RequestSender");
+                    await _context.SaveChangesAsync();
+                    await _userManager.AddToRoleAsync(users[3], "LaborMaker");
+                    await _context.SaveChangesAsync();
+                    await _userManager.AddToRoleAsync(users[4], "CurriculumMaker");
+                    await _context.SaveChangesAsync();
+                    await _userManager.AddToRoleAsync(users[5], "DepartmentAdmin");
                     await _context.SaveChangesAsync();
                 }
 
@@ -261,7 +314,7 @@ namespace DiplomaProject.Domain.Initializer
                     };
                     _context.SubjectModules.AddRange(modules);
                     _context.SaveChanges();
-                    
+
                 }
                 if (!_context.StakeHolders.Any())
                 {

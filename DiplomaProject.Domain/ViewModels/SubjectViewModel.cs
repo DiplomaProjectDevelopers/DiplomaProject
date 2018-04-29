@@ -10,6 +10,7 @@ namespace DiplomaProject.Domain.ViewModels
         public SubjectViewModel()
         {
             Outcomes = new List<OutcomeViewModel>();
+            DependentSubjects = new List<int>();
         }
         public int Id { get; set; }
         [Required]
@@ -22,5 +23,7 @@ namespace DiplomaProject.Domain.ViewModels
         public int SubjectModuleId { get; set; }
 
         public List<OutcomeViewModel> Outcomes { get; set; }
+
+        public List<int> DependentSubjects { get; set; }
     }
 }

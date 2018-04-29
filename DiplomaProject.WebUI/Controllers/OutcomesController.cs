@@ -17,7 +17,6 @@ using Newtonsoft.Json.Serialization;
 
 namespace DiplomaProject.WebUI.Controllers
 {
-    [Authorize(Roles = "ProfessionAdmin")]
     public class OutcomesController : BaseController
     {
         private OutcomesService outcomesService;
@@ -42,6 +41,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "SubjectMaker")]
         public IActionResult MakeDependencies(int professionId)
         {
             var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
@@ -67,6 +67,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GraphViewer(int professionId)
         {
             ViewBag.Profession = new ProfessionViewModel
@@ -92,6 +93,7 @@ namespace DiplomaProject.WebUI.Controllers
             return View("GraphViewer", viewModel);
         }
         [HttpPost]
+        [Authorize(Roles = "SubjectMaker")]
         public async Task<IActionResult> SaveDependencies([FromBody]List<EdgeViewModel> model)
         {
             if (model != null)
@@ -107,18 +109,20 @@ namespace DiplomaProject.WebUI.Controllers
             return Json("Error");
         }
 
-        [HttpGet]
-        public IActionResult BuildSubgraphs(int professionId)
+        [HttpGet, ActionName("Subjects")]
+        [Authorize(Roles = "SubjectMaker")]
+        public IActionResult BuildSubgraphs(int? professionId)
         {
-            if (professionId <= 0)
+            if (!professionId.HasValue || professionId.Value <= 0)
                 throw new ArgumentException("Invalid profession id");
             var subjectList = new SubjectListViewModel
             {
-                Profession = mapper.Map<ProfessionViewModel>(service.GetById<Profession>(professionId))
+                Profession = mapper.Map<ProfessionViewModel>(service.GetById<Profession>(professionId.Value))
             };
             ViewBag.Modules = service.GetAll<SubjectModule>().Select(m => mapper.Map<SubjectModuleViewModel>(m)).ToList();
             if (service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).All(o => o.SubjectId.HasValue && o.SubjectId.Value > 0))
             {
+
                 subjectList.Subjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).Select(s => mapper.Map<SubjectViewModel>(s)).ToList();
                 foreach (var subject in subjectList.Subjects)
                 {

@@ -4,12 +4,10 @@ using System.Text;
 
 namespace DiplomaProject.Domain.ViewModels
 {
-    public class RoleViewModel
+    public class BranchViewModel
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
-
-        public string DisplayName { get; set; }
     }
 }

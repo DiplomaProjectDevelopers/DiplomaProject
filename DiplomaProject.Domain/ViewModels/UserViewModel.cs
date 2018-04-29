@@ -8,7 +8,10 @@ namespace DiplomaProject.Domain.ViewModels
 {
     public class UserViewModel
     {
-        //[HiddenInput(DisplayValue = false)]
+        public UserViewModel()
+        {
+            Professions = new List<ProfessionViewModel>();
+        }
         public string Id { get; set; }
         [Display(Name = "Մուտքանուն")]
         public string Username { get; set; }
@@ -28,6 +31,9 @@ namespace DiplomaProject.Domain.ViewModels
         public string CurrentRole { get; set; }
         [Display(Name= "Օգտատերի դեր")]
         public string SelectedRoleId { get; set; }
+
+        public List<ProfessionViewModel> Professions { get; set; }
+        public bool CanEdit { get; set; } = false;
     }
 }
                                                                                                                                                                                                                                                   

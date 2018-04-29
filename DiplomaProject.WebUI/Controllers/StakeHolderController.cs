@@ -6,14 +6,17 @@ using DiplomaProject.Domain.Interfaces;
 using DiplomaProject.Domain.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using DiplomaProject.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+using DiplomaProject.Domain.Helpers;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DiplomaProject.WebUI.Controllers
 {
-    public class StakeHolderController : BaseController
+    public class StakeholderController : BaseController
     {
-        public StakeHolderController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
+        public StakeholderController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
             : base(service, mapper, userManager, signInManager, roleManager)
         {
 
@@ -28,6 +31,169 @@ namespace DiplomaProject.WebUI.Controllers
             ViewBag.ListofStakeHolder = stakeHoldersList;
             return View("Questionnaire1", model);
         }
+
+        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        [HttpGet]
+        public IActionResult Details(int? stakeholderId)
+        {
+            if (!stakeholderId.HasValue || stakeholderId.Value == 0)
+                return NotFound();
+            var stakeholder = service.GetById<StakeHolder>(stakeholderId.Value);
+            var model = mapper.Map<StakeHolderViewModel>(stakeholder);
+            model.TypeName = service.GetById<StakeHolderType>(model.TypeId.Value)?.ProfessionName ?? service.GetById<StakeHolderType>(model.TypeId.Value)?.TypeName;
+            model.BranchName = service.GetById<Branch>(model.BranchId.Value)?.Name;
+            return View(model);
+        }
+
+        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        [HttpGet]
+        public IActionResult Edit(int? stakeholderId)
+        {
+            if (!stakeholderId.HasValue || stakeholderId.Value == 0)
+            {
+                return NotFound();
+            }
+            var stakeholder = service.GetById<StakeHolder>(stakeholderId.Value);
+            if (stakeholder == null) return NotFound();
+            var model = mapper.Map<StakeHolderViewModel>(stakeholder);
+            model.TypeName = service.GetById<StakeHolderType>(model.TypeId.Value)?.ProfessionName ?? service.GetById<StakeHolderType>(model.TypeId.Value)?.TypeName;
+            model.BranchName = service.GetById<Branch>(model.BranchId.Value)?.Name;
+            var types = service.GetAll<StakeHolderType>().Select(s => mapper.Map<StakeHolderTypeViewModel>(s));
+            foreach (var type in types)
+            {
+                type.TypeName = type.ProfessionName ?? type.TypeName;
+            }
+            ViewBag.Types = types.ToList();
+            ViewBag.Branches = service.GetAll<Branch>().Select(b => mapper.Map<BranchViewModel>(b)).ToList();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        public async Task<IActionResult> Edit(StakeHolderViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Message = Messages.STAKEHOLDER_UPDATED_FAILURE;
+                return View(model);
+            }
+            bool isDirty = false;
+            var stakeholder = service.GetById<StakeHolder>(model.Id);
+            if (stakeholder == null)
+            {
+                return NotFound();
+            }
+            if (stakeholder.Email != model.Email)
+            {
+                isDirty = true;
+                stakeholder.Email = model.Email;
+            }
+            if (stakeholder.CompanyName != model.CompanyName)
+            {
+                isDirty = true;
+                stakeholder.CompanyName = model.CompanyName;
+            }
+            if (stakeholder.BranchId != model.BranchId)
+            {
+                isDirty = true;
+                stakeholder.BranchId = model.BranchId;
+            }
+            if (stakeholder.Phone != model.Phone)
+            {
+                isDirty = true;
+                stakeholder.Phone = model.Phone;
+            }
+            if (stakeholder.TypeId != model.TypeId)
+            {
+                isDirty = true;
+                stakeholder.TypeId = model.TypeId;
+            }
+            if (isDirty){
+                await service.Update(stakeholder);
+            }
+            TempData["Message"] = Messages.STAKEHOLDER_UPDATED_SUCCESS;
+            return RedirectToAction("Stakeholders", "Admin");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        public IActionResult Create()
+        {
+            var types = service.GetAll<StakeHolderType>().Select(s => mapper.Map<StakeHolderTypeViewModel>(s)).ToList();
+            for (int i = 0; i < types.Count; i++)
+            {
+                types[i].TypeName = types[i].ProfessionName ?? types[i].TypeName;
+
+            }
+            ViewBag.Types = types.ToList();
+            ViewBag.Branches = service.GetAll<Branch>().Select(b => mapper.Map<BranchViewModel>(b)).ToList();
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(StakeHolderViewModel model)
+        {
+            if (model == null || !ModelState.IsValid)
+                return View(model);
+            var data = mapper.Map<StakeHolder>(model);
+            data.Id = 0;
+            try
+            {
+                await service.Insert(data);
+                TempData["Message"] = Messages.STAKEHOLDER_UPDATED_SUCCESS;
+                return RedirectToAction("Stakeholders", "Admin");
+            }
+            catch
+            {
+                TempData["Message"] = Messages.STAKEHOLDER_UPDATED_FAILURE;
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        public IActionResult Delete(int? stakeholderId)
+        {
+            if (!stakeholderId.HasValue || stakeholderId.Value == 0)
+            {
+                return NotFound();
+            }
+            var data = service.GetById<StakeHolder>(stakeholderId.Value);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            var model = mapper.Map<StakeHolderViewModel>(data);
+            model.TypeName = service.GetById<StakeHolderType>(model.TypeId.Value)?.ProfessionName ?? service.GetById<StakeHolderType>(model.TypeId.Value)?.TypeName;
+            model.BranchName = service.GetById<Branch>(model.BranchId.Value)?.Name;
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        public async Task<IActionResult> DeleteConfirmed(int? stakeholderId)
+        {
+            if (!stakeholderId.HasValue || stakeholderId.Value == 0)
+                return NotFound();
+            var stakeholder = service.GetById<StakeHolder>(stakeholderId.Value);
+            if (stakeholder == null) return NotFound();
+            try
+            {
+                TempData["Message"] = Messages.STAKEHOLDER_DELETED_SUCCESS;
+                await service.DeleteById<StakeHolder>(stakeholderId.Value);
+                return RedirectToAction("Stakeholders", "Admin");
+            }
+            catch
+            {
+                var model = mapper.Map<StakeHolderViewModel>(stakeholder);
+                return View("Delete", model);
+            }
+        }
+
 
 
         //private readonly DiplomaProjectContext context;

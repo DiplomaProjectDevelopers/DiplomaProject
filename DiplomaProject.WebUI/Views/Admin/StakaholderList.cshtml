@@ -1,71 +1,91 @@
 ﻿@model IEnumerable<StakeHolderViewModel>
 
-    @{
+@{
     ViewData["Title"] = "Շահակիցներ";
-    }
-    <div>
-        @Html.Partial("_BaseAdminSideMenu")
-        <div class="table-responsive col-md-9 col-sm-8">
-            <button class="btn btn-link"><span class="glyphicon glyphicon-plus"></span>Ավելացնել շահակից</button>
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.FirstName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.LastName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.TypeName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Email)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Phone)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.CompanyName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.BranchName)
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model) {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FirstName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.LastName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TypeName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Email)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Phone)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CompanyName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.BranchName)
-                        </td>
-                        <td>
-                            @Html.ActionLink("Փոփոխել", "Edit", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Մանրամասն", "Details", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Ջնջել", "Delete", new { /* id=item.PrimaryKey */ })
-                        </td>
-                    </tr>
 }
-                </tbody>
-            </table>
-        </div>
+<div>
+    @Html.Partial("_BaseAdminSideMenu", ViewBag.User as UserViewModel)
+    <div class="table-responsive col-md-9 col-sm-8">
+        @if (TempData.ContainsKey("Message"))
+        {
+            <p class="label-info">@TempData["Message"]</p>
+        }
+        <button class="btn btn-link" type="button" onclick="location.href = '@Url.Action("Create", "Stakeholder")'"><span class="glyphicon glyphicon-plus"></span>Ավելացնել շահակից</button>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TypeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Phone)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CompanyName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BranchName)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var stakeholder in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => stakeholder.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => stakeholder.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => stakeholder.TypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => stakeholder.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => stakeholder.Phone)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => stakeholder.CompanyName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => stakeholder.BranchName)
+                        </td>
+                        @{ if (stakeholder.CanEdit)
+                            {
+                                <td>
+                                    <p data-placement="top" data-toggle="tooltip" title="Խմբագրել">
+                                        <a asp-action="Edit" asp-controller="Stakeholder" asp-route-stakeholderId="@stakeholder.Id" class="btn btn-success btn-xs" data-title="Խմբագրել" data-toggle="modal">
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                        </a>
+                                    </p>
+                                    <p data-placement="top" data-toggle="tooltip" title="Մանրամասն">
+                                        <a asp-action="Details" asp-controller="Stakeholder" asp-route-stakeholderId="@stakeholder.Id" class="btn btn-info btn-xs" data-title="Մանրամասն" data-toggle="modal">
+                                            <span class="glyphicon glyphicon-info-sign"></span>
+                                        </a>
+                                    </p>
+                                    <p data-placement="top" data-toggle="tooltip" title="Ջնջել">
+                                        <a asp-action="Delete" asp-controller="Stakeholder" asp-route-stakeholderId="@stakeholder.Id" class="btn btn-danger btn-xs" data-title="Ջնջել" data-toggle="modal">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
+                                    </p>
+                                </td>
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
+</div>

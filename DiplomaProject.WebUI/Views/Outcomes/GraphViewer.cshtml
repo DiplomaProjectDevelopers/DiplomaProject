@@ -1,21 +1,21 @@
 ﻿
 @{
-    ViewData["Title"] = "GraphViewer";
+    ViewData["Title"] = "Գրաֆի տեսքը";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Graph Viewer</h2>
-<p>Graphical representation of outcomes dependencies.</p>
+<h2>Գրաֆի տեսքը</h2>
+<p>Վերջնարդյունքների կապերի գրաֆիկական ներկայացումը</p>
 <div>
     <div class="row">
         <div class="col-md-2">
             <a onclick="renderGraph(nodes, edges)" class="btn btn-default glyphicon glyphicon-refresh">
-                <span style="color:brown">Redraw graph</span></a>
+                <span style="color:brown">Վերանկարել գրաֆը</span></a>
         </div>
         <div class="col-md-2">
             <a onclick="location.href='@Url.Action("MakeDependencies", "Outcomes", new { professionId = ViewBag.Profession?.Id})'"
                class="btn btn-link  glyphicon glyphicon-backward">
-                Go Back
+                Վերադառնալ
             </a>
         </div>
     </div>

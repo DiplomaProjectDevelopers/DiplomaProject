@@ -10,7 +10,7 @@ namespace DiplomaProject.Domain.Entities
     {
         [StringLength(500)]
         public override string Id { get => base.Id; set => base.Id = value; }
-
+        public string DisplayName { get; set; }
         public int? Priority { get; set; }
     }
 }

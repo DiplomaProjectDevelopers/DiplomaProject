@@ -109,6 +109,8 @@ namespace DiplomaProject.Domain.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("InitialSubjectId");
+
                     b.Property<bool?>("IsNew");
 
                     b.Property<string>("Name");
@@ -121,9 +123,9 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.Property<double?>("TotalWeight");
 
-                    b.Property<int?>("TypeId");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("InitialSubjectId");
 
                     b.HasIndex("OutComeTypeId");
 
@@ -139,19 +141,19 @@ namespace DiplomaProject.Domain.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("InitialSubjectId");
+
                     b.Property<string>("Name");
 
-                    b.Property<int?>("SubjectId");
-
-                    b.Property<int?>("TypeId");
+                    b.Property<int?>("OutComeTypeId");
 
                     b.Property<double?>("Weight");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("InitialSubjectId");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("OutComeTypeId");
 
                     b.ToTable("InitialOutComes");
                 });
@@ -177,29 +179,29 @@ namespace DiplomaProject.Domain.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("InitialSubjectId");
+
                     b.Property<bool?>("IsNew");
 
                     b.Property<string>("Name");
 
+                    b.Property<int?>("OutComeTypeId");
+
                     b.Property<int?>("ProfessionId");
 
-                    b.Property<int?>("StakeholderId");
-
-                    b.Property<int?>("SubjectId");
-
-                    b.Property<int?>("TypeId");
+                    b.Property<int?>("StakeHolderId");
 
                     b.Property<decimal>("Weight");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("InitialSubjectId");
+
+                    b.HasIndex("OutComeTypeId");
+
                     b.HasIndex("ProfessionId");
 
-                    b.HasIndex("StakeholderId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.HasIndex("TypeId");
+                    b.HasIndex("StakeHolderId");
 
                     b.ToTable("OutComes");
                 });
@@ -266,6 +268,8 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<string>("DisplayName");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256);
@@ -350,13 +354,31 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.Property<int?>("ProfessionId");
 
+                    b.Property<int?>("SubjectModuleId");
+
                     b.Property<int?>("TotalHours");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProfessionId");
 
+                    b.HasIndex("SubjectModuleId");
+
                     b.ToTable("Subjects");
+                });
+
+            modelBuilder.Entity("DiplomaProject.Domain.Entities.SubjectModule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Group");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubjectModules");
                 });
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.User", b =>
@@ -525,6 +547,10 @@ namespace DiplomaProject.Domain.Migrations
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.FinalOutCome", b =>
                 {
+                    b.HasOne("DiplomaProject.Domain.Entities.InitialSubject", "InitialSubject")
+                        .WithMany("FinalOutComes")
+                        .HasForeignKey("InitialSubjectId");
+
                     b.HasOne("DiplomaProject.Domain.Entities.OutComeType", "OutComeType")
                         .WithMany("FinalOutComes")
                         .HasForeignKey("OutComeTypeId");
@@ -540,13 +566,13 @@ namespace DiplomaProject.Domain.Migrations
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.InitialOutCome", b =>
                 {
-                    b.HasOne("DiplomaProject.Domain.Entities.InitialSubject", "Subject")
+                    b.HasOne("DiplomaProject.Domain.Entities.InitialSubject", "InitialSubject")
                         .WithMany("InitialOutComes")
-                        .HasForeignKey("SubjectId");
+                        .HasForeignKey("InitialSubjectId");
 
-                    b.HasOne("DiplomaProject.Domain.Entities.OutComeType", "Type")
+                    b.HasOne("DiplomaProject.Domain.Entities.OutComeType", "OutComeType")
                         .WithMany("InitialOutComes")
-                        .HasForeignKey("TypeId");
+                        .HasForeignKey("OutComeTypeId");
                 });
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.InitialSubject", b =>
@@ -558,21 +584,21 @@ namespace DiplomaProject.Domain.Migrations
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.OutCome", b =>
                 {
+                    b.HasOne("DiplomaProject.Domain.Entities.InitialSubject", "InitialSubject")
+                        .WithMany("OutComes")
+                        .HasForeignKey("InitialSubjectId");
+
+                    b.HasOne("DiplomaProject.Domain.Entities.OutComeType", "OutComeType")
+                        .WithMany("OutComes")
+                        .HasForeignKey("OutComeTypeId");
+
                     b.HasOne("DiplomaProject.Domain.Entities.Profession", "Profession")
                         .WithMany("OutCome")
                         .HasForeignKey("ProfessionId");
 
-                    b.HasOne("DiplomaProject.Domain.Entities.StakeHolder", "Stakeholder")
+                    b.HasOne("DiplomaProject.Domain.Entities.StakeHolder", "StakeHolder")
                         .WithMany("OutCome")
-                        .HasForeignKey("StakeholderId");
-
-                    b.HasOne("DiplomaProject.Domain.Entities.InitialSubject", "Subject")
-                        .WithMany("OutComes")
-                        .HasForeignKey("SubjectId");
-
-                    b.HasOne("DiplomaProject.Domain.Entities.OutComeType", "Type")
-                        .WithMany("OutComes")
-                        .HasForeignKey("TypeId");
+                        .HasForeignKey("StakeHolderId");
                 });
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.Profession", b =>
@@ -606,6 +632,10 @@ namespace DiplomaProject.Domain.Migrations
                     b.HasOne("DiplomaProject.Domain.Entities.Profession", "Profession")
                         .WithMany()
                         .HasForeignKey("ProfessionId");
+
+                    b.HasOne("DiplomaProject.Domain.Entities.SubjectModule", "SubjectModule")
+                        .WithMany("Subjects")
+                        .HasForeignKey("SubjectModuleId");
                 });
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.UserRole", b =>

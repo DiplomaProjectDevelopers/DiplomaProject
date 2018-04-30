@@ -21,14 +21,14 @@ namespace DiplomaProject.WebUI.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Application description page.";
+            ViewData["Message"] = "Համակարգի նկարագրության բաժին.";
 
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Website contact page.";
+            ViewData["Message"] = "Վեբ կայքի աջակցության բաժին.";
 
             return View();
         }

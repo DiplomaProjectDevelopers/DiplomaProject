@@ -32,6 +32,7 @@
             labelColor: 'yellow',
             autoResize: true,
             autoRescale: true,
+            defaultLabelSize: 12,
             maxNodeSize: 8,
             minNodeSize: 8,
             maxEdgeSize: 2,

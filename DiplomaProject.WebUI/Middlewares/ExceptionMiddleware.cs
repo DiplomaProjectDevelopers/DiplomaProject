@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace DiplomaProject.WebUI.Middlewares
 {
@@ -17,16 +19,28 @@ namespace DiplomaProject.WebUI.Middlewares
             _next = next;
         }
 
-        public Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext context)
         {
             try
             {
-                return _next(httpContext);
+                await _next(context);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                await HandleExceptionAsync(context, ex);
             }
+        }
+
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        {
+            var code = HttpStatusCode.InternalServerError; // 500 if unexpected
+
+            if (exception is UnauthorizedAccessException) code = HttpStatusCode.Unauthorized;
+
+            var result = JsonConvert.SerializeObject(new { error = exception.InnerException?.Message ?? exception.Message });
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)code;
+            return context.Response.WriteAsync(result);
         }
     }
 

@@ -9,7 +9,7 @@ namespace DiplomaProject.Domain.ViewModels
 {
     public class ProfessionAdminViewModel : UserViewModel
     {
-        [Display(Name = "Select profession")]
+        [Display(Name = "Ընտրեք մասնագիտությունը")]
         public int ProfessionId { get; set; }
     }
 }

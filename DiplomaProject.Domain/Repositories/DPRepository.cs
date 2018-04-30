@@ -16,6 +16,7 @@ namespace DiplomaProject.Domain.Repositories
         private readonly DiplomaProjectContext context;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private bool disposed = true;
         //private DbSet<T> entities;
         public DPRepository(DiplomaProjectContext context, UserManager<User> userManager, SignInManager<User> signInManager)
         {
@@ -99,10 +100,18 @@ namespace DiplomaProject.Domain.Repositories
         /// < returns ></ returns >
         public async Task<T> Update<T>(T item) where T : class
         {
-            context.Set<T>().Attach(item);
-            context.Entry(item).State = EntityState.Modified;
+            //context.Set<T>().Attach(item);
+            //context.Entry(item).State = EntityState.Modified;
+            context.Update<T>(item);
             await Save();
             return item;
+        }
+
+        public async Task<IEnumerable<T>> UpdateRange<T>(IEnumerable<T> entities) where T : class
+        {
+            context.UpdateRange(entities);
+            await Save();
+            return entities;
         }
 
         public async Task<SignInResult> SignInAsync(string username, string Password, bool RememberMe, bool lockoutInFailure = false)
@@ -132,13 +141,20 @@ namespace DiplomaProject.Domain.Repositories
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!this.disposed)
             {
-                if (context != null)
+                if (disposing)
                 {
                     context.Dispose();
                 }
             }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

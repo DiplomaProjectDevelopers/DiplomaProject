@@ -9,6 +9,7 @@ namespace DiplomaProject.Domain.Entities
         {
             InitialOutComes = new HashSet<InitialOutCome>();
             OutComes = new HashSet<OutCome>();
+            FinalOutComes = new HashSet<FinalOutCome>();
         }
 
         public int Id { get; set; }
@@ -18,5 +19,6 @@ namespace DiplomaProject.Domain.Entities
         public Profession Profession { get; set; }
         public ICollection<InitialOutCome> InitialOutComes { get; set; }
         public ICollection<OutCome> OutComes { get; set; }
+        public ICollection<FinalOutCome> FinalOutComes { get; set; }
     }
 }

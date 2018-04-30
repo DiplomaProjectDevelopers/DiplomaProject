@@ -25,23 +25,59 @@ namespace DiplomaProject.WebUI.Controllers
 
         }
 
+        [Authorize]
         public IActionResult Index()
         {
-            return Router();
+            var user = userManager.GetUserAsync(User).Result;
+            if (user is null) return NotFound();
+            return RedirectToAction("Users");
+            //var primaryRole = userManager.GetRoleAsync(user).GetAwaiter().GetResult();
+            //switch (primaryRole)
+            //{
+            //    case "facultyadmin":
+            //        return View("Users");
+            //    case "departmentadmin":
+            //        return View();
+            //    case "professionadmin":
+            //        return RedirectToAction(nameof(OutcomesController.Index), "Outcomes");
+            //    case "requestsender":
+            //        return View();
+            //    case "subjectmaker":
+            //        return View();
+            //    case "labormaker":
+            //        return View();
+            //    case "curriculummaker":
+            //        return View();
+            //    case "defaultrole":
+            //        var model = mapper.Map<UserViewModel>(user);
+            //        return View("DefaultRoleUserPage", model);
+            //    default:
+            //        return NotFound();
+            //}
         }
 
         [NonAction]
         private IActionResult Router()
         {
             var user = userManager.GetUserAsync(User).Result;
-            var roles = roleManager.Roles.Where(r => userManager.GetRolesAsync(user).Result.Contains(r.Name));
-            var primaryRole = roles.OrderBy(r => r.Priority).First();
-            switch (primaryRole?.Name?.ToLower())
+            if (user is null) return NotFound();
+            var primaryRole = userManager.GetRoleAsync(user).GetAwaiter().GetResult();
+            switch (primaryRole)
             {
-                case "baseadmin":
-                    return RedirectToAction("GetUsers");
+                case "facultyadmin":
+                    return RedirectToAction("Users");
+                case "departmentadmin":
+                    return View();
                 case "professionadmin":
                     return RedirectToAction(nameof(OutcomesController.Index), "Outcomes");
+                case "requestsender":
+                    return View();
+                case "subjectmaker":
+                    return View();
+                case "labormaker":
+                    return View();
+                case "curriculummaker":
+                    return View();
                 case "defaultrole":
                     var model = mapper.Map<UserViewModel>(user);
                     return View("DefaultRoleUserPage", model);
@@ -50,27 +86,57 @@ namespace DiplomaProject.WebUI.Controllers
             }
         }
 
-        [HttpGet("Users")]
-        [Authorize(Roles = "BaseAdmin")]
-        public IActionResult GetUsers()
+        [HttpGet, ActionName("Users")]
+        [Authorize]
+        public async Task<IActionResult> GetUsers()
         {
             var user = userManager.GetUserAsync(User).Result;
             var users = service.GetAll<User>().ToList();
+            var role = await roleManager.FindByNameAsync(userManager.GetRoleAsync(user).GetAwaiter().GetResult());
             ViewBag.Roles = roleManager.Roles.Select(r => mapper.Map<RoleViewModel>(r)).ToList();
-            var model = users.Where(u => u.Id != user.Id && !userManager.IsInRoleAsync(u, "BaseAdmin").Result).
+            var model = users.Where(u => u.Id != user.Id).
                 Select(async u =>
                 {
                     var m = mapper.Map<UserViewModel>(u);
                     var roleName = await userManager.GetRoleAsync(u);
-                    if (roleName != null)
-                    {
-                        m.SelectedRoleId = (await roleManager.FindByNameAsync(roleName)).Id;
-                    }
+                    var r = await roleManager.FindByNameAsync(roleName);
+                    m.SelectedRoleId = r.Id;
+                    m.CanEdit = r.Priority > role.Priority;
                     return m;
                 }
                 ).Select(u => u.Result).ToList();
+            var um = mapper.Map<UserViewModel>(user);
+            um.Professions = service.GetAll<Profession>().Where(p => p.AdminId == user.Id).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            ViewBag.User = um;
             return View("UserList", model);
         }
+
+        [HttpGet, ActionName("Stakeholders")]
+        [Authorize]
+        public async Task<IActionResult> GetStakeholders()
+        {
+            var user = await userManager.GetUserAsync(User);
+            var role = await roleManager.FindByNameAsync(await userManager.GetRoleAsync(user));
+            var stakeholders = service.GetAll<StakeHolder>().Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
+            foreach (var s in stakeholders)
+            {
+                if (s.BranchId.HasValue && s.BranchId.Value > 0)
+                {
+                    s.BranchName = service.GetById<Branch>(s.BranchId.Value)?.Name;
+                }
+                if (s.TypeId.HasValue && s.TypeId.Value > 0)
+                {
+                    var type = service.GetById<StakeHolderType>(s.TypeId.Value);
+                    s.TypeName = type.ProfessionName ?? type.TypeName;
+                }
+                if (role.Priority <= 3) s.CanEdit = true;
+            }
+            var um = mapper.Map<UserViewModel>(user);
+            um.Professions = service.GetAll<Profession>().Where(p => p.AdminId == user.Id).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            ViewBag.User = um;
+            return View("StakaholderList", stakeholders);
+        }
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -151,7 +217,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "BaseAdmin")]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin, FacultyAdmin")]
         public async Task<IActionResult> UpdateRole([FromBody]UserRoleViewModel model)
         {
             var userId = model.UserId;
@@ -171,7 +237,7 @@ namespace DiplomaProject.WebUI.Controllers
             return Json(new { Message = Messages.ROLE_UPDATED_FAILURE, Type = "danger" });
         }
         [HttpGet]
-        [Authorize(Roles = "BaseAdmin")]
+        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
         public IActionResult Edit(string userId)
         {
             if (userId is null)
@@ -180,21 +246,14 @@ namespace DiplomaProject.WebUI.Controllers
             }
             var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
             var role = userManager.GetRoleAsync(user).GetAwaiter().GetResult();
-            switch (role.ToUpper())
-            {
-                case "PROFESSIONADMIN":
-                    ViewBag.Professions = service.GetAll<Profession>().ToList();
-                    var model = mapper.Map<ProfessionAdminViewModel>(user);
-                    model.CurrentRole = role;
-                    return View("EditProfessionAdmin", model);
-
-                default:
-                    throw new NotImplementedException();
-            }
+            ViewBag.Professions = service.GetAll<Profession>().ToList();
+            var model = mapper.Map<ProfessionAdminViewModel>(user);
+            model.CurrentRole = role;
+            return View("EditProfessionAdmin", model);
         }
 
         [HttpPost, ActionName("EditProfessionAdmin")]
-        [Authorize(Roles = "BaseAdmin")]
+        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditConfirmed(ProfessionAdminViewModel model)
         {
@@ -209,13 +268,13 @@ namespace DiplomaProject.WebUI.Controllers
                     await service.Update<Profession>(profession);
                 }
                 TempData["UserUpdated"] = Messages.USER_UPDATED_SUCCESS;
-                return RedirectToAction(nameof(GetUsers));
+                return RedirectToAction("Users");
             }
             throw new Exception();
         }
 
         [HttpGet]
-        [Authorize(Roles = "BaseAdmin")]
+        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
         public IActionResult Delete(string userId)
         {
             if (userId is null)
@@ -229,7 +288,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "BaseAdmin")]
+        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string userId)
         {
@@ -251,7 +310,7 @@ namespace DiplomaProject.WebUI.Controllers
                     }
                 }
             }
-            return RedirectToAction("GetUsers");
+            return RedirectToAction("Users");
         }
 
         [HttpGet]
@@ -292,7 +351,7 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
             }
-            TempData["Accountpdated"] = Messages.ACCOUNT_UPDATED_SUCCESS;
+            TempData["AccountUpdated"] = Messages.ACCOUNT_UPDATED_SUCCESS;
             return Router();
         }
 

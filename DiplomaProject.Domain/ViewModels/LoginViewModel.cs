@@ -8,16 +8,16 @@ namespace DiplomaProject.Domain.ViewModels
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage ="This field is necessary")]
-        [Display(Name = "Username")]
+        [Required(ErrorMessage ="Այս դաշտը պարտադիր է")]
+        [Display(Name = "Մուտքանուն")]
         public string Username { get; set; }
 
-        [Required(ErrorMessage ="This field is necessary")]
+        [Required(ErrorMessage ="Այս դաշտը պարտադիր է")]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Գաղտնաբառ")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Հիշել")]
         public bool RememberMe { get; set; }
     }
 }

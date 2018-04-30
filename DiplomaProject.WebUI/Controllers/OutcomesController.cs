@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DiplomaProject.Domain.Entities;
 using DiplomaProject.Domain.Interfaces;
+using DiplomaProject.Domain.Models;
 using DiplomaProject.Domain.Services;
 using DiplomaProject.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -15,7 +17,6 @@ using Newtonsoft.Json.Serialization;
 
 namespace DiplomaProject.WebUI.Controllers
 {
-    [Authorize(Roles = "ProfessionAdmin")]
     public class OutcomesController : BaseController
     {
         private OutcomesService outcomesService;
@@ -40,6 +41,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "SubjectMaker")]
         public IActionResult MakeDependencies(int professionId)
         {
             var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
@@ -64,6 +66,8 @@ namespace DiplomaProject.WebUI.Controllers
             return View("DependencyBuilder", viewModel);
         }
 
+        [HttpGet]
+        [Authorize]
         public IActionResult GraphViewer(int professionId)
         {
             ViewBag.Profession = new ProfessionViewModel
@@ -89,6 +93,7 @@ namespace DiplomaProject.WebUI.Controllers
             return View("GraphViewer", viewModel);
         }
         [HttpPost]
+        [Authorize(Roles = "SubjectMaker")]
         public async Task<IActionResult> SaveDependencies([FromBody]List<EdgeViewModel> model)
         {
             if (model != null)
@@ -96,11 +101,66 @@ namespace DiplomaProject.WebUI.Controllers
                 var data = model.Select(edge => mapper.Map<Edge>(edge)).ToList();
                 var processedData = await outcomesService.SaveDependencies(data);
                 var processedModel = processedData.Select(d => mapper.Map<EdgeViewModel>(d));
-                return Json(model, new JsonSerializerSettings {
+                return Json(model, new JsonSerializerSettings
+                {
                     ContractResolver = new DefaultContractResolver()
                 });
             }
             return Json("Error");
+        }
+
+        [HttpGet, ActionName("Subjects")]
+        [Authorize(Roles = "SubjectMaker")]
+        public IActionResult BuildSubgraphs(int? professionId)
+        {
+            if (!professionId.HasValue || professionId.Value <= 0)
+                throw new ArgumentException("Invalid profession id");
+            var subjectList = new SubjectListViewModel
+            {
+                Profession = mapper.Map<ProfessionViewModel>(service.GetById<Profession>(professionId.Value))
+            };
+            ViewBag.Modules = service.GetAll<SubjectModule>().Select(m => mapper.Map<SubjectModuleViewModel>(m)).ToList();
+            if (service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).All(o => o.SubjectId.HasValue && o.SubjectId.Value > 0))
+            {
+
+                subjectList.Subjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).Select(s => mapper.Map<SubjectViewModel>(s)).ToList();
+                foreach (var subject in subjectList.Subjects)
+                {
+                    var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == subject.Id).Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
+                    subject.Outcomes = outcomes;
+                }
+            }
+            else
+            {
+                var vertices = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).Select(o => o.Id).ToList();
+                var edges = service.GetAll<Edge>().Where(e => e.ProfessionId == professionId).ToList();
+                var graph = new Graph(vertices.Count);
+                foreach (var edge in edges)
+                {
+                    var index1 = vertices.FindIndex(v => edge.LeftOutComeId.Value == v);
+                    var index2 = vertices.FindIndex(v => edge.RightOutComeId.Value == v);
+                    graph.AddEdge(index1, index2);
+                }
+
+                var subgraphs = graph.PrintSCCs();
+                for (int i = 0; i < subgraphs.Count; i++)
+                {
+                    var subject = new SubjectViewModel
+                    {
+                        Id = -(i + 1),
+                        Name = $"Առարկա-{i}",
+                        ProfessionId = professionId
+                    };
+                    for (int j = 0; j < subgraphs[i].Count; j++)
+                    {
+                        var outcome = service.GetById<FinalOutCome>(vertices[subgraphs[i][j]]);
+                        var model = mapper.Map<OutcomeViewModel>(outcome);
+                        subject.Outcomes.Add(model);
+                    }
+                    subjectList.Subjects.Add(subject);
+                }
+            }
+            return View("SubjectListPreview", subjectList);
         }
 
         [HttpPost]

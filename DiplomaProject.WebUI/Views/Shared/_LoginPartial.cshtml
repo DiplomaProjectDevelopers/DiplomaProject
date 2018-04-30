@@ -9,10 +9,10 @@
     <form asp-area="" asp-controller="Admin" asp-action="LogOut" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a asp-area="" asp-controller="Admin" asp-action="UpdateAccount" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                <a asp-area="" asp-controller="Admin" asp-action="UpdateAccount" title="Manage">Ողջույն @UserManager.GetUserName(User)!</a>
             </li>
             <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link glyphicon glyphicon-log-out"> Log out</button>
+                <button type="submit" class="btn btn-link navbar-btn navbar-link glyphicon glyphicon-log-out"> Դուրս գալ</button>
             </li>
         </ul>
     </form>
@@ -20,7 +20,7 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-controller="Admin" asp-action="Register" class="glyphicon glyphicon-user"> Sign Up</a></li>
-        <li><a asp-controller="Admin" asp-action="Login" class="glyphicon glyphicon-log-in"> Login</a></li>
+        <li><a asp-controller="Admin" asp-action="Register" class="glyphicon glyphicon-user">Գրանցվել</a></li>
+        <li><a asp-controller="Admin" asp-action="Login" class="glyphicon glyphicon-log-in"> Մուտք</a></li>
     </ul>
 }

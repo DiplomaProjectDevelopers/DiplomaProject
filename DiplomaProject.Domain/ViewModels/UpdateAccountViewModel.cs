@@ -11,24 +11,24 @@ namespace DiplomaProject.Domain.ViewModels
         [Required]
         public string Email { get; set; }
 
-        [Display(Name = "Phone number")]
+        [Display(Name = "Հեռախոսահամար")]
         [Required]
         [Phone]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "This field is reqired.")]
+        [Required(ErrorMessage = "Այս դաշտը պարտադիր է լրացման համար")]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        [Display(Name = "Հին գաղտնաբառ")]
         public string CurrentPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "Նոր գաղտնաբառ")]
         [StringLength(32, MinimumLength = 6)]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
         [Compare("NewPassword")]
-        [Display(Name = "Confirm new password")]
+        [Display(Name = "Հաստատեք նոր գաղտնաբառը")]
         [StringLength(32, MinimumLength = 6)]
         public string NewPasswordConfirm { get; set; }
     }

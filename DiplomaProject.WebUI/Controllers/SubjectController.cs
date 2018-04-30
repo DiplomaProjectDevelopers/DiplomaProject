@@ -32,39 +32,40 @@ namespace DiplomaProject.WebUI.Controllers
             return View("SubjectDistribution", fomodel);
         }
 
-        [HttpGet]
-        public IActionResult Distribution(int professionId)
+//        [HttpGet]
+//        public IActionResult Distribution(int professionId)
        
-        {
-            var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList();
-            for (int i = 0; i < finalSubjects.Count; i++)
-            {
+//        {
+//            var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList();
+//            for (int i = 0; i < finalSubjects.Count; i++)
+//            {
 
-                var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubjects[i].Id);
-                var giteliq = outcomes.Where(o => o.TypeId == 1);
-                var karoxutyun = outcomes.Where(o => o.TypeId == 2);
-                var hmtutyun = outcomes.Where(o => o.TypeId == 3);
-                var credit = 0;
-                var totalHours = 0;
-                var gWeight = giteliq.Sum(g => g.TotalWeight);
-                var kWeight = karoxutyun.Sum(k => k.TotalWeight);
-                var hWeight = hmtutyun.Sum(h => h.TotalWeight);
-                var sum = gWeight + kWeight + hWeight;
-                finalSubjects[i].Credit = credit;
-                finalSubjects[i].TotalHours = totalHours;
-                service.Update(finalSubjects[i]);
+//                var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubjects[i].Id);
+//                var giteliq = outcomes.Where(o => o.TypeId == 1);
+//                var karoxutyun = outcomes.Where(o => o.TypeId == 2);
+//                var hmtutyun = outcomes.Where(o => o.TypeId == 3);
+//                var credit = 0;
+//                var totalHours = 0;
+//                var gWeight = giteliq.Sum(g => g.TotalWeight);
+//                var kWeight = karoxutyun.Sum(k => k.TotalWeight);
+//                var hWeight = hmtutyun.Sum(h => h.TotalWeight);
+//                double sum = gWeight + kWeight + hWeight;
+//                finalSubjects[i].Credit = credit;
+//                finalSubjects[i].TotalHours = totalHours;
+//                service.Update(finalSubjects[i]);
+//                double totalsum= totalsum + sum:
+//             /*   var mG = gWeight * 100 / sum;  //popoxakan 
+//                var mK = kWeight * 100 / sum;
+//                var mH = hWeight * 100 / sum;
+//                */
+//                credit = 30 * sum / totalsum; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
+//                totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
+//                return View();
+//+
+//            }
 
-                var mG = gWeight * 100 / sum;  //popoxakan 
-                var mK = kWeight * 100 / sum;
-                var mH = hWeight * 100 / sum;
-                credit = 30 * sum / CourseHourse; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
-                totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
-                return View();
-
-            }
 
 
-
-        }
+        //}
     }
 }

@@ -44,9 +44,8 @@ namespace DiplomaProject.WebUI.Controllers
             return View("Questionnaire1");
         }
 
-        [HttpGet, ActionName("Stakeholders")]
         [Authorize]
-        public async Task<IActionResult> GetStakeholders()
+        public async Task<IActionResult> Index()
         {
             var user = await userManager.GetUserAsync(User);
             var role = await roleManager.FindByNameAsync(await userManager.GetRoleAsync(user));

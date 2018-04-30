@@ -50,3 +50,12 @@ select {
     padding-top: initial;
     padding-left: 400px;
 }
+
+.Button {
+    background-color: darkturquoise;
+    border-radius: 8px;
+    font-size: 16px;
+    color: black;
+    padding: 8px 30px;
+    border-color:darkturquoise;
+}

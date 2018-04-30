@@ -11,7 +11,8 @@
                 <h4>Ընտրել ճյուղը</h4>
                 <select id="Branch"
                         class="Branchclass"
-                        asp-items="@(new SelectList(ViewBag.ListOfBranch,"Id","Name"))"></select>
+                        asp-items="@(new SelectList(ViewBag.ListOfBranch,"Id","Name"))"
+                        ></select>
             </div>
             <div id="ProfessionDiv" class="profession" role="form">
                 <h4>Ընտրել մասնագիտությունը</h4>
@@ -22,16 +23,18 @@
             <div id="StakeHolder" class="checkbox">
                 <h4>Ընտրել շահակցին</h4>
                 @foreach (var item in ViewBag.ListOfTypeName)
-        {
-            <input class="Checkbox" type="checkbox" id="@item.Id" value="@item.TypeName" />@item.TypeName<br />
-}
+                {
+                    <input class="Checkbox" type="checkbox" id="@item.Id" value="@item.TypeName" />@item.TypeName<br />
+                }
             </div>
             <div id="CompanyDiv" class="company">
                 <h4>Ընտրել կազմակերպությունը</h4>
                 <select id="Company"
                         asp-items="@(new SelectList(ViewBag.ListofCompany,"Id", "CompanyName"))"></select>
                 <div class="Azat">
-                    <input class="btn btn-info" type="submit" value="Հաստատել" id="Hastatel" onclick="SaveItems" />
+                    <a class="Button" href="#" onclick="OK(); return false">
+                        Հաստատել
+                    </a>
                 </div>
             </div>
         </form>
@@ -47,73 +50,49 @@
 
 @section Scripts{
     @*<script src="/Scripts/Questionnaire1.js" type="text/javascript"></script>*@
-    <script>
-        var SaveItems = function () {
-            $("#Branch").change(function (evt) {
-                var branchid = $("#Branch").val();
-                var branchtext = $("#Branch option:selected").text();
-                alert(branchid);
-                alert(branchtext);
+    <script type="text/javascript">
+        var branchid;
+        var branchtext;
+        var proffid;
+        var profftext;
+        var companyid;
+        var companytext;
+        var selected = [];
+        var str = "";
+        var req = new XMLHttpRequest();
+        var url = '@Url.Action("IndexSel", "StakeHolder")';
+        var data = new FormData();
+        req.open('POST', url, true);
+        req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        data.append("Content-Type", 'application/json; charset=utf-8');
+        req.onload = function () {
+            req.responseText;
+        };
+        $(document).ready(function () {
+            $("#Branch").on('change',function (evt) {
+                branchid = $("#Branch").val();
+                branchtext = $("#Branch option:selected").text();
+                data.set("branchid", branchid);
             });
             $("#Profession").change(function (evt) {
-                var proffid = $("#Profession").val();
-                var profftext = $("#Profession option:selected").text();
-                alert(proffid);
-                alert(profftext);
+                proffid = $("#Profession").val();
+                profftext = $("#Profession option:selected").text();
+                data.set("profftext", profftext);
             });
             $("#Company").change(function (evt) {
-                var companyid = $("#Company").val();
-                var companytext = $("#Company option:selected").text();
-                alert(companyid);
-                alert(comanytext);
+                companyid = $("#Company").val();
+                companytext = $("#Company option:selected").text();
+                data.set("companyid", companyid);
             });
-
-            var selected = [];
-            var str = "";
-            $('#StakeHolder input:checked').each(function () {
+        });
+        function OK() {
+            $("#StakeHolder input:checked").each(function () {
                 selected.push($(this).attr('id'));
-            });
-
-            if (selected.length != 0) {
-                str = selected.toString();
-                alert(str);
-            }
-
-            var data = {
-                selectedBranch: branchid,
-                selectedProfession: profftext,
-                selectedStakeholder: str,
-                selectedCompany: companyid
-
-            };
-            $.ajax({
-                url: "/StakeHolder/IndexSel",
-                type: 'POST',
-                content: "application/json; charset=utf-8",
-                dataType: "json",
-                data: data,
-                success: function (response) {
-
-                }
-            });
+            })
+            str = selected.toString();
+            data.set("stakeholder", str);
+            //alert("onclick");
+            req.send(data);
         }
     </script>
-       @*<script>
-            $(function () {
-                $('#Branch').change(function () {
-                    var selectedBranch = $('#Branch option:selected').index();
-                    $.ajax({
-                        type: "POST",
-                        url: "/StakeHolder/Index",
-                        contentType: "application/json; charset=utf-8",
-                        data: '{"branchid":"' + selectedBranch +'"}',
-                        dataType: "html",
-                        success: function (result, status, xhr) {
-                            $("#Profession").html(result);
-                        },
-                    });
-
-                })
-            });
-        </script>*@
-    }
+}

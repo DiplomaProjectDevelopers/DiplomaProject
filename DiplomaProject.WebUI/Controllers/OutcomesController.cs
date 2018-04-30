@@ -92,7 +92,6 @@ namespace DiplomaProject.WebUI.Controllers
             return View("GraphViewer", viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveDependencies([FromBody]List<EdgeViewModel> model)
         {
             if (model != null)

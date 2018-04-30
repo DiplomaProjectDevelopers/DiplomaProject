@@ -18,30 +18,18 @@ namespace DiplomaProject.WebUI.Controllers
         {
 
         }
-
-        public class Data
-        {
-            public string selectedBranch { get; set; }
-            public string selectedProfession { get; set; }
-            public string selectedStakeholder { get; set; }
-            public string selectedCompany { get; set; }
-        }
-
-        public class DataSecond
-        {
-            public string name { get; set; }
-            public double value { get; set; }
-            public int branch { get; set; }
-        }
+    
 
         [HttpGet]
         public IActionResult Index()
         {
             var branch = service.GetAll<Branch>().ToList();
             var branchmodel = branch.Select(b => mapper.Map<BranchViewModel>(b)).ToList();
+            branchmodel.Insert(0, new BranchViewModel { Id = 0, Name = "ճյուղ" });
             ViewBag.ListOfBranch = branchmodel;
             var professions = service.GetAll<Profession>().ToList();
             var proffmodel = professions.Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            proffmodel.Insert(0, new ProfessionViewModel { Id = 0, Name = "մասնագիտություն" });
             ViewBag.ListofProfession = proffmodel;
             ViewBag.ListOfTypeName = service.GetAll<StakeHolderType>().Select(s => new StakeHolderTypeViewModel
             {
@@ -49,26 +37,27 @@ namespace DiplomaProject.WebUI.Controllers
                 TypeName = s.ProfessionName ?? s.TypeName
             });
             var stakeHolders = service.GetAll<StakeHolder>().ToList();
-            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s));
+            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
+            sthmodel.Insert(0, new StakeHolderViewModel { Id = 0, CompanyName = "կազմակերպություն" });
             ViewBag.ListofCompany = sthmodel;
             return View("Questionnaire1");
         }
 
         [HttpPost]
-        public JsonResult IndexSel(Data data)
+        public IActionResult IndexSel([FromForm]int branchid, string profftext, string stakeholder, int companyid)
         {
-            string[] listSTH = data.selectedStakeholder.Split(",");
+            //string[] listSTH = selectedStakeholder.Split(",");
 
-            foreach (var item in listSTH)
-            {
+            //foreach (var item in listSTH)
+            //{
 
-            }
-            ViewBag.ProfessionId = data.selectedProfession;
-            return Json("");
+            //}
+            //ViewBag.ProfessionId = data.selectedProfession;
+            return View();
         }
 
         [HttpGet]
-       public IActionResult Outcome()
+        public IActionResult Outcome()
         {
             ViewBag.ListOfTypeName = service.GetAll<StakeHolderType>().Select(s => new StakeHolderTypeViewModel
             {
@@ -81,21 +70,125 @@ namespace DiplomaProject.WebUI.Controllers
             var outcome = service.GetAll<InitialOutCome>().ToList();
             var outcomemodel = outcome.Select(o => mapper.Map<InitialOutcomeViewModel>(o)).ToList();
             ViewBag.ListOfOutcomes = outcomemodel;
-
             return View("Questionnaire2");
         }
 
         [HttpPost]
-        public IActionResult Outcome(DataSecond dataSecond)
+        public IActionResult Outcome([FromForm]int stakeholderid, string outcome, string weight, string id, string subject)
         {
-            var stakeHolders = service.GetAll<StakeHolder>().ToList();
-            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
-            var typeid = sthmodel.Find(s => s.BranchId.Equals(dataSecond.branch)).S
+            TempData["msg"] = "Pass";
+            string[] outcomelist = outcome.Split(",");
+            string[] weightstr = weight.Split(",");
+            string[] idstr = id.Split(",");
+            string[] subjectstr = subject.Split(",");
+            int[] weightlist = new int[weightstr.Length];
+            int[] idlist = new int[weightstr.Length];
+            int[] subjectlist = new int[weightstr.Length];
+            for (int i=0; i < weightstr.Length; i++)
+            {
+                weightlist[i] = int.Parse(weightstr[i]);
+                idlist[i] = int.Parse(idstr[i]);
+                subjectlist[i] = int.Parse(subjectstr[i]);
+            }
             var stakeHolderType = service.GetAll<StakeHolderType>().ToList();
             var sthtypemodel = stakeHolderType.Select(st => mapper.Map<StakeHolderTypeViewModel>(st)).ToList();
-            var coefficient = sthtypemodel.Find(st => st.Id.Equals(typeid)).Select(st => st.Coefficient.Value);
-            int outcomeWeight = dataSecond.value * coefficient;
+            var coefficient = sthtypemodel.Find(st => st.Id.Equals(stakeholderid)).Coefficient.Value;
+            double[] multipleofcoefficient = new double[weightlist.Length];
+            for (int i = 0; i < weightlist.Length; i++)
+            {
+                var m = weightlist[i] * coefficient;
+                multipleofcoefficient[i] = m;
+            }
+            
+           // var outcomeinsertmodel = outcomeinsert.Select(oi => mapper.Map<OutcomeViewModel>(oi)).ToList();
+            for (int i = 0; i < outcomelist.Length; i++)
+            {
+                var data=new OutCome
+                {
+                    Name = outcomelist[i],
+                    OutComeTypeId = idlist[i],
+                    InitialSubjectId = subjectlist[i],
+                    StakeHolderId = stakeholderid,
+                    Weight = weightlist[i],
+                };
+                var outcomeinsert = service.Insert<OutCome>(data);
+            }
+
+            var finaloutcome = service.GetAll<FinalOutCome>().ToList();
+            var finaloutcomemodel = finaloutcome.Select(fo => mapper.Map<OutcomeViewModel>(fo)).ToList();
+            var outcomeget = service.GetAll<OutCome>().ToList();
+            var outcomemodel = outcomeget.Select(o => mapper.Map<FinalOutcomeViewModel>(o)).ToList();
+            foreach (var outcomeitem in outcomemodel)
+            {
+                foreach (var finaloutcomeitem in finaloutcomemodel)
+                {
+                    if (finaloutcomeitem.Name == outcomeitem.Name)
+                    {
+                        if (finaloutcomeitem.TotalWeight == 0)
+                        {
+                            finaloutcomeitem.TotalWeight += outcomeitem.Weight;
+                        }
+                        else
+                        {
+                            finaloutcomeitem.TotalWeight = (finaloutcomeitem.TotalWeight + outcomeitem.Weight) / 2;
+                        }
+                        finaloutcomeitem.SubjectId = outcomeitem.InitialSubjectId;
+                    }
+                    else
+                    {
+                        var data = new FinalOutCome
+                        {
+                            Name = outcomeitem.Name,
+                            SubjectId = outcomeitem.InitialSubjectId,
+                            TotalWeight = outcomeitem.Weight,
+                        };
+                        var finaloutcomeinsert = service.Insert<FinalOutCome>(data);
+                    }
+                }
+                var outcomedelate = service.DeleteById<OutCome>(outcomeitem.Id);
+            }
+
             return View();
         }
+
+        //[HttpPost]
+        //public IActionResult FinalOutcome()
+        //{
+        //    var finaloutcome = service.GetAll<FinalOutCome>().ToList();
+        //    var finaloutcomemodel = finaloutcome.Select(fo => mapper.Map<OutcomeViewModel>(fo)).ToList();
+        //    var outcome = service.GetAll<OutCome>().ToList();
+        //    var outcomemodel = outcome.Select(o => mapper.Map<FinalOutcomeViewModel>(o)).ToList();           
+        //    foreach(var outcomeitem in outcomemodel)
+        //    {
+        //        foreach(var finaloutcomeitem in finaloutcomemodel)
+        //        {
+        //            if (finaloutcomeitem.Name == outcomeitem.Name)
+        //            {
+        //                if (finaloutcomeitem.TotalWeight == 0)
+        //                {
+        //                    finaloutcomeitem.TotalWeight += outcomeitem.Weight;
+        //                }
+        //                else
+        //                {
+        //                    finaloutcomeitem.TotalWeight = (finaloutcomeitem.TotalWeight + outcomeitem.Weight) / 2;
+        //                }
+        //                finaloutcomeitem.SubjectId = outcomeitem.InitialSubjectId;
+        //            }
+        //            else
+        //            {
+        //                var data = new FinalOutCome
+        //                {
+        //                    Name = outcomeitem.Name,
+        //                    SubjectId = outcomeitem.InitialSubjectId,
+        //                    TotalWeight = outcomeitem.Weight,
+        //                };
+        //                var finaloutcomeinsert = service.Insert<FinalOutCome>(data);
+        //            }
+        //        }
+        //        var outcomedelate = service.DeleteById<OutCome>(outcomeitem.Id);
+        //    }
+           
+        //    return View();
+        //}
     }
 }

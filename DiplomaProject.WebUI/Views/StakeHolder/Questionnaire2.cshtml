@@ -1,11 +1,11 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Հարցաթերթիկ";
 }
 
 <div class="space">
     <div class="page">
-        <h2>@ViewBag.SelectValue մասնագետի վերջնարդյունքի հարցում @ViewBag.ProfessionId</h2>
+        <h2>@ViewBag.profftext</h2>
+        <h2> Մասնագետի վերջնարդյունքի հարցում</h2>
         <div asp-action="Index" method="get" class="profession" role="form">
             <h4>Խնդում ենք նախ ընտրել Ձեր պաշտոնը</h4>
             <select id="Professionname"
@@ -21,7 +21,7 @@
                 <p class="Subject">Առարկա՝ @subject.Name </p>
                 @foreach (var outcome in ViewBag.ListOfOutcomes)
                 {
-                    if (outcome.SubjectId == subject.Id)
+                    if (outcome.InitialSubjectId == subject.Id)
                     {
                         <p id="textID">@k. @outcome.Name</p>
                         <div id="Radiodiv" class="Radio">
@@ -36,16 +36,16 @@
                             <label style="margin-left:19px">9</label>
                             <label style="margin-left:15px">10</label>
                             <br />
-                            <input style="margin-left:14px" type="radio" name="@outcome.Name" value=1 />
-                            <input style="margin-left:14px" type="radio" name="@outcome.Name" value=2 />
-                            <input style="margin-left:14px" type="radio" name="@outcome.Name" value=3 />
-                            <input style="margin-left:14px" type="radio" name="@outcome.Name" value=4 />
-                            <input style="margin-left:14px" type="radio" name="@outcome.Name" value=5 />
-                            <input style="margin-left:14px" type="radio" name="@outcome.Name" value=6 />
-                            <input style="margin-left:14px" type="radio" name="@outcome.Name" value=7 />
-                            <input style="margin-left:14px" type="radio" name="@outcome.Name" value=8 />
-                            <input style="margin-left:14px" type="radio" name="@outcome.Name" value=9 />
-                            <input style="margin-left:14px" type="radio" name="@outcome.Name" value=10 />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=1 />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=2 />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=3 />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=4 />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=5 />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=6 />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=7 />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=8 />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=9 />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=10 />
                         </div>
                             k++;
                         }
@@ -53,7 +53,9 @@
                     //}
             }
             <div class="Azat">
-                <input class="btn btn-info" type="submit" value="Հաստատել" />
+                <a class="Button" href="#" onclick="OK(); return false">
+                    Հաստատել
+                </a>
             </div>
         </form>
     </div>
@@ -66,35 +68,56 @@
 }
 
 @section Scripts{
-    <script>
+    <script type="text/javascript">
+        var selectedName = [];
+        var selectedWeight = [];
+        var selectedId = [];
+        var selectedSubject = [];
+        var strName = "";
+        var strWeight = "";
+        var req = new XMLHttpRequest();
+        var url = '@Url.Action("Outcome", "StakeHolder")';
+        var data = new FormData();
+        req.open('POST', url, true);
+        req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        data.append("Content-Type", 'application/json; charset=utf-8');
+        req.onload = function () {
+            req.responseText;
+        };
         $(document).ready(function () {
-            $("#Branch").change(function (evt) {
-                var branchid = $("#Branch").val();
-                var branchtext = $("#Branch option:selected").text();
-                alert(branchid);
-                alert(branchtext);
+            $("#Professionname").on('change',function (evt) {
+                var stakeholderid = $("#Professionname").val();
+                var stakeholdertext = $("#Professionname option:selected").text();
+                //alert(branchid);
+                //alert(branchtext);
+                data.set("stakeholderid", stakeholderid);
             });
-            $('#Radiodiv input[type=radio]').change(function () {
+            $('#Radiodiv input[type=radio]').on('change',function () {
                 var n = this.name;
-                var i = this.value;
-                alert(i);
-                alert(n);
-
-                var datasecond = {
-                    name: n,
-                    value: i,
-                    branch: branchid,
-                } 
-                
-                ajax({
-                    url: "/StakeHolder/Outcome",
-                    type: "POST",
-                    data: datasecond,
-                    success: function (response) {
-
-                    }
-                });
+                var w = this.value;
+                var i = this.id;
+                var c = this.className;
+                //alert(i);
+                //alert(n);
+                selectedName.push(n);
+                selectedWeight.push(w);
+                selectedId.push(i);
+                selectedSubject.push(c);
+                strName = selectedName.toString();
+                strWeight = selectedWeight.toString();
+                strId = selectedId.toString();
+                strSubject = selectedSubject.toString();
+                //alert(strName);
+                //alert(strWeight);
             });
         });
+        function OK() {
+            data.set("outcome", strName);
+            data.set("weight", strWeight);
+            data.set("subject", strSubject);
+            data.set("id", strId);
+            //alert("onclick");
+            req.send(data);
+        }
     </script>
 }

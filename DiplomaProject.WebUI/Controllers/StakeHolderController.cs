@@ -9,6 +9,7 @@ using DiplomaProject.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using DiplomaProject.Domain.Helpers;
+using DiplomaProject.Domain.Extentions;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,14 +23,40 @@ namespace DiplomaProject.WebUI.Controllers
 
         }
 
-        public IActionResult Index()
+        //public IActionResult Index()
+        //{
+        //    var stakeHolders = service.GetAll<StakeHolder>().ToList();
+        //    var model = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s));
+        //    List<StakeHolderViewModel> stakeHoldersList = model.Select(s => new StakeHolderViewModel { CompanyName = s.CompanyName }).ToList();
+        //    stakeHoldersList.Insert(0, new StakeHolderViewModel { Id = 0, CompanyName = "կազմակերպություն" });
+        //    ViewBag.ListofStakeHolder = stakeHoldersList;
+        //    return View("Questionnaire1", model);
+        //}
+
+        [HttpGet, ActionName("Stakeholders")]
+        [Authorize]
+        public async Task<IActionResult> GetStakeholders()
         {
-            var stakeHolders = service.GetAll<StakeHolder>().ToList();
-            var model = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s));
-            List<StakeHolderViewModel> stakeHoldersList = model.Select(s => new StakeHolderViewModel { CompanyName = s.CompanyName }).ToList();
-            stakeHoldersList.Insert(0, new StakeHolderViewModel { Id = 0, CompanyName = "կազմակերպություն" });
-            ViewBag.ListofStakeHolder = stakeHoldersList;
-            return View("Questionnaire1", model);
+            var user = await userManager.GetUserAsync(User);
+            var role = await roleManager.FindByNameAsync(await userManager.GetRoleAsync(user));
+            var stakeholders = service.GetAll<StakeHolder>().Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
+            foreach (var s in stakeholders)
+            {
+                if (s.BranchId.HasValue && s.BranchId.Value > 0)
+                {
+                    s.BranchName = service.GetById<Branch>(s.BranchId.Value)?.Name;
+                }
+                if (s.TypeId.HasValue && s.TypeId.Value > 0)
+                {
+                    var type = service.GetById<StakeHolderType>(s.TypeId.Value);
+                    s.TypeName = type.ProfessionName ?? type.TypeName;
+                }
+                if (role.Priority <= 3) s.CanEdit = true;
+            }
+            var um = mapper.Map<UserViewModel>(user);
+            um.Professions = service.GetAll<Profession>().Where(p => p.AdminId == user.Id).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            ViewBag.User = um;
+            return View("StakeholderList", stakeholders);
         }
 
         [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]

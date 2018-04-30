@@ -142,7 +142,7 @@ namespace DiplomaProject.WebUI.Controllers
                     graph.AddEdge(index1, index2);
                 }
 
-                var subgraphs = graph.PrintSCCs();
+                var subgraphs = graph.GetSubgraphs();
                 for (int i = 0; i < subgraphs.Count; i++)
                 {
                     var subject = new SubjectViewModel

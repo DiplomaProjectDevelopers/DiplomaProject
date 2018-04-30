@@ -48,14 +48,14 @@ namespace DiplomaProject.Domain.Services
             return await repository.Insert(item);
         }
 
-        public Task<T> Update<T>(T item) where T : class
+        public async Task<T> Update<T>(T item) where T : class
         {
-            return repository.Update(item);
+            return await repository.Update(item);
         }
 
-        public Task<IEnumerable<T>> UpdateRange<T>(IEnumerable<T> entities) where T : class
+        public async Task<IEnumerable<T>> UpdateRange<T>(IEnumerable<T> entities) where T : class
         {
-            return repository.UpdateRange(entities);
+            return await repository.UpdateRange(entities);
         }
 
         public async Task<SignInResult> SignInAsync(LoginViewModel loginModel, bool lockoutInFailure = false)

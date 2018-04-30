@@ -4,13 +4,16 @@
     ViewData["Title"] = "Շահակիցներ";
 }
 <div>
-    @Html.Partial("_BaseAdminSideMenu", ViewBag.User as UserViewModel)
+    @Html.Partial("_AdminSideMenu", ViewBag.User as UserViewModel)
     <div class="table-responsive col-md-9 col-sm-8">
         @if (TempData.ContainsKey("Message"))
         {
             <p class="label-info">@TempData["Message"]</p>
         }
-        <button class="btn btn-link" type="button" onclick="location.href = '@Url.Action("Create", "Stakeholder")'"><span class="glyphicon glyphicon-plus"></span>Ավելացնել շահակից</button>
+        @{ if (ViewBag.RoleName == "DEPARTMENTADMIN")
+            {
+                <button class="btn btn-link" type="button" onclick="location.href = '@Url.Action("Create", "Stakeholder")'"><span class="glyphicon glyphicon-plus"></span>Ավելացնել շահակից</button>
+            } }
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -62,7 +65,7 @@
                         <td>
                             @Html.DisplayFor(modelItem => stakeholder.BranchName)
                         </td>
-                        @{ if (stakeholder.CanEdit)
+                        @{ if (ViewBag.RoleName == "DEPARTMENTADMIN")
                             {
                                 <td>
                                     <p data-placement="top" data-toggle="tooltip" title="Խմբագրել">

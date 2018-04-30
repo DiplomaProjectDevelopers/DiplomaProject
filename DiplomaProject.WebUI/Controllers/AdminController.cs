@@ -111,32 +111,6 @@ namespace DiplomaProject.WebUI.Controllers
             return View("UserList", model);
         }
 
-        [HttpGet, ActionName("Stakeholders")]
-        [Authorize]
-        public async Task<IActionResult> GetStakeholders()
-        {
-            var user = await userManager.GetUserAsync(User);
-            var role = await roleManager.FindByNameAsync(await userManager.GetRoleAsync(user));
-            var stakeholders = service.GetAll<StakeHolder>().Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
-            foreach (var s in stakeholders)
-            {
-                if (s.BranchId.HasValue && s.BranchId.Value > 0)
-                {
-                    s.BranchName = service.GetById<Branch>(s.BranchId.Value)?.Name;
-                }
-                if (s.TypeId.HasValue && s.TypeId.Value > 0)
-                {
-                    var type = service.GetById<StakeHolderType>(s.TypeId.Value);
-                    s.TypeName = type.ProfessionName ?? type.TypeName;
-                }
-                if (role.Priority <= 3) s.CanEdit = true;
-            }
-            var um = mapper.Map<UserViewModel>(user);
-            um.Professions = service.GetAll<Profession>().Where(p => p.AdminId == user.Id).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
-            ViewBag.User = um;
-            return View("StakaholderList", stakeholders);
-        }
-
 
         [HttpGet]
         [AllowAnonymous]

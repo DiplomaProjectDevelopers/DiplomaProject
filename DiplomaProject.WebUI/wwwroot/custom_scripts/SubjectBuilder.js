@@ -97,7 +97,7 @@
     const subArrays = chunkArray(blocks, 3);
     subArrays.forEach((array) => {
         const row = document.createElement('div');
-        row.setAttribute('class', row);
+        row.setAttribute('class', 'row');
         array.forEach((block) => {
             row.appendChild(block);
         });
@@ -170,9 +170,14 @@ function onSave() {
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: function (data) {
-                const message = "Առարկաները հաջողությամբ պահպանվեցին!!!";
-                document.getElementById('message').innerText = message;
-                renderCards(data);
+                if (data.redirect) {
+                    location.href = data.redirect;
+                }
+                else {
+                    const message = "Առարկաները հաջողությամբ պահպանվեցին!!!";
+                    document.getElementById('message').innerText = message;
+                    renderCards(data.model);
+                }
             },
             error: function (error) {
                 console.log("Error occured!!");

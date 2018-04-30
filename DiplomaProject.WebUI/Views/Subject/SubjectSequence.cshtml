@@ -1,41 +1,37 @@
-﻿@model SubjectListViewModel
+﻿@model List<List<SubjectViewModel>>
 
 @{
-    ViewData["Title"] = "Առարկաների նախադիտում";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "SubjectSequence";
 }
 
-
-<h3 class="row">Առաջարկվող առարկաները  «@Model.Profession.Name» մասնագիտության համար</h3>
+<h2>Առարկաների ուսումնասիրման հաջորդականությունը «@ViewBag.Profession.Name» մասնագիտության համար</h2>
 <div class="row">
     <div class="col-md-6">
-        <p>
-            Վերջնարդյունքների կապերի  հիման վրա ձևավորել ենք հետևյալ առարկաները
-        </p>
+        <p> 
+            Ձևավորել ենք առարկաների ուսումնասիրման հետևյալ հաջորդականությունը: Խնդրում ենք ստուգել, փոփոխել և պահպանել:
+         </p>
         <div id="message" class="text-info"></div>
     </div>
     <div class="col-md-6">
         <div class="row pull-right">
-            <button class=" btn btn-link" onclick="addSubject()"><span class="glyphicon glyphicon-plus "></span>Ավելացնել առարկա</button>
             <button type="submit" value="Save subjects" class="btn btn-primary" onclick="onSave()">Պահպանել</button>
             <button type="button" value="Cancel" asp-action="Cancel" class="btn btn-default">Չեղարկել</button>
         </div>
     </div>
 </div>
 <div>
-    <div class="row container pre-scrollable" id="card-list">
-    </div>
+    <div class="row container" id="semester-list"></div>
     <div class="modal fade" id="moveModal" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Տեղափոխել վերջնարդյունքը դեպի</h4>
+                    <h4 class="modal-title">Տեղափոխել առարկան այլ կիսամյակ</h4>
                 </div>
                 <div id="moveModal_body" class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="moveOutcome()">Տեղափոխել</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="moveSubject()">Տեղափոխել</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Փակել</button>
                 </div>
             </div>
@@ -44,21 +40,13 @@
 </div>
 
 @section Scripts{
-    <script src="~/custom_scripts/SubjectBuilder.js"></script>
+    <script src="~/custom_scripts/SubjectSequenceBuilder.js"></script>
     <script>
         var model;
-        var modules;
         $(document).ready(function () {
             model = @Html.Raw(Json.Serialize(Model));
-            modules = @Html.Raw(Json.Serialize(ViewBag.Modules));
-            renderCards();
+            renderSemesters();
         });
-
-        function onModalLoad(outcomeId, subjectId){
-            sessionStorage.clear();
-            sessionStorage.setItem('subjectId', subjectId.toString());
-            sessionStorage.setItem('outcomeId', outcomeId.toString());
-        }
 
         $('#moveModal').on('hidden.bs.modal', function () {
             sessionStorage.clear();
@@ -68,8 +56,4 @@
             renderModal();
         });
     </script>
-}
-
-@section Styles{
-    <link rel="stylesheet" href="~/custom_contents/SubjectListPreview.css" />
 }

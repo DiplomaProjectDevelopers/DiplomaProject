@@ -5,13 +5,18 @@
 }
 
 <div>
-    @Html.Partial("_BaseAdminSideMenu", ViewBag.User as UserViewModel)
+    @Html.Partial("_AdminSideMenu", ViewBag.User as UserViewModel)
     <div class="table-responsive col-md-9 col-sm-8">
         <div>
             <h4 class="col-md-6">Ներկայացված են բոլոր ներկայիս օգտատերերը</h4>
             <div class="btn-group-sm">
                 <button class="btn btn-default" disabled>Ցույց տալ միայն ընտրվածները</button>
-                <button class="btn btn-danger" disabled>Ջնջել ընտրվածները</button>
+                @{
+                    if (ViewBag.RoleName == "DEPARTMENTADMIN")
+                    {
+                        <button class="btn btn-danger" disabled>Ջնջել ընտրվածները</button>
+                    }
+                }
             </div>
         </div>
         @if (TempData.ContainsKey("UserDeleted"))
@@ -52,7 +57,7 @@
                         </td>
                         <td>
                             @{
-                                if (user.CanEdit)
+                                if (ViewBag.RoleName == "DEPARTMENTADMIN")
                                 {
                                     <select id="@("roleList" + @user.Id)" asp-for="@user.SelectedRoleId" asp-items="@(new SelectList(ViewBag.Roles, "Id", "DisplayName", user.SelectedRoleId))">
                                         <option>-- ընտրեք նոր դեր --</option>
@@ -67,28 +72,28 @@
                                     <span>@roles.First(r => r.Id == user.SelectedRoleId).DisplayName</span>
 
                                 }
+                            }
+                        </td>
+                        @{ if (ViewBag.RoleName == "DEPARTMENTADMIN")
+                            {
+                                <td>
+                                    <p data-placement="top" data-toggle="tooltip" title="Խմբագրել">
+                                        <a asp-action="Edit" asp-route-userId="@user.Id" class="btn btn-primary btn-xs" data-title="Խմբագրել" data-toggle="modal">
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                        </a>
+                                    </p>
+                                </td>
+                                <td>
+                                    <p data-placement="top" data-toggle="tooltip" title="Հեռացնել">
+                                        <a asp-action="Delete" asp-route-userId="@user.Id" class="btn btn-danger btn-xs" data-title="Հեռացնել" data-toggle="modal">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
+                                    </p>
+                                </td>
+                            }
                         }
-                    </td>
-                    @{ if (user.CanEdit)
-                        {
-                            <td>
-                                <p data-placement="top" data-toggle="tooltip" title="Խմբագրել">
-                                    <a asp-action="Edit" asp-route-userId="@user.Id" class="btn btn-primary btn-xs" data-title="Խմբագրել" data-toggle="modal">
-                                        <span class="glyphicon glyphicon-pencil"></span>
-                                    </a>
-                                </p>
-                            </td>
-                            <td>
-                                <p data-placement="top" data-toggle="tooltip" title="Հեռացնել">
-                                    <a asp-action="Delete" asp-route-userId="@user.Id" class="btn btn-danger btn-xs" data-title="Հեռացնել" data-toggle="modal">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </a>
-                                </p>
-                            </td>
-                        }
-                    }
-                </tr>
-            }
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

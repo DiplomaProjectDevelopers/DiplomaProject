@@ -7,12 +7,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DiplomaProject.Domain.Entities;
+using DiplomaProject.Domain.Extentions;
 using DiplomaProject.Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace DiplomaProject.WebUI.Controllers
 { 
@@ -23,6 +25,7 @@ namespace DiplomaProject.WebUI.Controllers
         protected UserManager<User> userManager;
         protected SignInManager<User> signInManager;
         protected RoleManager<Role> roleManager;
+        protected string roleName;
 
         public BaseController(IDPService service, IMapper mapper,
             UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
@@ -32,8 +35,20 @@ namespace DiplomaProject.WebUI.Controllers
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
+            SetRoleName();
         }
 
+        private void SetRoleName()
+        {
+            if (User?.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var user = service.GetUserAsync(User).Result;
+                if (user != null)
+                {
+                    this.roleName = userManager.GetRoleAsync(user).Result;
+                }
+            }
+        }
 
         protected void AddErrors(IdentityResult result)
         {
@@ -43,6 +58,11 @@ namespace DiplomaProject.WebUI.Controllers
             }
         }
 
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            ViewBag.RoleName = roleName?.ToUpper();
+            base.OnActionExecuting(context);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DiplomaProject.Domain.Services
 {
@@ -32,7 +33,7 @@ namespace DiplomaProject.Domain.Services
             await repository.DeleteById<T>(id);
         }
 
-        public DbSet<T> GetAll<T>() where T : class
+        public IQueryable<T> GetAll<T>() where T : class
         {
             return repository.GetAll<T>();
         }
@@ -44,12 +45,17 @@ namespace DiplomaProject.Domain.Services
 
         public async Task<T> Insert<T>(T item) where T : class
         {
-            return await repository.Insert<T>(item);
+            return await repository.Insert(item);
         }
 
         public Task<T> Update<T>(T item) where T : class
         {
-            return repository.Update<T>(item);
+            return repository.Update(item);
+        }
+
+        public Task<IEnumerable<T>> UpdateRange<T>(IEnumerable<T> entities) where T : class
+        {
+            return repository.UpdateRange(entities);
         }
 
         public async Task<SignInResult> SignInAsync(LoginViewModel loginModel, bool lockoutInFailure = false)
@@ -75,6 +81,10 @@ namespace DiplomaProject.Domain.Services
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
             return await userManager.CreateAsync(user, password);
+        }
+        public void Dispose()
+        {
+            repository.Dispose();
         }
     }
 }

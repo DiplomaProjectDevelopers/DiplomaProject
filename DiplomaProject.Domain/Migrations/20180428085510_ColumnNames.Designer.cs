@@ -11,9 +11,10 @@ using System;
 namespace DiplomaProject.Domain.Migrations
 {
     [DbContext(typeof(DiplomaProjectContext))]
-    partial class DiplomaProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20180428085510_ColumnNames")]
+    partial class ColumnNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,8 +110,6 @@ namespace DiplomaProject.Domain.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("InitialSubjectId");
-
                     b.Property<bool?>("IsNew");
 
                     b.Property<string>("Name");
@@ -124,8 +123,6 @@ namespace DiplomaProject.Domain.Migrations
                     b.Property<double?>("TotalWeight");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("InitialSubjectId");
 
                     b.HasIndex("OutComeTypeId");
 
@@ -268,8 +265,6 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("DisplayName");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256);
@@ -547,10 +542,6 @@ namespace DiplomaProject.Domain.Migrations
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.FinalOutCome", b =>
                 {
-                    b.HasOne("DiplomaProject.Domain.Entities.InitialSubject", "InitialSubject")
-                        .WithMany("FinalOutComes")
-                        .HasForeignKey("InitialSubjectId");
-
                     b.HasOne("DiplomaProject.Domain.Entities.OutComeType", "OutComeType")
                         .WithMany("FinalOutComes")
                         .HasForeignKey("OutComeTypeId");

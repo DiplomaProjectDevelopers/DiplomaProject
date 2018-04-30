@@ -1,7 +1,11 @@
 ﻿.body-content{
-    padding-top:30px;
-}
+    padding-top:55px;
+   }
 
 .btn{
     border-radius:0 !important;
+}
+
+.body-content{
+    margin-left: 35px;
 }

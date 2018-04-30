@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DiplomaProject.Domain.Interfaces
 {
-    public interface IDPRepository
+    public interface IDPRepository : IDisposable
     {
         T GetById<T>(int id) where T : class;
 
@@ -16,7 +16,7 @@ namespace DiplomaProject.Domain.Interfaces
         Task<T> Insert<T>(T item) where T : class;
 
         Task<T> Update<T>(T item) where T : class;
-
+        Task<IEnumerable<T>> UpdateRange<T>(IEnumerable<T> entities) where T : class;
         Task DeleteById<T>(int id) where T : class;
 
         Task Delete<T>(T item) where T : class;

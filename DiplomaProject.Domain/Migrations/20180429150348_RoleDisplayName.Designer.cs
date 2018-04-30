@@ -11,9 +11,10 @@ using System;
 namespace DiplomaProject.Domain.Migrations
 {
     [DbContext(typeof(DiplomaProjectContext))]
-    partial class DiplomaProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20180429150348_RoleDisplayName")]
+    partial class RoleDisplayName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

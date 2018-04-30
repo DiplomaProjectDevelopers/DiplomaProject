@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\custom_contents\login.css" />
+    <None Include="wwwroot\custom_scripts\UserList.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
@@ -15,6 +20,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DiplomaProject.Domain\DiplomaProject.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Scripts\Admin\" />
   </ItemGroup>
 
 </Project>

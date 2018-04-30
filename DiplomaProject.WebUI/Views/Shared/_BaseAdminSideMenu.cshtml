@@ -1,0 +1,56 @@
+﻿@model UserViewModel
+<div class="col-sm-4 col-md-3 sidebar">
+    <div class="mini-submenu">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </div>
+    <div class="list-group">
+        <span href="#" class="list-group-item active">
+            Մենյու
+            <span class="pull-right" id="slide-submenu">
+                <i class="glyphicon glyphicon-pushpin"></i>
+            </span>
+        </span>
+        <ul class="list-group">
+            <li>
+                <a href="@Url.Action("Users")" class="list-group-item">
+                    <span class="glyphicon glyphicon-user"></span> Օգտագործողներ
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Stakeholders")" class="list-group-item">
+                    <i class="glyphicon glyphicon-education"></i> Շահակիցներ
+                </a>
+            </li>
+            <li>
+                <a href="#" class="list-group-item">
+                    <i class="glyphicon glyphicon-book"></i> Վերջնարդյունքներ
+                </a>
+            </li>
+            <li>
+                <a id="lnkProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessions" aria-expanded="false">
+                    <i class="glyphicon glyphicon-book"></i> Առարկաներ
+                </a>
+                <ul class="collapse" id="prefessions" role="menu" aria-labelledby="lnkPrefessions">
+                    @foreach (var item in Model.Professions)
+                    {
+                        <li>
+                            <a href="@Url.Action("MakeDependencies", "Outcomes", new { professionId = item.Id } )">@item.Name</a>
+                        </li>
+                    }
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="list-group-item">
+                    <i class="glyphicon glyphicon-book"></i> Ուսումնական պլան
+                </a>
+            </li>
+            <li>
+                <a href="#" class="list-group-item">
+                    <i class="glyphicon glyphicon-bell"></i> Ծանուցումներ <span class="badge">14</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

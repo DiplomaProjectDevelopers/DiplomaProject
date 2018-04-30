@@ -11,6 +11,6 @@ namespace DiplomaProject.Domain.ViewModels
             Subjects = new List<SubjectViewModel>();
         }
         public List<SubjectViewModel> Subjects { get; set; }
-        public string ProfessionName { get; set; }
+        public ProfessionViewModel Profession { get; set; }
     }
 }

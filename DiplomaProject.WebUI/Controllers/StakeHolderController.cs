@@ -240,12 +240,11 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Outcome([FromForm]int stakeholderid, string outcome, string weight, string id, string subject)
+        public IActionResult Outcome([FromForm]int stakeholderid, string outcomeName, string weight, string outcomeid, string subject)
         {
-            TempData["msg"] = "Pass";
-            string[] outcomelist = outcome.Split(",");
+            string[] outcomelist = outcomeName.Split(",");
             string[] weightstr = weight.Split(",");
-            string[] idstr = id.Split(",");
+            string[] idstr = outcomeid.Split(",");
             string[] subjectstr = subject.Split(",");
             int[] weightlist = new int[weightstr.Length];
             int[] idlist = new int[weightstr.Length];
@@ -279,11 +278,17 @@ namespace DiplomaProject.WebUI.Controllers
                 };
                 var outcomeinsert = service.Insert<OutCome>(data);
             }
+            FinalOutcomeFunc();
+            return View();
+        }
 
+        [HttpPost]
+        public IActionResult FinalOutcomeFunc()
+        {
             var finaloutcome = service.GetAll<FinalOutCome>().ToList();
             var finaloutcomemodel = finaloutcome.Select(fo => mapper.Map<OutcomeViewModel>(fo)).ToList();
-            var outcomeget = service.GetAll<OutCome>().ToList();
-            var outcomemodel = outcomeget.Select(o => mapper.Map<FinalOutcomeViewModel>(o)).ToList();
+            var outcome = service.GetAll<OutCome>().ToList();
+            var outcomemodel = outcome.Select(o => mapper.Map<FinalOutcomeViewModel>(o)).ToList();
             foreach (var outcomeitem in outcomemodel)
             {
                 foreach (var finaloutcomeitem in finaloutcomemodel)
@@ -316,45 +321,5 @@ namespace DiplomaProject.WebUI.Controllers
 
             return View();
         }
-
-        //[HttpPost]
-        //public IActionResult FinalOutcome()
-        //{
-        //    var finaloutcome = service.GetAll<FinalOutCome>().ToList();
-        //    var finaloutcomemodel = finaloutcome.Select(fo => mapper.Map<OutcomeViewModel>(fo)).ToList();
-        //    var outcome = service.GetAll<OutCome>().ToList();
-        //    var outcomemodel = outcome.Select(o => mapper.Map<FinalOutcomeViewModel>(o)).ToList();           
-        //    foreach(var outcomeitem in outcomemodel)
-        //    {
-        //        foreach(var finaloutcomeitem in finaloutcomemodel)
-        //        {
-        //            if (finaloutcomeitem.Name == outcomeitem.Name)
-        //            {
-        //                if (finaloutcomeitem.TotalWeight == 0)
-        //                {
-        //                    finaloutcomeitem.TotalWeight += outcomeitem.Weight;
-        //                }
-        //                else
-        //                {
-        //                    finaloutcomeitem.TotalWeight = (finaloutcomeitem.TotalWeight + outcomeitem.Weight) / 2;
-        //                }
-        //                finaloutcomeitem.SubjectId = outcomeitem.InitialSubjectId;
-        //            }
-        //            else
-        //            {
-        //                var data = new FinalOutCome
-        //                {
-        //                    Name = outcomeitem.Name,
-        //                    SubjectId = outcomeitem.InitialSubjectId,
-        //                    TotalWeight = outcomeitem.Weight,
-        //                };
-        //                var finaloutcomeinsert = service.Insert<FinalOutCome>(data);
-        //            }
-        //        }
-        //        var outcomedelate = service.DeleteById<OutCome>(outcomeitem.Id);
-        //    }
-           
-        //    return View();
-        //}
     }
 }

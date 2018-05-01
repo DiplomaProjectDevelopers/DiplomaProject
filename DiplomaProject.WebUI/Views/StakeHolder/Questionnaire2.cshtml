@@ -25,7 +25,8 @@
                     {
                         <p id="textID">@k. @outcome.Name</p>
                         <div id="Radiodiv" class="Radio">
-                            <label style="margin-left:15px">1</label>
+                            <label style="margin-left:16px">0</label>
+                            <label style="margin-left:18px">1</label>
                             <label style="margin-left:20px">2</label>
                             <label style="margin-left:20px">3</label>
                             <label style="margin-left:19px">4</label>
@@ -36,6 +37,7 @@
                             <label style="margin-left:19px">9</label>
                             <label style="margin-left:15px">10</label>
                             <br />
+                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=0 />
                             <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=1 />
                             <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=2 />
                             <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=3 />
@@ -112,10 +114,10 @@
             });
         });
         function OK() {
-            data.set("outcome", strName);
+            data.set("outcomeName", strName);
             data.set("weight", strWeight);
             data.set("subject", strSubject);
-            data.set("id", strId);
+            data.set("outcomeid", strId);
             //alert("onclick");
             req.send(data);
         }

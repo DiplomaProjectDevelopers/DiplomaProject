@@ -84,6 +84,7 @@ namespace DiplomaProject.WebUI.Controllers
                     subjects.Find(s => s.Id == s1).DependentSubjects.Add(s2.Value);
                 }
             }
+            return View();
         }
     }
 }

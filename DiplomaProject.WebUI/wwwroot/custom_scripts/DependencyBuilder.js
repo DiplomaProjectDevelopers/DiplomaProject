@@ -1,5 +1,5 @@
 ﻿function getOptions() {
-    const array = JSON.parse(sessionStorage.getItem('nodes'));
+    let array = JSON.parse(sessionStorage.getItem('nodes'));
     array.push({ Id: -1, Name: '-ընտրեք վերջնարդյունքը-' });
     array.sort((x, y) => x.Id - y.Id);
     return array;

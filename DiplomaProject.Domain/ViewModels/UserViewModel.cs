@@ -1,5 +1,4 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -11,6 +10,7 @@ namespace DiplomaProject.Domain.ViewModels
         public UserViewModel()
         {
             Professions = new List<ProfessionViewModel>();
+            UserRoles = new List<UserRoleViewModel>();
         }
         public string Id { get; set; }
         [Display(Name = "Մուտքանուն")]
@@ -33,6 +33,8 @@ namespace DiplomaProject.Domain.ViewModels
         public string SelectedRoleId { get; set; }
 
         public List<ProfessionViewModel> Professions { get; set; }
+
+        public List<UserRoleViewModel> UserRoles { get; set; }
         public bool CanEdit { get; set; } = false;
     }
 }

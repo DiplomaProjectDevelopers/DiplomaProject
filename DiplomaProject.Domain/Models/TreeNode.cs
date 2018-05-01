@@ -4,38 +4,78 @@ using System.Text;
 
 namespace DiplomaProject.Domain.Models
 {
-    class TreeNode<T>
+    /// <summary>
+    /// Represeting a node in DAG or Tree
+    /// </summary>
+    /// <typeparam name="T">Value of the node</typeparam>
+    public class Node<T>
     {
-        private T value;
-        private bool hasParent;
-        private List<TreeNode<T>> children;
-        public TreeNode(T value)
+        /// <summary>
+        /// creats a node with no child nodes
+        /// </summary>
+        /// <param name="value">Value of the node</param>
+        public Node(T value)
         {
-            this.value = value;
-            this.children = new List<TreeNode<T>>();
+            Value = value;
+            ChildNodes = new List<Node<T>>();
         }
 
-        public T Value
+        /// <summary>
+        /// Creates a node with given value and copy the collection of child nodes
+        /// </summary>
+        /// <param name="value">value of the node</param>
+        /// <param name="childNodes">collection of child nodes</param>
+        public Node(T value, IEnumerable<Node<T>> childNodes)
         {
-            get
+            if (childNodes == null)
             {
-                return value;
+                throw new ArgumentNullException("childNodes");
             }
-            set
-            {
-                this.value = value;
-            }
-        }
-        public bool HasParent { get; set; }
-        public void AddChild(TreeNode<T> child)
-        {
-            child.hasParent = true;
-            this.children.Add(child);
+            ChildNodes = new List<Node<T>>(childNodes);
+            Value = value;
         }
 
-        public TreeNode<T> GetChild(int index)
+        /// <summary>
+        /// Determines if the node has any child node
+        /// </summary>
+        /// <returns>true if has any</returns>
+        public bool HasChildNodes
         {
-            return this.children[index];
+            get { return this.ChildNodes.Count != 0; }
         }
+
+
+        /// <summary>
+        /// Travearse the Graph recursively
+        /// </summary>
+        /// <param name="root">root node</param>
+        /// <param name="visitor">visitor for each node</param>
+        public void Traverse(Node<T> root, Action<Node<T>> visitor)
+        {
+            if (root == null)
+            {
+                throw new ArgumentNullException("root");
+            }
+            if (visitor == null)
+            {
+                throw new ArgumentNullException("visitor");
+            }
+
+            visitor(root);
+            foreach (var node in root.ChildNodes)
+            {
+                Traverse(node, visitor);
+            }
+        }
+
+        /// <summary>
+        /// Value of the node
+        /// </summary>
+        public T Value { get; private set; }
+
+        /// <summary>
+        /// List of all child nodes
+        /// </summary>
+        public List<Node<T>> ChildNodes { get; private set; }
     }
 }

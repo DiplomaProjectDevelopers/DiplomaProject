@@ -18,6 +18,7 @@ namespace DiplomaProject.Domain.Profiles
             CreateMap<User, UpdateAccountViewModel>();
             CreateMap<RegisterViewModel, User>();
             CreateMap<StakeHolder, StakeHolderViewModel>();
+            CreateMap<UserRole, UserRoleViewModel>();
         }
     }
 }

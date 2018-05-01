@@ -1,28 +1,33 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DiplomaProject.Domain.Entities;
+using DiplomaProject.Domain.Extentions;
 using DiplomaProject.Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace DiplomaProject.WebUI.Controllers
 { 
-    public abstract class BaseController : Controller
+    public class BaseController : Controller
     {
         protected IDPService service;
         protected IMapper mapper;
         protected UserManager<User> userManager;
         protected SignInManager<User> signInManager;
         protected RoleManager<Role> roleManager;
+        protected string roleName;
 
         public BaseController(IDPService service, IMapper mapper,
             UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
@@ -34,7 +39,6 @@ namespace DiplomaProject.WebUI.Controllers
             this.roleManager = roleManager;
         }
 
-
         protected void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
@@ -43,6 +47,19 @@ namespace DiplomaProject.WebUI.Controllers
             }
         }
 
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (User?.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var user = service.GetUserAsync(User).Result;
+                if (user != null)
+                {
+                    this.roleName = userManager.GetRoleAsync(user).Result;
+                }
+            }
+            ViewBag.RoleName = roleName?.ToUpper();
+            base.OnActionExecuting(context);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

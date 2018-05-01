@@ -29,7 +29,7 @@ namespace DiplomaProject.WebUI.Controllers
             var finaloutcome = service.GetAll<FinalOutCome>().ToList();
             var fomodel = finaloutcome.Select(fo => mapper.Map<FinalOutcomeViewModel>(fo));
             ViewBag.ListOfFinalOutcome = finaloutcome;
-            return View("SubjectDistribution", fomodel);
+            return View("SubjectDistribution");
         }
 
 //        [HttpGet]
@@ -123,6 +123,7 @@ namespace DiplomaProject.WebUI.Controllers
                     subjects.Find(s => s.Id == s1).DependentSubjects.Add(s2.Value);
                 }
             }
+            return View();
         }
     }
 }

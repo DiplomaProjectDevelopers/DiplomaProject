@@ -403,6 +403,7 @@ namespace DiplomaProject.Domain.Initializer
                     {
                         userroles.Add(new UserRole { ProfessionId = 1, UserId = users[i].Id, RoleId = roles[i].Id });
                     }
+                    userroles.Add(new UserRole { ProfessionId = 2, UserId = users[2].Id, RoleId = roles[2].Id });
                     _context.UserRoles.AddRange(userroles);
                     _context.SaveChanges();
                 }

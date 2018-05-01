@@ -1,0 +1,48 @@
+﻿@model IEnumerable<StakeHolderViewModel>
+
+@{
+    ViewData["Title"] = "Շահակիցներ";
+}
+<div>
+    @Html.Partial("_AdminSideMenu", ViewBag.User as UserViewModel)
+    <div class="table-responsive col-md-9 col-sm-8">
+        @if (TempData.ContainsKey("Message"))
+    {
+        <p class="label-info">@TempData["Message"]</p>
+}
+        <h4>Ներկայացված են բոլոր շահակիցները</h4>
+        @{ if (ViewBag.RoleName == "DEPARTMENTADMIN")
+        {
+            <div class="col-md-6">
+                <button class="btn btn-link btn-lg" type="button" onclick="location.href = '@Url.Action("Create", "Stakeholder")'"><span class="glyphicon glyphicon-plus"></span>Ավելացնել շահակից</button>
+            </div>
+    }
+        }
+        <div class="col-md-6 form-control-static">
+            <input type="text" class="form-control bs-searchbox" oninput="onSearch(this.value)" placeholder="Search by firstname and lastname" />
+        </div>
+        <div id="tblStakeholders">
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            onSearch("");
+
+        })
+        function onSearch(searchTerm) {
+            $.ajax({
+                method: "GET",
+                data: {
+                    searchTerm
+                },
+                url: "/Stakeholder/StakeholderList"
+            }).done(function (data) {
+                $("#tblStakeholders").html(data);
+            });
+
+        }
+    </script>
+}

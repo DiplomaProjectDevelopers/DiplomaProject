@@ -54,7 +54,7 @@
         <form method="post" asp-action="Delete" asp-controller="Admin" asp-antiforgery="true">
             @Html.Hidden("userId", Model.Id)
             <input type="submit" value="Ջնջել" class="btn btn-danger" /> |
-            <a asp-action="GetUsers" class="btn btn-default">Վերադառնալ ցանկին</a>
+            <a asp-action="Index" class="btn btn-default">Վերադառնալ ցանկին</a>
         </form>
     </div>
 </div>

@@ -32,7 +32,6 @@ namespace DiplomaProject.Domain.Entities
         public virtual DbSet<SubjectModule> SubjectModules { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {         
             modelBuilder.Entity<Edge>()
@@ -45,7 +44,14 @@ namespace DiplomaProject.Domain.Entities
                 .WithMany(t => t.RightSideOutComes)
                 .HasForeignKey(m => m.RightOutComeId)
                 .OnDelete(DeleteBehavior.Cascade);
-           base.OnModelCreating(modelBuilder);
+
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserRole>(entity =>
+            {
+                entity.HasKey(k => new { k.UserId, k.RoleId, k.ProfessionId });
+                entity.HasOne(r => r.Profession).WithMany();
+            });
         }
     }
 }

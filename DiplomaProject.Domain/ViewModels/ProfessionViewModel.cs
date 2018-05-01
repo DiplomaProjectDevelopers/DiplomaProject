@@ -23,7 +23,6 @@ namespace DiplomaProject.Domain.ViewModels
         public byte? MdpartTimeSemesters { get; set; }
         public int? BranchId { get; set; }
         public int? DepartmentId { get; set; }
-        public string AdminId { get; set; }
         [Display(Name = "Ամբիոն")]
         public string Department { get; set; }
     }

@@ -1,8 +1,10 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -18,7 +20,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace DiplomaProject.WebUI.Controllers
 { 
-    public abstract class BaseController : Controller
+    public class BaseController : Controller
     {
         protected IDPService service;
         protected IMapper mapper;
@@ -35,19 +37,6 @@ namespace DiplomaProject.WebUI.Controllers
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
-            SetRoleName();
-        }
-
-        private void SetRoleName()
-        {
-            if (User?.Identity != null && User.Identity.IsAuthenticated)
-            {
-                var user = service.GetUserAsync(User).Result;
-                if (user != null)
-                {
-                    this.roleName = userManager.GetRoleAsync(user).Result;
-                }
-            }
         }
 
         protected void AddErrors(IdentityResult result)
@@ -60,6 +49,14 @@ namespace DiplomaProject.WebUI.Controllers
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            if (User?.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var user = service.GetUserAsync(User).Result;
+                if (user != null)
+                {
+                    this.roleName = userManager.GetRoleAsync(user).Result;
+                }
+            }
             ViewBag.RoleName = roleName?.ToUpper();
             base.OnActionExecuting(context);
         }

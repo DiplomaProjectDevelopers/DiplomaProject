@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using DiplomaProject.Domain.Helpers;
 using DiplomaProject.Domain.Extentions;
-
+using System;
+using System.Globalization;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DiplomaProject.WebUI.Controllers
@@ -61,12 +62,37 @@ namespace DiplomaProject.WebUI.Controllers
                     var type = service.GetById<StakeHolderType>(s.TypeId.Value);
                     s.TypeName = type.ProfessionName ?? type.TypeName;
                 }
-                if (role.Priority <= 3) s.CanEdit = true;
             }
+
             var um = mapper.Map<UserViewModel>(user);
-            um.Professions = service.GetAll<Profession>().Where(p => p.AdminId == user.Id).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            um.Professions = service.GetAll<UserRole>().Where(up => up.UserId == user.Id).Select(p => p.ProfessionId).Distinct()
+                .Select(s => mapper.Map<ProfessionViewModel>(service.GetById<Profession>(s.Value))).ToList();
             ViewBag.User = um;
-            return View("StakeholderList", stakeholders);
+            return View("Stakeholders", stakeholders);
+        }
+
+        public IActionResult StakeHolderList(string searchTerm = "")
+        {
+            var stakeholders = service.GetAll<StakeHolder>().Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
+            foreach (var s in stakeholders)
+            {
+                if (s.BranchId.HasValue && s.BranchId.Value > 0)
+                {
+                    s.BranchName = service.GetById<Branch>(s.BranchId.Value)?.Name;
+                }
+                if (s.TypeId.HasValue && s.TypeId.Value > 0)
+                {
+                    var type = service.GetById<StakeHolderType>(s.TypeId.Value);
+                    s.TypeName = type.ProfessionName ?? type.TypeName;
+                }
+            }
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                stakeholders = stakeholders.Where(s => s.FirstName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) != -1 
+                || s.LastName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) != -1
+                ).ToList();
+            }
+            return PartialView("StakeholderList", stakeholders);
         }
 
         [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
@@ -146,11 +172,12 @@ namespace DiplomaProject.WebUI.Controllers
                 isDirty = true;
                 stakeholder.TypeId = model.TypeId;
             }
-            if (isDirty){
+            if (isDirty)
+            {
                 await service.Update(stakeholder);
             }
             TempData["Message"] = Messages.STAKEHOLDER_UPDATED_SUCCESS;
-            return RedirectToAction("Stakeholders", "Admin");
+            return RedirectToAction("Index", "Stakeholder");
         }
 
         [HttpGet]
@@ -181,7 +208,7 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 await service.Insert(data);
                 TempData["Message"] = Messages.STAKEHOLDER_UPDATED_SUCCESS;
-                return RedirectToAction("Stakeholders", "Admin");
+                return RedirectToAction("Index", "Stakeholder");
             }
             catch
             {
@@ -222,7 +249,7 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 TempData["Message"] = Messages.STAKEHOLDER_DELETED_SUCCESS;
                 await service.DeleteById<StakeHolder>(stakeholderId.Value);
-                return RedirectToAction("Stakeholders", "Admin");
+                return RedirectToAction("Index", "Stakeholder");
             }
             catch
             {
@@ -273,7 +300,7 @@ namespace DiplomaProject.WebUI.Controllers
             int[] weightlist = new int[weightstr.Length];
             int[] idlist = new int[weightstr.Length];
             int[] subjectlist = new int[weightstr.Length];
-            for (int i=0; i < weightstr.Length; i++)
+            for (int i = 0; i < weightstr.Length; i++)
             {
                 weightlist[i] = int.Parse(weightstr[i]);
                 idlist[i] = int.Parse(idstr[i]);
@@ -288,11 +315,11 @@ namespace DiplomaProject.WebUI.Controllers
                 var m = weightlist[i] * coefficient;
                 multipleofcoefficient[i] = m;
             }
-            
-           // var outcomeinsertmodel = outcomeinsert.Select(oi => mapper.Map<OutcomeViewModel>(oi)).ToList();
+
+            // var outcomeinsertmodel = outcomeinsert.Select(oi => mapper.Map<OutcomeViewModel>(oi)).ToList();
             for (int i = 0; i < outcomelist.Length; i++)
             {
-                var data=new OutCome
+                var data = new OutCome
                 {
                     Name = outcomelist[i],
                     OutComeTypeId = idlist[i],
@@ -376,7 +403,7 @@ namespace DiplomaProject.WebUI.Controllers
         //        }
         //        var outcomedelate = service.DeleteById<OutCome>(outcomeitem.Id);
         //    }
-           
+
         //    return View();
         //}
     }

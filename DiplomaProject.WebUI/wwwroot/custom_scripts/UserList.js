@@ -17,29 +17,3 @@
     });
 
 });         
-
-
-$(document).ready(function () {
-    $("#user-tbl #checkall").click(function () {
-        if ($("#user-tbl #checkall").is(':checked')) {
-            $("#user-tbl input[type=checkbox]").each(function () {
-                $(this).prop("checked", true);
-            });
-
-        } else {
-            $("#user-tbl input[type=checkbox]").each(function () {
-                $(this).prop("checked", false);
-            });
-        }
-    });
-    $("[data-toggle=tooltip]").tooltip();
-});
-
-function oncheck() {
-    if ($("#user-tbl input:checkbox:checked").length > 0) {
-        $('.btn-group-sm button').removeAttr('disabled');
-    }
-    else {
-        $('.btn-group-sm button').attr('disabled', 'disabled');
-    }
-}

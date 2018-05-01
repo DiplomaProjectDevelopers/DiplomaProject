@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -26,74 +27,11 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         public IActionResult Index()
         {
             var user = userManager.GetUserAsync(User).Result;
-            if (user is null) return NotFound();
-            return RedirectToAction("Users");
-            //var primaryRole = userManager.GetRoleAsync(user).GetAwaiter().GetResult();
-            //switch (primaryRole)
-            //{
-            //    case "facultyadmin":
-            //        return View("Users");
-            //    case "departmentadmin":
-            //        return View();
-            //    case "professionadmin":
-            //        return RedirectToAction(nameof(OutcomesController.Index), "Outcomes");
-            //    case "requestsender":
-            //        return View();
-            //    case "subjectmaker":
-            //        return View();
-            //    case "labormaker":
-            //        return View();
-            //    case "curriculummaker":
-            //        return View();
-            //    case "defaultrole":
-            //        var model = mapper.Map<UserViewModel>(user);
-            //        return View("DefaultRoleUserPage", model);
-            //    default:
-            //        return NotFound();
-            //}
-        }
-
-        [NonAction]
-        private IActionResult Router()
-        {
-            var user = userManager.GetUserAsync(User).Result;
-            if (user is null) return NotFound();
-            var primaryRole = userManager.GetRoleAsync(user).GetAwaiter().GetResult();
-            switch (primaryRole)
-            {
-                case "facultyadmin":
-                    return RedirectToAction("Users");
-                case "departmentadmin":
-                    return View();
-                case "professionadmin":
-                    return RedirectToAction(nameof(OutcomesController.Index), "Outcomes");
-                case "requestsender":
-                    return View();
-                case "subjectmaker":
-                    return View();
-                case "labormaker":
-                    return View();
-                case "curriculummaker":
-                    return View();
-                case "defaultrole":
-                    var model = mapper.Map<UserViewModel>(user);
-                    return View("DefaultRoleUserPage", model);
-                default:
-                    return NotFound();
-            }
-        }
-
-        [HttpGet, ActionName("Users")]
-        [Authorize]
-        public async Task<IActionResult> GetUsers()
-        {
-            var user = userManager.GetUserAsync(User).Result;
             var users = service.GetAll<User>().ToList();
-            var role = await roleManager.FindByNameAsync(userManager.GetRoleAsync(user).GetAwaiter().GetResult());
-            ViewBag.Roles = roleManager.Roles.Select(r => mapper.Map<RoleViewModel>(r)).ToList();
             var model = users.Where(u => u.Id != user.Id).
                 Select(async u =>
                 {
@@ -101,16 +39,37 @@ namespace DiplomaProject.WebUI.Controllers
                     var roleName = await userManager.GetRoleAsync(u);
                     var r = await roleManager.FindByNameAsync(roleName);
                     m.SelectedRoleId = r.Id;
-                    m.CanEdit = r.Priority > role.Priority;
                     return m;
                 }
                 ).Select(u => u.Result).ToList();
             var um = mapper.Map<UserViewModel>(user);
-            um.Professions = service.GetAll<Profession>().Where(p => p.AdminId == user.Id).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            var proff = service.GetAll<UserRole>().ToList().Where(p => p.UserId == user.Id && p.ProfessionId.HasValue && p.ProfessionId.Value > 0).Select(ur => ur.ProfessionId.Value).Distinct()
+                .Select(p => service.GetById<Profession>(p)).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
             ViewBag.User = um;
             return View("UserList", model);
         }
 
+        public IActionResult UserList(string searchTerm)
+        {
+            var user = userManager.GetUserAsync(User).Result;
+            var users = service.GetAll<User>().ToList();
+            var model = users.Where(u => u.Id != user.Id).
+                Select(async u =>
+                {
+                    var m = mapper.Map<UserViewModel>(u);
+                    var roleName = await userManager.GetRoleAsync(u);
+                    var r = await roleManager.FindByNameAsync(roleName);
+                    m.SelectedRoleId = r.Id;
+                    return m;
+                }
+                ).Select(u => u.Result).ToList();
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                model = model.Where(u => u.Username.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) != -1 || u.FirstName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) != -1
+                || u.LastName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) != -1).ToList();
+            }
+            return PartialView("_Users", model);
+        }
 
         [HttpGet]
         [AllowAnonymous]
@@ -118,7 +77,7 @@ namespace DiplomaProject.WebUI.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Router();
+                return RedirectToAction("Index");
             }
             return View();
         }
@@ -162,7 +121,7 @@ namespace DiplomaProject.WebUI.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Router();
+                return RedirectToAction("Index");
             }
             return View();
         }
@@ -210,20 +169,40 @@ namespace DiplomaProject.WebUI.Controllers
             }
             return Json(new { Message = Messages.ROLE_UPDATED_FAILURE, Type = "danger" });
         }
+
         [HttpGet]
         [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
-        public IActionResult Edit(string userId)
+        public async Task<IActionResult> Edit(string userId)
         {
             if (userId is null)
             {
                 return RedirectToAction("Index");
             }
             var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
-            var role = userManager.GetRoleAsync(user).GetAwaiter().GetResult();
-            ViewBag.Professions = service.GetAll<Profession>().ToList();
-            var model = mapper.Map<ProfessionAdminViewModel>(user);
-            model.CurrentRole = role;
-            return View("EditProfessionAdmin", model);
+            if (user == null)
+                return NotFound();
+
+            var current = service.GetUserAsync(User).GetAwaiter().GetResult();
+            var da = (await roleManager.FindByNameAsync("DepartmentAdmin"));
+            var dap = service.GetAll<UserRole>().Where(ur => ur.UserId == current.Id && ur.RoleId == da.Id)
+                .Select(ur => ur.ProfessionId.Value).ToList();
+            if (dap.Count > 0)
+            {
+                //    .Where(u => u.UserId == current.Id && u.ProfessionId.HasValue && u.ProfessionId.Value > 0)
+                //    .Select(s => s.ProfessionId.Value).Distinct().ToList();
+
+                ViewBag.Roles = service.GetAll<Role>().Where(r => r.Priority > 3).Select(s => mapper.Map<RoleViewModel>(s)).ToList();
+                ViewBag.Professions = service.GetAll<Profession>().Where(p => dap.IndexOf(p.Id) != -1).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+                var userroles = service.GetAll<UserRole>().Where(u => u.UserId == userId && dap.Contains(u.ProfessionId.Value)).Select(s => mapper.Map<UserRoleViewModel>(s)).ToList();
+                var model = mapper.Map<UserViewModel>(user);
+                model.UserRoles = userroles;
+                for (int i = 0; i < model.UserRoles.Count; i++)
+                {
+                    model.UserRoles[i].Id = i + 1;
+                }
+                return View("EditProfessionAdmin", model);
+            }
+            throw new NotImplementedException();
         }
 
         [HttpPost, ActionName("EditProfessionAdmin")]
@@ -235,12 +214,12 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 var user = await userManager.FindByIdAsync(model.Id);
                 var userProfessions = service.GetAll<Profession>();
-                if (userProfessions.FirstOrDefault(p => p.Id == model.ProfessionId) != null)
-                {
-                    var profession = service.GetById<Profession>(model.ProfessionId);
-                    profession.AdminId = user.Id;
-                    await service.Update<Profession>(profession);
-                }
+                //if (userProfessions.FirstOrDefault(p => p.Id == model.ProfessionId) != null)
+                //{
+                //    var profession = service.GetById<Profession>(model.ProfessionId);
+                //    profession.AdminId = user.Id;
+                //    await service.Update<Profession>(profession);
+                //}
                 TempData["UserUpdated"] = Messages.USER_UPDATED_SUCCESS;
                 return RedirectToAction("Users");
             }
@@ -275,7 +254,7 @@ namespace DiplomaProject.WebUI.Controllers
                     if (result.Succeeded)
                     {
                         TempData["UserDeleted"] = Messages.USER_DELETED_SUCCESS;
-                        return RedirectToAction(nameof(GetUsers));
+                        return RedirectToAction(nameof(Index));
                     }
                     else
                     {
@@ -326,7 +305,7 @@ namespace DiplomaProject.WebUI.Controllers
                 await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
             }
             TempData["AccountUpdated"] = Messages.ACCOUNT_UPDATED_SUCCESS;
-            return Router();
+            return RedirectToAction("Index");
         }
 
     }

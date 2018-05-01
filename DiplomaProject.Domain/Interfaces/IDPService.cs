@@ -15,7 +15,7 @@ namespace DiplomaProject.Domain.Interfaces
     {
         T GetById<T>(int id) where T : class;
 
-        IQueryable<T> GetAll<T>() where T : class;
+        IEnumerable<T> GetAll<T>() where T : class;
 
         Task<T> Insert<T>(T item) where T : class;
 

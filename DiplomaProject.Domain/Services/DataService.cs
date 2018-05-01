@@ -33,9 +33,9 @@ namespace DiplomaProject.Domain.Services
             await repository.DeleteById<T>(id);
         }
 
-        public IQueryable<T> GetAll<T>() where T : class
+        public IEnumerable<T> GetAll<T>() where T : class
         {
-            return repository.GetAll<T>();
+            return repository.GetAll<T>().ToList();
         }
 
         public T GetById<T>(int id) where T : class

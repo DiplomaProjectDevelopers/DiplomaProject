@@ -30,7 +30,7 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult Index()
         {
             var user = userManager.GetUserAsync(User).Result;
-            var professions = service.GetAll<Profession>().Where(e => e.AdminId == user.Id).ToList();
+            var professions = service.GetAll<Profession>().ToList();//.Where(e => e.AdminId == user.Id).ToList();
             var model = professions.Select(p =>
             {
                 var profession = mapper.Map<ProfessionViewModel>(p);
@@ -142,7 +142,7 @@ namespace DiplomaProject.WebUI.Controllers
                     graph.AddEdge(index1, index2);
                 }
 
-                var subgraphs = graph.PrintSCCs();
+                var subgraphs = graph.GetSubgraphs();
                 for (int i = 0; i < subgraphs.Count; i++)
                 {
                     var subject = new SubjectViewModel

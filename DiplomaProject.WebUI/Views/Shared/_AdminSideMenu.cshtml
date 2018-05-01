@@ -12,14 +12,14 @@
                 <i class="glyphicon glyphicon-pushpin"></i>
             </span>
         </span>
-        <ul class="list-group">
+        <ul class="list-group list-unstyled">
             <li>
-                <a href="@Url.Action("Users")" class="list-group-item">
+                <a href="@Url.Action("Index", "Admin")" class="list-group-item">
                     <span class="glyphicon glyphicon-user"></span> Օգտագործողներ
                 </a>
             </li>
             <li>
-                <a href="@Url.Action("Stakeholders")" class="list-group-item">
+                <a href="@Url.Action("Index", "Stakeholder")" class="list-group-item">
                     <i class="glyphicon glyphicon-education"></i> Շահակիցներ
                 </a>
             </li>
@@ -36,7 +36,7 @@
                     @foreach (var item in Model.Professions)
                     {
                         <li>
-                            <a href="@Url.Action("MakeDependencies", "Outcomes", new { professionId = item.Id } )">@item.Name</a>
+                            <a href="@Url.Action("Index", "Subject", new { professionId = item.Id } )">@item.Name</a>
                         </li>
                     }
                 </ul>

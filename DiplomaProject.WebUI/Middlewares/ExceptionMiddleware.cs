@@ -40,7 +40,8 @@ namespace DiplomaProject.WebUI.Middlewares
             var result = JsonConvert.SerializeObject(new { error = exception.InnerException?.Message ?? exception.Message });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
-            return context.Response.WriteAsync(result);
+            context.Response.Redirect("/StatusCode/Index");
+            return Task.CompletedTask;
         }
     }
 

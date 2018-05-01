@@ -41,9 +41,7 @@ namespace DiplomaProject.Domain.Initializer
 
 
                 //Create the Administartor Role
-                if (!_context.Roles.Any())
-                {
-                    var roles = new List<Role>
+                var roles = new List<Role>
                     {
                         new Role
                         {
@@ -96,9 +94,13 @@ namespace DiplomaProject.Domain.Initializer
                         new Role
                         {
                             Name = "DefaultRole",
-                            Priority = 6
+                            Priority = 6,
+                            DisplayName = "Նոր օգտատեր"
                         } //Defaultrole
                     };
+
+                if (!_context.Roles.Any())
+                {
                     foreach (var role in roles)
                     {
                         await _roleManager.CreateAsync(role);
@@ -111,18 +113,35 @@ namespace DiplomaProject.Domain.Initializer
                 {
                     new User
                     {
-                        FirstName = "Hakob",
-                        LastName = "Papazyan",
-                        PhoneNumber = "093697343",
-                        UserName = "hakob_papazyan",
-                        Email = "hakobpapazyan2@gmail.com",
+                        FirstName = "Base",
+                        LastName = "Admin",
+                        Email = "ba@sa.com",
+                        EmailConfirmed = true,
+                        UserName = "ba"
+                    },
+                    new User
+                    {
+                        FirstName = "Faculty",
+                        LastName = "Admin",
+                        Email = "fa@sa.com",
+                        EmailConfirmed = true,
+                        UserName = "fa"
+                    },
+                    new User
+                    {
+                        FirstName = "Department",
+                        LastName = "Admin",
+                        UserName = "da",
+                        Email = "da@sa.com",
                         EmailConfirmed = true
                     },
                     new User
                     {
-                        Email = "sa@sa.com",
-                        UserName = "sa",
-                        EmailConfirmed = true,
+                        FirstName = "Profession",
+                        LastName = "Admin",
+                        UserName = "pa",
+                        Email = "pa@sa.com",
+                        EmailConfirmed = true
                     },
                     new User
                     {
@@ -130,6 +149,15 @@ namespace DiplomaProject.Domain.Initializer
                         LastName = "Grigoryan",
                         UserName = "liana_grigoryan",
                         Email = "lgrigoryan25@gmail.com",
+                        EmailConfirmed = true
+                    },
+                    new User
+                    {
+                        FirstName = "Hakob",
+                        LastName = "Papazyan",
+                        PhoneNumber = "093697343",
+                        UserName = "hakob_papazyan",
+                        Email = "hakobpapazyan2@gmail.com",
                         EmailConfirmed = true
                     },
                     new User
@@ -150,30 +178,20 @@ namespace DiplomaProject.Domain.Initializer
                     },
                     new User
                     {
-                        FirstName = "DepartmentAdmin",
-                        Email = "da@sa.com",
-                        UserName = "da",
-                        EmailConfirmed = true
-                    }
+                        FirstName = "Simple",
+                        LastName = "Admin",
+                        Email = "sa@sa.com",
+                        UserName = "sa",
+                        EmailConfirmed = true,
+                    },
                 };
                 if (!_context.Users.Any())
                 {
-                    foreach (var user in users)
+                    for (int i = 0; i < users.Count; i++)
                     {
-                        await _userManager.CreateAsync(user, password);
+                        await _userManager.CreateAsync(users[i], password);
+
                     }
-                    await _userManager.AddToRoleAsync(users[0], "SubjectMaker");
-                    await _context.SaveChangesAsync();
-                    await _userManager.AddToRoleAsync(users[1], "DefaultRole");
-                    await _context.SaveChangesAsync();
-                    await _userManager.AddToRoleAsync(users[2], "RequestSender");
-                    await _context.SaveChangesAsync();
-                    await _userManager.AddToRoleAsync(users[3], "LaborMaker");
-                    await _context.SaveChangesAsync();
-                    await _userManager.AddToRoleAsync(users[4], "CurriculumMaker");
-                    await _context.SaveChangesAsync();
-                    await _userManager.AddToRoleAsync(users[5], "DepartmentAdmin");
-                    await _context.SaveChangesAsync();
                 }
 
                 if (!_context.StakeHolderTypes.Any())
@@ -229,7 +247,6 @@ namespace DiplomaProject.Domain.Initializer
                     _context.Faculties.AddRange(faculties);
                     _context.SaveChanges();
                 }
-
                 if (!_context.Departments.Any())
                 {
                     var departments = new List<Department>
@@ -244,7 +261,6 @@ namespace DiplomaProject.Domain.Initializer
                     _context.Departments.AddRange(departments);
                     _context.SaveChanges();
                 }
-
                 if (!_context.Branches.Any())
                 {
                     var branches = new List<Branch>
@@ -261,7 +277,6 @@ namespace DiplomaProject.Domain.Initializer
                     _context.Branches.AddRange(branches);
                     _context.SaveChanges();
                 }
-
                 if (!_context.SubjectModules.Any())
                 {
                     var modules = new List<SubjectModule>()
@@ -381,6 +396,17 @@ namespace DiplomaProject.Domain.Initializer
                     _context.SaveChanges();
                 }
 
+                if (!_context.UserRoles.Any())
+                {
+                    var userroles = new List<UserRole>();
+                    for (int i = 0; i < 9; i++)
+                    {
+                        userroles.Add(new UserRole { ProfessionId = 1, UserId = users[i].Id, RoleId = roles[i].Id });
+                    }
+                    userroles.Add(new UserRole { ProfessionId = 2, UserId = users[2].Id, RoleId = roles[2].Id });
+                    _context.UserRoles.AddRange(userroles);
+                    _context.SaveChanges();
+                }
                 if (!_context.OutComeTypes.Any())
                 {
                     var types = new List<OutComeType>

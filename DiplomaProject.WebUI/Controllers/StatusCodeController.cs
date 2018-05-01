@@ -25,7 +25,7 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult Index(int statusCode)
         {
             var reExecute = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            logger.LogInformation($"Unexpected Status Code: {statusCode}, OriginalPath: {reExecute.OriginalPath}");
+            logger.LogInformation($"Unexpected Status Code: {statusCode}, OriginalPath: {reExecute?.OriginalPath}");
             return View(statusCode);
         }
     }

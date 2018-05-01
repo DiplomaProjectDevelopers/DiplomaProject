@@ -20,7 +20,18 @@ namespace DiplomaProject.Domain.ViewModels
         public int? ProfessionId { get; set; }
         [Required]
         [Display(Name = "Առարկայական մոդուլ")]
-        public int SubjectModuleId { get; set; }
+        public int? SubjectModuleId { get; set; }
+
+        [Display(Name = "Մոդուլ")]
+        public string SubjectModule { get; set; }
+
+        [Display(Name = "Կրեդիտ")]
+        public int? Credit { get; set; }
+        [Display(Name = "Կիսամյակ")]
+        public int? Level { get; set; }
+
+        [Display(Name = "Ընդհանուր ժամաքանակ")]
+        public int? TotalHours { get; set; }
 
         public List<OutcomeViewModel> Outcomes { get; set; }
 

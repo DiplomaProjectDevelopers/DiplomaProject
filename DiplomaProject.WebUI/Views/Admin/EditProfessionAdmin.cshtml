@@ -1,4 +1,4 @@
-﻿@model DiplomaProject.Domain.ViewModels.ProfessionAdminViewModel
+﻿@model UserViewModel
 
 @{
     ViewData["Title"] = $"Խմբագրել {Model?.Username} օգտագործողին";
@@ -11,46 +11,23 @@
 <hr />
 <div class="row">
     <div class="col-md-6 col-sm-12 col-lg-6 col-md-offset-3">
+        <div id="message"></div>
+        <button class="btn btn-link" onclick="addRole()"><i class="glyphicon glyphicon-plus"></i>Ավելացնել դեր</button>
         <div class="panel panel-success">
-            <div class="panel-heading">Update roles for the specified user.</div>
+            <div class="panel-heading">Ընտրեք դերերը տվյալ օգտագոտծողի համար</div>
+            <div>
+            </div>
             <div class="panel-body">
                 <form asp-action="EditProfessionAdmin" asp-controller="Admin" asp-antiforgery="true">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     @Html.HiddenFor(m => m.Id)
-                    <div class="form-group">
-                        <label asp-for="Username" class="control-label"></label>
-                        @Html.DisplayFor(m => m.Username)
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="FirstName" class="control-label"></label>
-                        @Html.DisplayFor(m => m.FirstName)
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="LastName" class="control-label"></label>
-                        @Html.DisplayFor(m => m.LastName)
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Email" class="control-label"></label>
-                        @Html.DisplayFor(m => m.Email)
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="PhoneNumber" class="control-label"></label>
-                        @Html.DisplayFor(m => m.PhoneNumber)
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="CurrentRole" class="control-label"></label>
-                        @Html.DisplayFor(m => m.CurrentRole)
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="ProfessionId" class="control-label"></label>
-                        <select asp-for="ProfessionId" asp-items="@(new SelectList(ViewBag.Professions, "Id", "Name"))">
-                            <option>--ընտրեք մասնագիտություն--</option>
-                        </select>
+                    <div id="roleProfessions">
+
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Պահպանել" class="btn btn-success" />
-                        <a asp-action="GetUsers" class="btn btn-default">Հետ գնալ ցանկ</a>
+                        <a asp-action="Index" class="btn btn-default">Հետ գնալ ցանկ</a>
                     </div>
                 </form>
             </div>
@@ -59,5 +36,20 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var professions;
+        var roles;
+        var nextId;
+        var edges;
+        var userId;
+       $(document).ready(function() {
+           edges = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UserRoles)))');
+           userId = '@Model.Id';
+           nextId = -1;
+           roles = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Roles)))');
+           professions = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Professions)))');
+           updateDependencies(edges);
+        });
+    </script>
+    <script src="~/custom_scripts/EditUser.js"></script>
 }

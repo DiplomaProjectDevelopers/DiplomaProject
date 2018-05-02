@@ -11,8 +11,8 @@ using System;
 namespace DiplomaProject.Domain.Migrations
 {
     [DbContext(typeof(DiplomaProjectContext))]
-    [Migration("20180425170823_ModuleGroup")]
-    partial class ModuleGroup
+    [Migration("20180502193526_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -110,6 +110,8 @@ namespace DiplomaProject.Domain.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("InitialSubjectId");
+
                     b.Property<bool?>("IsNew");
 
                     b.Property<string>("Name");
@@ -122,9 +124,9 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.Property<double?>("TotalWeight");
 
-                    b.Property<int?>("TypeId");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("InitialSubjectId");
 
                     b.HasIndex("OutComeTypeId");
 
@@ -190,7 +192,7 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.Property<int?>("StakeHolderId");
 
-                    b.Property<decimal>("Weight");
+                    b.Property<double?>("Weight");
 
                     b.HasKey("Id");
 
@@ -222,8 +224,6 @@ namespace DiplomaProject.Domain.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AdminId");
-
                     b.Property<bool?>("BdfullTime");
 
                     b.Property<byte?>("BdfullTimeSemesters");
@@ -250,8 +250,6 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminId");
-
                     b.HasIndex("BranchId");
 
                     b.HasIndex("DepartmentId");
@@ -268,6 +266,8 @@ namespace DiplomaProject.Domain.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<string>("DisplayName");
+
                     b.Property<string>("Name")
                         .HasMaxLength(256);
 
@@ -283,7 +283,26 @@ namespace DiplomaProject.Domain.Migrations
                         .HasName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("DiplomaProject.Domain.Entities.RoleClaim", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleClaims");
                 });
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.StakeHolder", b =>
@@ -344,8 +363,6 @@ namespace DiplomaProject.Domain.Migrations
                     b.Property<int?>("LectionHours");
 
                     b.Property<int>("Level");
-
-                    b.Property<int?>("ModuleId");
 
                     b.Property<string>("Name");
 
@@ -437,42 +454,10 @@ namespace DiplomaProject.Domain.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("DiplomaProject.Domain.Entities.UserRole", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ClaimType");
-
-                    b.Property<string>("ClaimValue");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetRoleClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("DiplomaProject.Domain.Entities.UserClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -488,10 +473,10 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("UserClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("DiplomaProject.Domain.Entities.UserLogin", b =>
                 {
                     b.Property<string>("LoginProvider");
 
@@ -506,10 +491,27 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("UserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("DiplomaProject.Domain.Entities.UserRole", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("RoleId");
+
+                    b.Property<int>("ProfessionId");
+
+                    b.HasKey("UserId", "RoleId", "ProfessionId");
+
+                    b.HasIndex("ProfessionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("DiplomaProject.Domain.Entities.UserToken", b =>
                 {
                     b.Property<string>("UserId");
 
@@ -521,7 +523,7 @@ namespace DiplomaProject.Domain.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("UserTokens");
                 });
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.Department", b =>
@@ -546,6 +548,10 @@ namespace DiplomaProject.Domain.Migrations
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.FinalOutCome", b =>
                 {
+                    b.HasOne("DiplomaProject.Domain.Entities.InitialSubject", "InitialSubject")
+                        .WithMany("FinalOutComes")
+                        .HasForeignKey("InitialSubjectId");
+
                     b.HasOne("DiplomaProject.Domain.Entities.OutComeType", "OutComeType")
                         .WithMany("FinalOutComes")
                         .HasForeignKey("OutComeTypeId");
@@ -598,10 +604,6 @@ namespace DiplomaProject.Domain.Migrations
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.Profession", b =>
                 {
-                    b.HasOne("DiplomaProject.Domain.Entities.User", "Admin")
-                        .WithMany("Professions")
-                        .HasForeignKey("AdminId");
-
                     b.HasOne("DiplomaProject.Domain.Entities.Branch", "Branch")
                         .WithMany("Professions")
                         .HasForeignKey("BranchId");
@@ -609,6 +611,14 @@ namespace DiplomaProject.Domain.Migrations
                     b.HasOne("DiplomaProject.Domain.Entities.Department", "Department")
                         .WithMany("Professions")
                         .HasForeignKey("DepartmentId");
+                });
+
+            modelBuilder.Entity("DiplomaProject.Domain.Entities.RoleClaim", b =>
+                {
+                    b.HasOne("DiplomaProject.Domain.Entities.Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DiplomaProject.Domain.Entities.StakeHolder", b =>
@@ -633,8 +643,29 @@ namespace DiplomaProject.Domain.Migrations
                         .HasForeignKey("SubjectModuleId");
                 });
 
+            modelBuilder.Entity("DiplomaProject.Domain.Entities.UserClaim", b =>
+                {
+                    b.HasOne("DiplomaProject.Domain.Entities.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DiplomaProject.Domain.Entities.UserLogin", b =>
+                {
+                    b.HasOne("DiplomaProject.Domain.Entities.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("DiplomaProject.Domain.Entities.UserRole", b =>
                 {
+                    b.HasOne("DiplomaProject.Domain.Entities.Profession", "Profession")
+                        .WithMany()
+                        .HasForeignKey("ProfessionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("DiplomaProject.Domain.Entities.Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
@@ -646,31 +677,7 @@ namespace DiplomaProject.Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.HasOne("DiplomaProject.Domain.Entities.Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.HasOne("DiplomaProject.Domain.Entities.User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.HasOne("DiplomaProject.Domain.Entities.User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("DiplomaProject.Domain.Entities.UserToken", b =>
                 {
                     b.HasOne("DiplomaProject.Domain.Entities.User")
                         .WithMany()

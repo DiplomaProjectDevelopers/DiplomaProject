@@ -23,27 +23,6 @@ namespace DiplomaProject.WebUI.Controllers
         {
 
         }
-        public IActionResult Index2()
-        {
-            var branch = service.GetAll<Branch>().ToList();
-            var branchmodel = branch.Select(b => mapper.Map<BranchViewModel>(b)).ToList();
-            branchmodel.Insert(0, new BranchViewModel { Id = 0, Name = "ճյուղ" });
-            ViewBag.ListOfBranch = branchmodel;
-            var professions = service.GetAll<Profession>().ToList();
-            var proffmodel = professions.Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
-            proffmodel.Insert(0, new ProfessionViewModel { Id = 0, Name = "մասնագիտություն" });
-            ViewBag.ListofProfession = proffmodel;
-            ViewBag.ListOfTypeName = service.GetAll<StakeHolderType>().Select(s => new StakeHolderTypeViewModel
-            {
-                Id = s.Id,
-                TypeName = s.ProfessionName ?? s.TypeName
-            });
-            var stakeHolders = service.GetAll<StakeHolder>().ToList();
-            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
-            sthmodel.Insert(0, new StakeHolderViewModel { Id = 0, CompanyName = "կազմակերպություն" });
-            ViewBag.ListofCompany = sthmodel;
-            return View("Questionnaire1");
-        }
 
         [Authorize]
         public async Task<IActionResult> Index()
@@ -258,6 +237,25 @@ namespace DiplomaProject.WebUI.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult Question()
+        {
+            var branch = service.GetAll<Branch>().ToList();
+            var branchmodel = branch.Select(b => mapper.Map<BranchViewModel>(b)).ToList();
+            ViewBag.ListOfBranch = branchmodel;
+            var professions = service.GetAll<Profession>().ToList();
+            var proffmodel = professions.Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            ViewBag.ListofProfession = proffmodel;
+            ViewBag.ListOfTypeName = service.GetAll<StakeHolderType>().Select(s => new StakeHolderTypeViewModel
+            {
+                Id = s.Id,
+                TypeName = s.ProfessionName ?? s.TypeName
+            });
+            var stakeHolders = service.GetAll<StakeHolder>().ToList();
+            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
+            ViewBag.ListofCompany = sthmodel;
+            return View("Questionnaire1");
+        }
 
         [HttpPost]
         public IActionResult IndexSel([FromForm]int branchid, string profftext, string stakeholder, int companyid)
@@ -314,8 +312,6 @@ namespace DiplomaProject.WebUI.Controllers
                 var m = weightlist[i] * coefficient;
                 multipleofcoefficient[i] = m;
             }
-
-            // var outcomeinsertmodel = outcomeinsert.Select(oi => mapper.Map<OutcomeViewModel>(oi)).ToList();
             for (int i = 0; i < outcomelist.Length; i++)
             {
                 var data = new OutCome
@@ -328,88 +324,55 @@ namespace DiplomaProject.WebUI.Controllers
                 };
                 var outcomeinsert = service.Insert<OutCome>(data);
             }
-            FinalOutcomeFunc();
-            return View();
+            return RedirectToAction("FinalOutcomeFunc");
         }
 
-        [HttpPost]
         public IActionResult FinalOutcomeFunc()
         {
             var finaloutcome = service.GetAll<FinalOutCome>().ToList();
-            var finaloutcomemodel = finaloutcome.Select(fo => mapper.Map<OutcomeViewModel>(fo)).ToList();
+            var finaloutcomemodel = finaloutcome.Select(f => mapper.Map<OutcomeViewModel>(f)).ToList();
             var outcome = service.GetAll<OutCome>().ToList();
             var outcomemodel = outcome.Select(o => mapper.Map<FinalOutcomeViewModel>(o)).ToList();
             foreach (var outcomeitem in outcomemodel)
             {
+                int count = 0;
                 foreach (var finaloutcomeitem in finaloutcomemodel)
                 {
-                    if (finaloutcomeitem.Name == outcomeitem.Name)
+                    var data = new FinalOutCome { };
+                    if (finaloutcomeitem.Name.Trim() == (outcomeitem.Name.Trim()))
                     {
-                        if (finaloutcomeitem.TotalWeight == 0)
+                        if (finaloutcomeitem.TotalWeight == null)
                         {
-                            finaloutcomeitem.TotalWeight += outcomeitem.Weight;
+                            data.TotalWeight = finaloutcomeitem.TotalWeight + outcomeitem.Weight;
                         }
                         else
                         {
-                            finaloutcomeitem.TotalWeight = (finaloutcomeitem.TotalWeight + outcomeitem.Weight) / 2;
+
+                            data.TotalWeight = (finaloutcomeitem.TotalWeight + outcomeitem.Weight) / 2;
                         }
-                        finaloutcomeitem.SubjectId = outcomeitem.InitialSubjectId;
+                        data.InitialSubjectId = outcomeitem.InitialSubjectId;
                     }
                     else
                     {
-                        var data = new FinalOutCome
+                        count++;
+                        if (count == finaloutcomemodel.Count)
                         {
-                            Name = outcomeitem.Name,
-                            SubjectId = outcomeitem.InitialSubjectId,
-                            TotalWeight = outcomeitem.Weight,
-                        };
-                        var finaloutcomeinsert = service.Insert<FinalOutCome>(data);
+                            data.Name = outcomeitem.Name;
+                            data.InitialSubjectId = outcomeitem.InitialSubjectId;
+                            data.TotalWeight = outcomeitem.Weight;
+                            //var data = new FinalOutCome
+                            //{
+                            //    Name = outcomeitem.Name,
+                            //    InitialSubjectId = outcomeitem.InitialSubjectId,
+                            //    TotalWeight = outcomeitem.Weight,
+                            //}
+                        }
                     }
+                    var finaloutcomeinsert = service.Insert<FinalOutCome>(data);
                 }
                 var outcomedelate = service.DeleteById<OutCome>(outcomeitem.Id);
             }
-
-            return View();
+            return View("Questionnaire2");
         }
-
-        //[HttpPost]
-        //public IActionResult FinalOutcome()
-        //{
-        //    var finaloutcome = service.GetAll<FinalOutCome>().ToList();
-        //    var finaloutcomemodel = finaloutcome.Select(fo => mapper.Map<OutcomeViewModel>(fo)).ToList();
-        //    var outcome = service.GetAll<OutCome>().ToList();
-        //    var outcomemodel = outcome.Select(o => mapper.Map<FinalOutcomeViewModel>(o)).ToList();           
-        //    foreach(var outcomeitem in outcomemodel)
-        //    {
-        //        foreach(var finaloutcomeitem in finaloutcomemodel)
-        //        {
-        //            if (finaloutcomeitem.Name == outcomeitem.Name)
-        //            {
-        //                if (finaloutcomeitem.TotalWeight == 0)
-        //                {
-        //                    finaloutcomeitem.TotalWeight += outcomeitem.Weight;
-        //                }
-        //                else
-        //                {
-        //                    finaloutcomeitem.TotalWeight = (finaloutcomeitem.TotalWeight + outcomeitem.Weight) / 2;
-        //                }
-        //                finaloutcomeitem.SubjectId = outcomeitem.InitialSubjectId;
-        //            }
-        //            else
-        //            {
-        //                var data = new FinalOutCome
-        //                {
-        //                    Name = outcomeitem.Name,
-        //                    SubjectId = outcomeitem.InitialSubjectId,
-        //                    TotalWeight = outcomeitem.Weight,
-        //                };
-        //                var finaloutcomeinsert = service.Insert<FinalOutCome>(data);
-        //            }
-        //        }
-        //        var outcomedelate = service.DeleteById<OutCome>(outcomeitem.Id);
-        //    }
-
-        //    return View();
-        //}
     }
 }

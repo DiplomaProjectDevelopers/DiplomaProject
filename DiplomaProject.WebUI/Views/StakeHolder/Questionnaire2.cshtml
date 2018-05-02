@@ -9,8 +9,10 @@
         <div asp-action="Index" method="get" class="profession" role="form">
             <h4>Խնդում ենք նախ ընտրել Ձեր պաշտոնը</h4>
             <select id="Professionname"
-                    class="Professionnamehclass"
-                    asp-items="@(new SelectList(ViewBag.ListOfTypeName,"Id","TypeName"))"></select>
+                    class="Professionnameclass"
+                    asp-items="@(new SelectList(ViewBag.ListOfTypeName,"Id","TypeName"))">
+            <option>պաշտոն</option>
+            </select>
         </div>
         <form asp-controller="StakeHolder" asp-action="Outcome" method="get" class="Form" >
             @foreach (var subject in ViewBag.ListOfSubject)
@@ -114,12 +116,26 @@
             });
         });
         function OK() {
-            data.set("outcomeName", strName);
-            data.set("weight", strWeight);
-            data.set("subject", strSubject);
-            data.set("outcomeid", strId);
-            //alert("onclick");
-            req.send(data);
+            var x = document.querySelectorAll("#Radiodiv > input[type=radio]");
+            var i;
+            for (i = 0; i < x.length; i++) {
+                if (x[i].is(':checked')) { }
+                else {
+                    x[i].style.color = "red";
+                }
+            }
+            if ($('#Radiodiv:not(:has(:radio:checked))').length == 0) {
+                alert("All checked!!!");
+                data.set("outcomeName", strName);
+                data.set("weight", strWeight);
+                data.set("subject", strSubject);
+                data.set("outcomeid", strId);
+                //alert("onclick");
+                req.send(data);
+            }
+            else {
+                alert("Please check all");
+            }
         }
     </script>
 }

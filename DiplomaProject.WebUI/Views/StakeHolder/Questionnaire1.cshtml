@@ -11,14 +11,17 @@
                 <h4>Ընտրել ճյուղը</h4>
                 <select id="Branch"
                         class="Branchclass"
-                        asp-items="@(new SelectList(ViewBag.ListOfBranch,"Id","Name"))"
-                        ></select>
+                        asp-items="@(new SelectList(ViewBag.ListOfBranch,"Id","Name"))">
+                    <option selected disabled>ճյուղ</option>
+                </select>
             </div>
             <div id="ProfessionDiv" class="profession" role="form">
                 <h4>Ընտրել մասնագիտությունը</h4>
                 <select id="Profession"
                         class="Professionclass"
-                        asp-items="@(new SelectList(ViewBag.ListofProfession, "Id", "Name"))"></select>
+                        asp-items="@(new SelectList(ViewBag.ListofProfession, "Id", "Name"))">
+                    <option selected disabled>մասնագիտություն</option>
+                </select>
             </div>
             <div id="StakeHolder" class="checkbox">
                 <h4>Ընտրել շահակցին</h4>
@@ -30,7 +33,9 @@
             <div id="CompanyDiv" class="company">
                 <h4>Ընտրել կազմակերպությունը</h4>
                 <select id="Company"
-                        asp-items="@(new SelectList(ViewBag.ListofCompany,"Id", "CompanyName"))"></select>
+                        asp-items="@(new SelectList(ViewBag.ListofCompany,"Id", "CompanyName"))">
+                    <option selected disabled>կազմակերպություն</option>
+                </select>
                 <div class="Azat">
                     <a class="Button" href="#" onclick="OK(); return false">
                         Հաստատել

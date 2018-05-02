@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -9,8 +13,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace DiplomaProject.Domain.Entities
 {
-    public class DiplomaProjectContext 
-        : IdentityDbContext<User, Role, string, IdentityUserClaim<string>, UserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
+    public class DiplomaProjectContext
+        : IdentityDbContext<User,Role,string,UserClaim,UserRole,UserLogin,RoleClaim,UserToken>
     {
         public DiplomaProjectContext(DbContextOptions<DiplomaProjectContext> options) : base(options)
         {
@@ -33,7 +37,23 @@ namespace DiplomaProject.Domain.Entities
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {         
+        {
+            //modelBuilder.Entity<Role>(b =>
+            //{
+            //    b.HasKey(r => r.Id);
+            //    b.HasIndex(r => r.NormalizedName).HasName("RoleNameIndex").IsUnique();
+            //    b.Property(r => r.ConcurrencyStamp).IsConcurrencyToken();
+
+            //    b.Property(u => u.Name).HasMaxLength(256);
+            //    b.Property(u => u.NormalizedName).HasMaxLength(256);
+
+            //    b.HasMany<UserRole>().WithOne().HasForeignKey(ur => ur.RoleId).IsRequired();
+            //    b.HasMany<RoleClaim>().WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
+            //});
+            //modelBuilder.Entity<UserRole>(entity =>
+            //{
+            //    entity.HasKey(m => new { m.UserId, m.RoleId, m.ProfessionId });
+            //});
             modelBuilder.Entity<Edge>()
                .HasOne(m => m.LeftOutCome)
                .WithMany(t => t.LeftSideOutComes)
@@ -47,10 +67,40 @@ namespace DiplomaProject.Domain.Entities
 
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("Users");
+            });
+            modelBuilder.Entity<UserClaim>(entity =>
+            {
+                entity.ToTable("UserClaims");
+            });
+            modelBuilder.Entity<UserLogin>(entity =>
+            {
+                entity.ToTable("UserLogins");
+            });
+            modelBuilder.Entity<UserToken>(entity =>
+            {
+                entity.ToTable("UserTokens");
+            });
             modelBuilder.Entity<UserRole>(entity =>
             {
-                entity.HasKey(k => new { k.UserId, k.RoleId, k.ProfessionId });
-                entity.HasOne(r => r.Profession).WithMany();
+                var mutableKeys = entity.Metadata.GetKeys().ToList();
+                for (int i = 0; i < mutableKeys.Count; i++)
+                {
+                    entity.Metadata.RemoveKey(mutableKeys[i].Properties);
+                }
+
+                entity.HasKey(m => new { m.UserId, m.RoleId, m.ProfessionId });
+                entity.ToTable("UserRoles");
+            });
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("Roles");
+            });
+            modelBuilder.Entity<RoleClaim>(entity =>
+            {
+                entity.ToTable("RoleClaims");
             });
         }
     }

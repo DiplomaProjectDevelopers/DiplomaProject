@@ -43,7 +43,7 @@ namespace DiplomaProject.WebUI.Controllers
                 }
                 ).Select(u => u.Result).ToList();
             var um = mapper.Map<UserViewModel>(user);
-            var proff = service.GetAll<UserRole>().ToList().Where(p => p.UserId == user.Id && p.ProfessionId.HasValue && p.ProfessionId.Value > 0).Select(ur => ur.ProfessionId.Value).Distinct()
+            var proff = service.GetAll<UserRole>().ToList().Where(p => p.UserId == user.Id && p.ProfessionId > 0).Select(ur => ur.ProfessionId).Distinct()
                 .Select(p => service.GetById<Profession>(p)).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
             ViewBag.User = um;
             return View("UserList", model);
@@ -185,7 +185,7 @@ namespace DiplomaProject.WebUI.Controllers
             var current = service.GetUserAsync(User).GetAwaiter().GetResult();
             var da = (await roleManager.FindByNameAsync("DepartmentAdmin"));
             var dap = service.GetAll<UserRole>().Where(ur => ur.UserId == current.Id && ur.RoleId == da.Id)
-                .Select(ur => ur.ProfessionId.Value).ToList();
+                .Select(ur => ur.ProfessionId).ToList();
             if (dap.Count > 0)
             {
                 //    .Where(u => u.UserId == current.Id && u.ProfessionId.HasValue && u.ProfessionId.Value > 0)
@@ -193,7 +193,7 @@ namespace DiplomaProject.WebUI.Controllers
 
                 ViewBag.Roles = service.GetAll<Role>().Where(r => r.Priority > 3).Select(s => mapper.Map<RoleViewModel>(s)).ToList();
                 ViewBag.Professions = service.GetAll<Profession>().Where(p => dap.IndexOf(p.Id) != -1).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
-                var userroles = service.GetAll<UserRole>().Where(u => u.UserId == userId && dap.Contains(u.ProfessionId.Value)).Select(s => mapper.Map<UserRoleViewModel>(s)).ToList();
+                var userroles = service.GetAll<UserRole>().Where(u => u.UserId == userId && dap.Contains(u.ProfessionId)).Select(s => mapper.Map<UserRoleViewModel>(s)).ToList();
                 var model = mapper.Map<UserViewModel>(user);
                 model.UserRoles = userroles;
                 for (int i = 0; i < model.UserRoles.Count; i++)

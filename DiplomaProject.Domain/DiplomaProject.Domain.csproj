@@ -9,9 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20180204142919_Initial.cs" />
-    <Compile Remove="Migrations\20180204154008_Initial.cs" />
-    <Compile Remove="Migrations\20180204154444_Initial.cs" />
+    <Compile Remove="Migrations\20180502122952_InitialCreate.cs" />
+    <Compile Remove="Migrations\20180502123502_InitialCreate.cs" />
+    <Compile Remove="Migrations\20180502125300_InitialCreate.cs" />
+    <Compile Remove="Migrations\20180502140244_InitialCreate.cs" />
+    <Compile Remove="Migrations\20180502142031_InitialCreate.cs" />
+    <Compile Remove="Migrations\20180502143614_InitialCreate.cs" />
+    <Compile Remove="Migrations\20180502182418_InitialCreate.cs" />
+    <Compile Remove="Migrations\20180502190438_InitialCreate.cs" />
+    <Compile Remove="Migrations\20180502190952_InitialCreate.cs" />
+    <Compile Remove="Migrations\20180502191716_InitialCreate.cs" />
+    <Compile Remove="Migrations\20180502192444_InitialCreate.cs" />
   </ItemGroup>
 
   <ItemGroup>

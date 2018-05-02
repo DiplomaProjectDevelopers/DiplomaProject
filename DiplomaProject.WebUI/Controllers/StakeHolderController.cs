@@ -45,7 +45,7 @@ namespace DiplomaProject.WebUI.Controllers
 
             var um = mapper.Map<UserViewModel>(user);
             um.Professions = service.GetAll<UserRole>().Where(up => up.UserId == user.Id).Select(p => p.ProfessionId).Distinct()
-                .Select(s => mapper.Map<ProfessionViewModel>(service.GetById<Profession>(s.Value))).ToList();
+                .Select(s => mapper.Map<ProfessionViewModel>(service.GetById<Profession>(s))).ToList();
             ViewBag.User = um;
             return View("Stakeholders", stakeholders);
         }

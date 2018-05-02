@@ -1,7 +1,9 @@
 ﻿using DiplomaProject.Domain.Entities;
 using DiplomaProject.Domain.Interfaces;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,18 +31,12 @@ namespace DiplomaProject.Domain.Initializer
         }
 
         //This example just creates an Administrator role and one Admin users
-        public async Task Initialize()
+        public async Task Initialize(IApplicationBuilder app)
         {
-            try
+            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                //create database schema if none exists
-                _context.Database.Migrate();
-                //If there is already an Administrator role, abort
+                scope.ServiceProvider.GetRequiredService<DiplomaProjectContext>().Database.Migrate();
 
-
-
-
-                //Create the Administartor Role
                 var roles = new List<Role>
                     {
                         new Role
@@ -98,12 +94,11 @@ namespace DiplomaProject.Domain.Initializer
                             DisplayName = "Նոր օգտատեր"
                         } //Defaultrole
                     };
-
                 if (!_context.Roles.Any())
                 {
-                    foreach (var role in roles)
+                    for (int i = 0; i < roles.Count; i++)
                     {
-                        await _roleManager.CreateAsync(role);
+                        await _roleManager.CreateAsync(roles[i]);
                     }
                 }
 
@@ -392,8 +387,13 @@ namespace DiplomaProject.Domain.Initializer
                             BranchId = 1
                         }
                     };
-                    _context.Professions.AddRange(professions);
-                    _context.SaveChanges();
+                    for (int i = 0; i < professions.Count; i++)
+                    {
+                        _context.Professions.Add(professions[i]);
+                        _context.SaveChanges();
+                    }
+                    //_context.Professions.AddRange(professions);
+                    //_context.SaveChanges();
                 }
 
                 if (!_context.UserRoles.Any())
@@ -404,8 +404,11 @@ namespace DiplomaProject.Domain.Initializer
                         userroles.Add(new UserRole { ProfessionId = 1, UserId = users[i].Id, RoleId = roles[i].Id });
                     }
                     userroles.Add(new UserRole { ProfessionId = 2, UserId = users[2].Id, RoleId = roles[2].Id });
-                    _context.UserRoles.AddRange(userroles);
-                    _context.SaveChanges();
+                    for (int i = 0; i < userroles.Count; i++)
+                    {
+                        _context.UserRoles.Add(userroles[i]);
+                        _context.SaveChanges();
+                    }
                 }
                 if (!_context.OutComeTypes.Any())
                 {
@@ -551,10 +554,13 @@ namespace DiplomaProject.Domain.Initializer
                     _context.SaveChanges();
                 }
             }
-            catch (Exception exception)
-            {
-                throw exception;
-            }
+            //create database schema if none exists
+           // _context.Database.Migrate();
+            //_context.Database.EnsureCreated();
+            //If there is already an Administrator role, abort
+
+            //Create the Administartor Role
+            
         }
     }
 }

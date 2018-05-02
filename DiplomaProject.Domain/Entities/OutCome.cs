@@ -11,7 +11,7 @@ namespace DiplomaProject.Domain.Entities
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public float Weight { get; set; }
+        public double? Weight { get; set; }
         public int? OutComeTypeId { get; set; }
         public int? StakeHolderId { get; set; }
         public int? InitialSubjectId { get; set; }

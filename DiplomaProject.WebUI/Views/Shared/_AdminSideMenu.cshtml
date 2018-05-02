@@ -33,10 +33,10 @@
                     <i class="glyphicon glyphicon-book"></i> Առարկաներ
                 </a>
                 <ul class="collapse" id="prefessions" role="menu" aria-labelledby="lnkPrefessions">
-                    @foreach (var item in Model.Professions)
+                    @foreach (var item in Model.UserRoles)
                     {
                         <li>
-                            <a href="@Url.Action("Index", "Subject", new { professionId = item.Id } )">@item.Name</a>
+                            <a href="@Url.Action("Index", "Subject", new { professionId = item.ProfessionId } )">@item.ProfessionName</a>
                         </li>
                     }
                 </ul>

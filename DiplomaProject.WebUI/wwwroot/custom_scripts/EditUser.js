@@ -24,11 +24,53 @@ function addRole() {
     else {
         message = "Ոչ բոլոր զույգերն են ամբողջությամբ լրացված: Լրացրեք բոլորը և փորձեք կրկին"
     }
-    document.getElementById('message').innerText = message;
-
+    setMessage(message);
     updateDependencies(edges);
 }
 
+function onSubmit(){
+    const isOK = isFull(edges);
+    let message;
+    if (isOK) {
+        message = "";
+        $.ajax({         
+            type: "POST",
+            data: JSON.stringify({
+                Id: userId,
+                UserRoles: edges
+            }),
+            url: '/Admin/EditConfirmed',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.redirect) {
+                    location.href = data.redirect;
+                }
+            }
+        });
+    }
+    else {
+        message = "Ոչ բոլոր զույգերն են ամբողջությամբ լրացված: Լրացրեք բոլորը և փորձեք կրկին"
+    }
+    setMessage(message);
+}
+
+function setMessage(message){
+    if (message && message.length) {
+        var div = document.getElementById('message');
+        while (div.firstChild) {
+            div.removeChild(div.firstChild);
+        }
+        const p = document.createElement('p');
+        p.setAttribute('class', 'alert alert-info');
+        const icon = document.createElement('span');
+        icon.setAttribute('class', 'glyphicon glyphicon-info-sign');
+        const span = document.createElement('span');
+        span.textContent = message;
+        p.appendChild(icon);
+        p.appendChild(span);
+        div.appendChild(p);
+    }
+}
 function removeDependency(edge, index) {
     edges =  edges.filter((item, index) => item.Id !== edge.Id);
     updateDependencies(edges);
@@ -37,7 +79,6 @@ function removeDependency(edge, index) {
 function onChange(edgeId, property, value) {
     const edge = edges.find(e => e.Id === edgeId);
     edge[property] = value;
-    //updateDependencies(edges);
 }
 
 function updateDependencies(edges) {

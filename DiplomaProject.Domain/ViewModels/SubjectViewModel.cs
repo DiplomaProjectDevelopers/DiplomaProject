@@ -18,6 +18,8 @@ namespace DiplomaProject.Domain.ViewModels
         public string Name { get; set; }
         [Display(Name = "Մասնագիտություն")]
         public int? ProfessionId { get; set; }
+        [Display(Name = "Մասնագիտություն")]
+        public string ProfessionName { get; set; }
         [Required]
         [Display(Name = "Առարկայական մոդուլ")]
         public int? SubjectModuleId { get; set; }

@@ -28,6 +28,7 @@ namespace DiplomaProject.WebUI.Controllers
         protected SignInManager<User> signInManager;
         protected RoleManager<Role> roleManager;
         protected string roleName;
+        protected User currentUser;
 
         public BaseController(IDPService service, IMapper mapper,
             UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
@@ -54,6 +55,7 @@ namespace DiplomaProject.WebUI.Controllers
                 var user = service.GetUserAsync(User).Result;
                 if (user != null)
                 {
+                    this.currentUser = user;
                     this.roleName = userManager.GetRoleAsync(user).Result;
                 }
             }

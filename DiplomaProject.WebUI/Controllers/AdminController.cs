@@ -28,23 +28,23 @@ namespace DiplomaProject.WebUI.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var user = userManager.GetUserAsync(User).Result;
             var users = service.GetAll<User>().ToList();
             var model = users.Where(u => u.Id != user.Id).
-                Select(async u =>
-                {
-                    var m = mapper.Map<UserViewModel>(u);
-                    var roleName = await userManager.GetRoleAsync(u);
-                    var r = await roleManager.FindByNameAsync(roleName);
-                    m.SelectedRoleId = r.Id;
-                    return m;
-                }
-                ).Select(u => u.Result).ToList();
+                Select(u =>  mapper.Map<UserViewModel>(u)    
+                ).ToList();
             var um = mapper.Map<UserViewModel>(user);
-            var proff = service.GetAll<UserRole>().ToList().Where(p => p.UserId == user.Id && p.ProfessionId > 0).Select(ur => ur.ProfessionId).Distinct()
-                .Select(p => service.GetById<Profession>(p)).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            var userRoles = service.GetAll<UserRole>().ToList().Where(p => p.UserId == user.Id).Select(p => mapper.Map<UserRoleViewModel>(p)).ToList();
+            for (int i = 0; i < userRoles.Count; i++)
+            {
+                userRoles[i].ProfessionName = service.GetById<Profession>(userRoles[i].ProfessionId)?.Name;
+                userRoles[i].UserName = (await userManager.FindByIdAsync(userRoles[i].UserId))?.UserName;
+                userRoles[i].RoleName = (await roleManager.FindByIdAsync(userRoles[i].RoleId))?.Name;
+                userRoles[i].RoleDisplayName = (await roleManager.FindByIdAsync(userRoles[i].RoleDisplayName))?.DisplayName;
+            }
+            um.UserRoles = userRoles;
             ViewBag.User = um;
             return View("UserList", model);
         }
@@ -198,32 +198,44 @@ namespace DiplomaProject.WebUI.Controllers
                 model.UserRoles = userroles;
                 for (int i = 0; i < model.UserRoles.Count; i++)
                 {
-                    model.UserRoles[i].Id = i + 1;
+                    model.UserRoles[i].Id = -1 - i;
                 }
-                return View("EditProfessionAdmin", model);
+                return View("EditUser", model);
             }
             throw new NotImplementedException();
         }
 
-        [HttpPost, ActionName("EditProfessionAdmin")]
+        [HttpPost]
         [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditConfirmed(ProfessionAdminViewModel model)
+        public async Task<IActionResult> EditConfirmed([FromBody]UserViewModel model)
         {
-            if (ModelState.IsValid && model != null && model.Id != null)
+            if (ModelState.IsValid && model != null && model.UserRoles.Count  != 0)
             {
-                var user = await userManager.FindByIdAsync(model.Id);
-                var userProfessions = service.GetAll<Profession>();
-                //if (userProfessions.FirstOrDefault(p => p.Id == model.ProfessionId) != null)
-                //{
-                //    var profession = service.GetById<Profession>(model.ProfessionId);
-                //    profession.AdminId = user.Id;
-                //    await service.Update<Profession>(profession);
-                //}
+                var currentUserProfessions = service.GetAll<UserRole>().Where(s => s.UserId == currentUser.Id).Select(s => s.ProfessionId).Distinct().ToList();
+                var enabledRoles = service.GetAll<Role>().ToList();
+                var previousroles = service.GetAll<UserRole>().Where(s => s.UserId == model.Id);
+                foreach (var item in previousroles)
+                {
+                    await service.Delete(item);
+                }
+                for (int i = 0; i < model.UserRoles.Count; i++)
+                {
+                    if (currentUserProfessions.Contains(model.UserRoles[i].ProfessionId))
+                    {
+                        var dataModel = new UserRole
+                        {
+                            UserId = model.Id,
+                            RoleId = model.UserRoles[i].RoleId,
+                            ProfessionId = model.UserRoles[i].ProfessionId
+                        };
+                        await service.Insert(dataModel);
+                    }
+                }
                 TempData["UserUpdated"] = Messages.USER_UPDATED_SUCCESS;
-                return RedirectToAction("Users");
+                return Json(new { redirect = Url.Action("Index", "Admin") });
             }
-            throw new Exception();
+            ViewBag.Message = "Սխալ տեղի ունեցավ: Խնդրում ենք փորձել կրկին";
+            return View("EditUser", model);
         }
 
         [HttpGet]

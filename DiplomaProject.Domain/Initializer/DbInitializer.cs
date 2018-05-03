@@ -47,12 +47,6 @@ namespace DiplomaProject.Domain.Initializer
                         }, //BaseAdmin
                         new Role
                         {
-                            Name = "FacultyAdmin",
-                            Priority = 2,
-                            DisplayName = "Ֆակուլտետի ադմին"
-                        }, //FacultyAdmin
-                        new Role
-                        {
                             Name = "DepartmentAdmin",
                             DisplayName = "Ամբիոնի ադմին",
                             Priority = 3
@@ -113,14 +107,6 @@ namespace DiplomaProject.Domain.Initializer
                         Email = "ba@sa.com",
                         EmailConfirmed = true,
                         UserName = "ba"
-                    },
-                    new User
-                    {
-                        FirstName = "Faculty",
-                        LastName = "Admin",
-                        Email = "fa@sa.com",
-                        EmailConfirmed = true,
-                        UserName = "fa"
                     },
                     new User
                     {
@@ -399,11 +385,11 @@ namespace DiplomaProject.Domain.Initializer
                 if (!_context.UserRoles.Any())
                 {
                     var userroles = new List<UserRole>();
-                    for (int i = 0; i < 9; i++)
+                    for (int i = 0; i < 8; i++)
                     {
                         userroles.Add(new UserRole { ProfessionId = 1, UserId = users[i].Id, RoleId = roles[i].Id });
                     }
-                    userroles.Add(new UserRole { ProfessionId = 2, UserId = users[2].Id, RoleId = roles[2].Id });
+                    userroles.Add(new UserRole { ProfessionId = 2, UserId = users[1].Id, RoleId = roles[1].Id });
                     for (int i = 0; i < userroles.Count; i++)
                     {
                         _context.UserRoles.Add(userroles[i]);

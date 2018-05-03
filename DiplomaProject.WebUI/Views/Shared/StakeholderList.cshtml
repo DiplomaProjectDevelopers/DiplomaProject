@@ -51,7 +51,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => stakeholder.BranchName)
                 </td>
-                @{ if (ViewBag.RoleName == "DEPARTMENTADMIN")
+                @{ if (ViewBag.UserRoles.Contains("DEPARTMENTADMIN"))
                     {
                         <td>
                             <p data-placement="top" data-toggle="tooltip" title="Խմբագրել">

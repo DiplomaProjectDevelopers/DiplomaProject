@@ -45,12 +45,17 @@ namespace DiplomaProject.WebUI.Controllers
                 userRoles[i].RoleDisplayName = (await roleManager.FindByIdAsync(userRoles[i].RoleDisplayName))?.DisplayName;
             }
             um.UserRoles = userRoles;
+
+            um.Professions = service.GetAll<UserRole>().Where(up => up.UserId == user.Id).Select(p => p.ProfessionId).Distinct()
+                .Select(s => mapper.Map<ProfessionViewModel>(service.GetById<Profession>(s))).ToList();
+
             ViewBag.User = um;
             return View("UserList", model);
         }
 
         public IActionResult UserList(string searchTerm)
         {
+            GetRoles();
             var user = userManager.GetUserAsync(User).Result;
             var users = service.GetAll<User>().ToList();
             var model = users.Where(u => u.Id != user.Id).
@@ -150,7 +155,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "BaseAdmin, DepartmentAdmin, FacultyAdmin")]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
         public async Task<IActionResult> UpdateRole([FromBody]UserRoleViewModel model)
         {
             var userId = model.UserId;
@@ -171,7 +176,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
         public async Task<IActionResult> Edit(string userId)
         {
             if (userId is null)
@@ -206,7 +211,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
         public async Task<IActionResult> EditConfirmed([FromBody]UserViewModel model)
         {
             if (ModelState.IsValid && model != null && model.UserRoles.Count  != 0)
@@ -239,7 +244,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
         public IActionResult Delete(string userId)
         {
             if (userId is null)
@@ -253,7 +258,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string userId)
         {

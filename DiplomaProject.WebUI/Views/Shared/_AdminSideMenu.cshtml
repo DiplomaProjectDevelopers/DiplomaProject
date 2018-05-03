@@ -25,7 +25,7 @@
             </li>
             <li>
                 <a href="#" class="list-group-item">
-                    <i class="glyphicon glyphicon-book"></i> Վերջնարդյունքներ
+                    <i class="glyphicon glyphicon-asterisk"></i> Վերջնարդյունքներ
                 </a>
             </li>
             <li>
@@ -33,17 +33,17 @@
                     <i class="glyphicon glyphicon-book"></i> Առարկաներ
                 </a>
                 <ul class="collapse" id="prefessions" role="menu" aria-labelledby="lnkPrefessions">
-                    @foreach (var item in Model.UserRoles)
+                    @foreach (var item in Model.Professions)
                     {
                         <li>
-                            <a href="@Url.Action("Index", "Subject", new { professionId = item.ProfessionId } )">@item.ProfessionName</a>
+                            <a href="@Url.Action("Index", "Subject", new { professionId = item.Id } )">@item.Name</a>
                         </li>
                     }
                 </ul>
             </li>
             <li>
                 <a href="#" class="list-group-item">
-                    <i class="glyphicon glyphicon-book"></i> Ուսումնական պլան
+                    <i class="glyphicon glyphicon-screenshot"></i> Ուսումնական պլան
                 </a>
             </li>
             <li>

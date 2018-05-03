@@ -30,9 +30,9 @@
             </div>
         </div>
     </div>
-
-    @section Scripts {
-        <script>
+</div>
+@section Scripts {
+    <script>
         var professions;
         var roles;
         var nextId;
@@ -48,6 +48,6 @@
            professions = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Professions)))');
            updateDependencies(edges);
         });
-        </script>
-        <script src="~/custom_scripts/EditUser.js"></script>
-    }
+    </script>
+    <script src="~/custom_scripts/EditUser.js"></script>
+}

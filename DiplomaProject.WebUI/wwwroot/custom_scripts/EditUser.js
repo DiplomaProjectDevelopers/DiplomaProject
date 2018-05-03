@@ -92,7 +92,7 @@ function updateDependencies(edges) {
         const fromSelect = document.createElement('select');
         fromSelect.setAttribute('class', 'form-control');
         fromSelect.style.width = '100%';
-        fromSelect.addEventListener('change', (e) => onChange(edge.Id, 'ProfessionId', e.target.value));
+        fromSelect.addEventListener('change', (e) => onChange(edge.Id, 'ProfessionId', parseInt(e.target.value)));
 
         const toDiv = document.createElement('div');
         toDiv.setAttribute('class', 'col-md-5 form-group');
@@ -153,6 +153,12 @@ function isFull(edges) {
             isOK = false;
         }
     }
+    edges.forEach((edge, index) => {
+        const doubling = edges.filter(e => e.RoleId === edge.RoleId && e.ProfessionId === edge.ProfessionId);
+        if (doubling.length > 1) {
+            isOK = false;
+        }
+    })
     return isOK;
 }
 

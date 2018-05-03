@@ -44,6 +44,7 @@ namespace DiplomaProject.WebUI.Controllers
         [Authorize(Roles = "SubjectMaker")]
         public IActionResult MakeDependencies(int professionId)
         {
+            GetRoles(professionId);
             var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
             var model = outcomes.Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
             foreach (var o in model)
@@ -70,6 +71,7 @@ namespace DiplomaProject.WebUI.Controllers
         [Authorize]
         public IActionResult GraphViewer(int professionId)
         {
+            GetRoles(professionId);
             ViewBag.Profession = new ProfessionViewModel
             {
                 Id = professionId,
@@ -114,7 +116,8 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult BuildSubgraphs(int? professionId)
         {
             if (!professionId.HasValue || professionId.Value <= 0)
-                throw new ArgumentException("Invalid profession id");
+                return NotFound();
+            GetRoles(professionId.Value);
             var subjectList = new SubjectListViewModel
             {
                 Profession = mapper.Map<ProfessionViewModel>(service.GetById<Profession>(professionId.Value))

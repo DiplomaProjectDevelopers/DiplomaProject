@@ -25,6 +25,7 @@ namespace DiplomaProject.WebUI.Controllers
         [Authorize]
         public IActionResult Index(int professionId)
         {
+            GetRoles(professions: professionId);
             if (professionId == 0) return NotFound();
             var profession = service.GetById<Profession>(professionId);
             if (profession == null) return NotFound();
@@ -87,6 +88,7 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult SubjectSequences(int professionId)
         {
             if (professionId == 0) return NotFound();
+            GetRoles(professionId);
             var profession = service.GetById<Profession>(professionId);
             if (profession == null) return NotFound();
             else ViewBag.Profession = mapper.Map<ProfessionViewModel>(profession);

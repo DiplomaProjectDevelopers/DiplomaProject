@@ -48,6 +48,7 @@ namespace DiplomaProject.WebUI.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
+            GetRoles();
             var user = await userManager.GetUserAsync(User);
             var role = await roleManager.FindByNameAsync(await userManager.GetRoleAsync(user));
             var stakeholders = service.GetAll<StakeHolder>().Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
@@ -67,12 +68,24 @@ namespace DiplomaProject.WebUI.Controllers
             var um = mapper.Map<UserViewModel>(user);
             um.Professions = service.GetAll<UserRole>().Where(up => up.UserId == user.Id).Select(p => p.ProfessionId).Distinct()
                 .Select(s => mapper.Map<ProfessionViewModel>(service.GetById<Profession>(s))).ToList();
+
+            var userRoles = service.GetAll<UserRole>().ToList().Where(p => p.UserId == user.Id).Select(p => mapper.Map<UserRoleViewModel>(p)).ToList();
+            for (int i = 0; i < userRoles.Count; i++)
+            {
+                userRoles[i].ProfessionName = service.GetById<Profession>(userRoles[i].ProfessionId)?.Name;
+                userRoles[i].UserName = (await userManager.FindByIdAsync(userRoles[i].UserId))?.UserName;
+                userRoles[i].RoleName = (await roleManager.FindByIdAsync(userRoles[i].RoleId))?.Name;
+                userRoles[i].RoleDisplayName = (await roleManager.FindByIdAsync(userRoles[i].RoleDisplayName))?.DisplayName;
+            }
+
+            um.UserRoles = userRoles;
             ViewBag.User = um;
             return View("Stakeholders", stakeholders);
         }
 
         public IActionResult StakeHolderList(string searchTerm = "")
         {
+            GetRoles();
             var stakeholders = service.GetAll<StakeHolder>().Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
             foreach (var s in stakeholders)
             {
@@ -95,7 +108,7 @@ namespace DiplomaProject.WebUI.Controllers
             return PartialView("StakeholderList", stakeholders);
         }
 
-        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        [Authorize(Roles = "DepartmentAdmin, BaseAdmin, ProfessionAdmin")]
         [HttpGet]
         public IActionResult Details(int? stakeholderId)
         {
@@ -108,7 +121,7 @@ namespace DiplomaProject.WebUI.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        [Authorize(Roles = "DepartmentAdmin, BaseAdmin, ProfessionAdmin")]
         [HttpGet]
         public IActionResult Edit(int? stakeholderId)
         {
@@ -133,7 +146,7 @@ namespace DiplomaProject.WebUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        [Authorize(Roles = "DepartmentAdmin, BaseAdmin, ProfessionAdmin")]
         public async Task<IActionResult> Edit(StakeHolderViewModel model)
         {
             if (!ModelState.IsValid)
@@ -181,7 +194,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        [Authorize(Roles = "DepartmentAdmin, BaseAdmin, ProfessionAdmin")]
         public IActionResult Create()
         {
             var types = service.GetAll<StakeHolderType>().Select(s => mapper.Map<StakeHolderTypeViewModel>(s)).ToList();
@@ -196,7 +209,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        [Authorize(Roles = "DepartmentAdmin, BaseAdmin, ProfessionAdmin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(StakeHolderViewModel model)
         {
@@ -218,7 +231,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        [Authorize(Roles = "DepartmentAdmin, BaseAdmin, ProfessionAdmin")]
         public IActionResult Delete(int? stakeholderId)
         {
             if (!stakeholderId.HasValue || stakeholderId.Value == 0)
@@ -238,7 +251,7 @@ namespace DiplomaProject.WebUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "DepartmentAdmin, FacultyAdmin, BaseAdmin, ProfessionAdmin")]
+        [Authorize(Roles = "DepartmentAdmin, BaseAdmin, ProfessionAdmin")]
         public async Task<IActionResult> DeleteConfirmed(int? stakeholderId)
         {
             if (!stakeholderId.HasValue || stakeholderId.Value == 0)

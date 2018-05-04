@@ -46,7 +46,11 @@ namespace DiplomaProject.WebUI.Controllers
         {
             GetRoles(professionId);
             var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
-            var model = outcomes.Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
+            var model = outcomes.Select(o => {
+                var m = mapper.Map<OutcomeViewModel>(o);
+                m.SubjectId = o.InitialSubjectId;
+                return m;
+                }).ToList();
             foreach (var o in model)
             {
                 if (o.SubjectId.HasValue && o.SubjectId.Value != 0)

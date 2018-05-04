@@ -1,14 +1,15 @@
 {
   "name": "asp.net",
   "private": true,
-    "dependencies": {
-        "bootstrap": "3.3.7",
-        "jquery": "3.3.1",
-        "jquery-validation": "1.17.0",
-        "jquery-validation-unobtrusive": "3.2.9",
-        "jquery-validator": "1.0.0",
-        "requirejs": "2.3.5",
-        "bootstrap-select": "v1.12.4",
-        "bower-sigma": "v1.0.3"
-    }
+  "dependencies": {
+    "bootstrap": "3.3.7",
+    "jquery": "3.3.1",
+    "jquery-validation": "1.17.0",
+    "jquery-validation-unobtrusive": "3.2.9",
+    "jquery-validator": "1.0.0",
+    "requirejs": "2.3.5",
+    "bootstrap-select": "v1.12.4",
+    "bower-sigma": "v1.0.3",
+    "customSelect": "3.0.1"
+  }
 }

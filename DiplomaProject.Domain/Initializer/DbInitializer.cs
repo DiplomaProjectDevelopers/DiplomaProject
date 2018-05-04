@@ -166,6 +166,7 @@ namespace DiplomaProject.Domain.Initializer
                         EmailConfirmed = true,
                     },
                 };
+
                 if (!_context.Users.Any())
                 {
                     for (int i = 0; i < users.Count; i++)
@@ -216,6 +217,7 @@ namespace DiplomaProject.Domain.Initializer
                     _context.StakeHolderTypes.AddRange(types);
                     _context.SaveChanges();
                 }
+
                 if (!_context.Faculties.Any())
                 {
                     var faculties = new List<Faculty>
@@ -228,6 +230,7 @@ namespace DiplomaProject.Domain.Initializer
                     _context.Faculties.AddRange(faculties);
                     _context.SaveChanges();
                 }
+
                 if (!_context.Departments.Any())
                 {
                     var departments = new List<Department>
@@ -242,6 +245,7 @@ namespace DiplomaProject.Domain.Initializer
                     _context.Departments.AddRange(departments);
                     _context.SaveChanges();
                 }
+
                 if (!_context.Branches.Any())
                 {
                     var branches = new List<Branch>
@@ -258,6 +262,7 @@ namespace DiplomaProject.Domain.Initializer
                     _context.Branches.AddRange(branches);
                     _context.SaveChanges();
                 }
+
                 if (!_context.SubjectModules.Any())
                 {
                     var modules = new List<SubjectModule>()
@@ -312,6 +317,7 @@ namespace DiplomaProject.Domain.Initializer
                     _context.SaveChanges();
 
                 }
+
                 if (!_context.StakeHolders.Any())
                 {
                     var stakeholders = new List<StakeHolder>
@@ -368,7 +374,7 @@ namespace DiplomaProject.Domain.Initializer
                         },
                         new Profession
                         {
-                            Name = "Ինֆորմատիկա և ծրագրավորում",
+                            Name = "Հաշվողական տեխնիկայի և ավտոմատացված համակարգերի ծրագրային ապահովում",
                             DepartmentId = 1,
                             BranchId = 1
                         }
@@ -396,6 +402,7 @@ namespace DiplomaProject.Domain.Initializer
                         _context.SaveChanges();
                     }
                 }
+
                 if (!_context.OutComeTypes.Any())
                 {
                     var types = new List<OutComeType>
@@ -423,13 +430,43 @@ namespace DiplomaProject.Domain.Initializer
                     {
                         new InitialSubject
                         {
-                            Name = "Օբյեկտ կողմոնորշված և կոմպոնենտային ծրագրավորում",
+                            Name = "Ծրագրավորման տեխնոլոգիա",
                             ProfessionId = 1
+                        },
+                        new InitialSubject
+                        {
+                            Name = "Ծրագրավորման տեխնոլոդիա",
+                            ProfessionId = 2
                         },
                         new InitialSubject
                         {
                             Name = "Տվյալների բազաների նախագծման տեխնոլոգիաներ և պաշտպանություն",
                             ProfessionId = 1
+                        },
+                        new InitialSubject
+                        {
+                            Name = "Օբյեկտ կողմնորոշված և կոմպոնենտային ծրագրավորում",
+                            ProfessionId = 1
+                        },
+                        new InitialSubject
+                        {
+                            Name = "Տվյալների պաշտպանություն չարտոնված մուտքից",
+                            ProfessionId = 1
+                        },
+                        new InitialSubject
+                        {
+                            Name = "Հաշվողական համակարգերի հակավիրուսային պաշտպանություն",
+                            ProfessionId = 1
+                        },
+                        new InitialSubject
+                        {
+                            Name = "Ցանցային կիրառությունների ծրագրային ապահովում",
+                            ProfessionId = 1
+                        },
+                        new InitialSubject
+                        {
+                            Name = "Ցանցային կիրառությունների ծրագրային ապահովում",
+                            ProfessionId = 2
                         }
                     };
                     _context.InitialSubjects.AddRange(subjects);
@@ -440,113 +477,270 @@ namespace DiplomaProject.Domain.Initializer
                 {
                     var outComes = new List<InitialOutCome>
                     {
-                        new InitialOutCome
-                        {
-                            Name = "Կիրառական ծրագրերի գործնական նախագծման կարողություն",
-                            InitialSubjectId = 1,
-                            OutComeTypeId = 2
-                        },
-                        new InitialOutCome
-                        {
-                            Name = "Պաշտպանված ծրագրային ապահովման նախագծման կարողություն",
-                            InitialSubjectId = 1,
-                            OutComeTypeId = 2
-                        },
-                        new InitialOutCome
-                        {
-                            Name = "Ծրագրային ապահովման թեստավորման հմտություն",
-                            InitialSubjectId = 1,
-                            OutComeTypeId = 3
-                        },
-                        new InitialOutCome
-                        {
-                            Name ="Մասնագիտական գործնական գիտելիքներ",
-                            InitialSubjectId = 1,
-                            OutComeTypeId = 1
-                        },
-                        new InitialOutCome
-                        {
-                            Name= "Մասնագիտական գործնական հմտություններ",
-                            InitialSubjectId = 1,
-                            OutComeTypeId = 3
-                        },
-                        new InitialOutCome
-                        {
-                            Name = "Պաշտպանված քոմփյութերային համակարգերի նախագծման կարողություններ",
-                            InitialSubjectId = 2,
-                            OutComeTypeId = 2
-                        },
-                        new InitialOutCome
-                        {
-                            Name = "Մասնագիտական գործնական գիտելիքներ",
-                            InitialSubjectId = 2,
-                            OutComeTypeId = 1
-                        }
+                       new InitialOutCome
+                       {
+                           Name = "Ծրագրավորման օբյեկտակողմնորոշված մեթոդի կիրառման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 1
+                       },
+                       new InitialOutCome
+                       {
+                           Name ="Ծրագրավորման եղանակների կիրառման ունակություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 1
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Ծրագրավորման օբյեկտակողմնորոշված մեթոդի կիրառման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 2
+                       },
+                       new InitialOutCome
+                       {
+                           Name ="Ծրագրավորման եղանակների կիրառման ունակություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 2
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Պաշտպանված քոմփյութերային համակարգերի նախագծման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 3
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Մասնագիտական գործնական գիտելիքներ",
+                           OutComeTypeId = 1,
+                           InitialSubjectId = 3
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Կիրառական ծրագրերի գործնական նախագշման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 4
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Պաշտպանված ծրագրային ապահովման նախագծման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 4
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Ծրագրային ապահովման թեստովորման հմտություն",
+                           OutComeTypeId = 3,
+                           InitialSubjectId = 4
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Պաշտպանված ծրագրային ապահովման նախագծման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 5
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Ցանցային կիրառությունների մշակման ունակություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 5
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Մասնագիտական գործնական գիտելիքներ և հմտություններ",
+                           OutComeTypeId = 3,
+                           InitialSubjectId = 5
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Վիրուսների և վնասակար ծրագրերի վերաբերյալ գիտելիքներ",
+                           InitialSubjectId = 6,
+                           OutComeTypeId = 1
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Համակարգչային վիրուսների սիգնատուրան ճանաչելու ունակություն",
+                           InitialSubjectId = 6,
+                           OutComeTypeId = 2
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Հակավիրուսային ծրագրեր մշակելու ունակություն",
+                           InitialSubjectId = 6,
+                           OutComeTypeId =2
+                       },
+
+                       new InitialOutCome
+                       {
+                           Name = "Տեղադրել և կարգաբերել ցանցային սերվերներ",
+                           InitialSubjectId = 7,
+                           OutComeTypeId =2
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Ինքնուրույն ստեղծել ցանցային կիրառություններ",
+                           InitialSubjectId = 7,
+                           OutComeTypeId =2
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Տեղադրել և կարգաբերել ցանցային սերվերներ",
+                           InitialSubjectId = 8,
+                           OutComeTypeId =2
+                       },
+                       new InitialOutCome
+                       {
+                           Name = "Ինքնուրույն ստեղծել ցանցային կիրառություններ",
+                           InitialSubjectId = 8,
+                           OutComeTypeId =2
+                       }
                     };
                     _context.InitialOutComes.AddRange(outComes);
                     _context.SaveChanges();
                 }
 
-
                 if (!_context.FinalOutComes.Any())
                 {
                     var outComes = new List<FinalOutCome>
                     {
-                        new FinalOutCome
-                        {
-                            Name = "Կիրառական ծրագրերի գործնական նախագծման կարողություն",
-                            OutComeTypeId = 2,
-                            ProfessionId = 1
-                        },
-                        new FinalOutCome
-                        {
-                            Name = "Պաշտպանված ծրագրային ապահովման նախագծման կարողություն",
-                            OutComeTypeId = 2,
-                            ProfessionId = 1
-                        },
-                        new FinalOutCome
-                        {
-                            Name = "Ծրագրային ապահովման թեստավորման հմտություն",
-                            OutComeTypeId = 3,
-                            ProfessionId = 1
-                        },
-                        new FinalOutCome
-                        {
-                            Name ="Մասնագիտական գործնական գիտելիքներ",
-                            OutComeTypeId = 1,
-                            ProfessionId = 1
-                        },
-                        new FinalOutCome
-                        {
-                            Name= "Մասնագիտական գործնական հմտություններ",
-                            OutComeTypeId = 3,
-                            ProfessionId = 1
-                        },
-                        new FinalOutCome
-                        {
-                            Name = "Պաշտպանված քոմփյութերային համակարգերի նախագծման կարողություններ",
-                            OutComeTypeId = 2,
-                            ProfessionId = 1
-                        },
-                        new FinalOutCome
-                        {
-                            Name = "Մասնագիտական գործնական գիտելիքներ",
-                            OutComeTypeId = 1,
-                            ProfessionId = 1,
-                            IsNew = true
-                        }
+                       new FinalOutCome
+                       {
+                           Name = "Ծրագրավորման օբյեկտակողմնորոշված մեթոդի կիրառման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 1,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name ="Ծրագրավորման եղանակների կիրառման ունակություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 1,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Ծրագրավորման օբյեկտակողմնորոշված մեթոդի կիրառման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 2,
+                           ProfessionId = 2
+                       },
+                       new FinalOutCome
+                       {
+                           Name ="Ծրագրավորման եղանակների կիրառման ունակություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 2,
+                           ProfessionId = 2
+                       },
+
+                       new FinalOutCome
+                       {
+                           Name = "Պաշտպանված քոմփյութերային համակարգերի նախագծման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 3,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Մասնագիտական գործնական գիտելիքներ",
+                           OutComeTypeId = 1,
+                           InitialSubjectId = 3,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Կիրառական ծրագրերի գործնական նախագշման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 4,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Պաշտպանված ծրագրային ապահովման նախագծման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 4,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Ծրագրային ապահովման թեստովորման հմտություն",
+                           OutComeTypeId = 3,
+                           InitialSubjectId = 4,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Պաշտպանված ծրագրային ապահովման նախագծման կարողություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 5,
+                           ProfessionId = 2
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Ցանցային կիրառությունների մշակման ունակություն",
+                           OutComeTypeId = 2,
+                           InitialSubjectId = 5,
+                           ProfessionId = 2
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Մասնագիտական գործնական գիտելիքներ և հմտություններ",
+                           OutComeTypeId = 3,
+                           InitialSubjectId = 5,
+                           ProfessionId = 2
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Վիրուսների և վնասակար ծրագրերի վերաբերյալ գիտելիքներ",
+                           InitialSubjectId = 6,
+                           OutComeTypeId = 1,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Համակարգչային վիրուսների սիգնատուրան ճանաչելու ունակություն",
+                           InitialSubjectId = 6,
+                           OutComeTypeId = 2,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Հակավիրուսային ծրագրեր մշակելու ունակություն",
+                           InitialSubjectId = 6,
+                           OutComeTypeId =2,
+                           ProfessionId = 1
+                       },
+
+                       new FinalOutCome
+                       {
+                           Name = "Տեղադրել և կարգաբերել ցանցային սերվերներ",
+                           InitialSubjectId = 7,
+                           OutComeTypeId =2,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Ինքնուրույն ստեղծել ցանցային կիրառություններ",
+                           InitialSubjectId = 7,
+                           OutComeTypeId =2,
+                           ProfessionId = 1
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Տեղադրել և կարգաբերել ցանցային սերվերներ",
+                           InitialSubjectId = 8,
+                           OutComeTypeId =2,
+                           ProfessionId = 2
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Ինքնուրույն ստեղծել ցանցային կիրառություններ",
+                           InitialSubjectId = 8,
+                           OutComeTypeId =2,
+                           ProfessionId = 2
+                       }
                     };
                     _context.FinalOutComes.AddRange(outComes);
                     _context.SaveChanges();
                 }
             }
-            //create database schema if none exists
-           // _context.Database.Migrate();
-            //_context.Database.EnsureCreated();
-            //If there is already an Administrator role, abort
-
-            //Create the Administartor Role
-            
         }
     }
 }

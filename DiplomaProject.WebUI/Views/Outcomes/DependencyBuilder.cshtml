@@ -35,7 +35,7 @@
     </div>
     <div>
         <a class="btn btn-primary" onclick="onSubmit()">Պահպանել</a>
-        <a class="btn btn-link" onclick="location.href='@Url.Action("Index", "Outcomes" )'">Չեղարկել</a>
+        <a class="btn btn-link" onclick="location.href='@Url.Action("Index", "Subject", new { professionId = ViewBag.Profession?.Id })'">Չեղարկել</a>
     </div>
 </div>
 @section Styles{
@@ -58,9 +58,6 @@
                             node.Name = `${node.Name}(${node.Subject})`;
 
                     });
-                    if (!sessionStorage.getItem('edges')) {
-                        sessionStorage.setItem('edges', JSON.stringify(edges || []));
-                    }
                     if (!sessionStorage.getItem('nextId'))
                     {
                         sessionStorage.setItem('nextId', '-1');
@@ -68,6 +65,13 @@
                     if (!sessionStorage.getItem('nodes'))
                     {
                         sessionStorage.setItem('nodes', JSON.stringify(nodes || []));
+                    }
+                    if (!sessionStorage.getItem('edges')) {
+                        if (edges.length === 0) {
+                            edges.push({Id: getNextId(), FromNode: -1, ToNode: -1, professionId})
+
+                        }
+                        sessionStorage.setItem('edges', JSON.stringify(edges || []));
                     }
                     updateDependencies(edges);
                  });

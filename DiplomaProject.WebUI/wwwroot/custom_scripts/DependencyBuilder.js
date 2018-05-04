@@ -1,6 +1,6 @@
 ﻿function getOptions() {
     let array = JSON.parse(sessionStorage.getItem('nodes'));
-    array.push({ Id: -1, Name: '-ընտրեք վերջնարդյունքը-' });
+    //array.push({ Id: -1, Name: '-ընտրեք վերջնարդյունքը-' });
     array.sort((x, y) => x.Id - y.Id);
     return array;
 
@@ -82,22 +82,32 @@ function updateDependencies(edges) {
         deleteDiv.appendChild(deleteLink);
 
         const options = getOptions();
-        (options || []).forEach(option => {
+        const groups = groupBy(options, o => o.Subject);
+        groups.forEach((options, key) => {
+            const optgroup1 = document.createElement('optgroup');
+            optgroup1.label = key || 'Նոր վերջնարդյունքներ';
 
-            const option1 = document.createElement('option');
-            option1.value = option.Id;
-            option1.text = option.Name;
+            const optgroup2 = document.createElement('optgroup');
+            optgroup2.label = key;
+            (options || []).forEach(option => {
 
-            const option2 = document.createElement('option');
-            option2.value = option.Id;
-            option2.text = option.Name;
+                const option1 = document.createElement('option');
+                option1.value = option.Id;
+                option1.text = option.Name;
 
-            if (option.IsNew) {
-                option1.setAttribute('class', 'isNewOutComeOption');
-                option2.setAttribute('class', 'isNewOutComeOption');
-            }
-            fromSelect.appendChild(option1);
-            toSelect.appendChild(option2);
+                const option2 = document.createElement('option');
+                option2.value = option.Id;
+                option2.text = option.Name;
+
+                if (option.IsNew) {
+                    option1.setAttribute('class', 'isNewOutComeOption');
+                    option2.setAttribute('class', 'isNewOutComeOption');
+                }
+                optgroup1.appendChild(option1);
+                optgroup2.appendChild(option2);
+            });
+            fromSelect.appendChild(optgroup1);
+            toSelect.appendChild(optgroup2);
         });
         fromSelect.value = edge.FromNode;
         fromDiv.appendChild(fromSelect);

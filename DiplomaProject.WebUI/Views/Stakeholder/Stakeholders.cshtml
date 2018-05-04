@@ -11,7 +11,7 @@
         <p class="label-info">@TempData["Message"]</p>
 }
         <h4>Ներկայացված են բոլոր շահակիցները</h4>
-        @{ if (ViewBag.RoleName == "DEPARTMENTADMIN")
+        @{ if (ViewBag.UserRoles.Contains("DEPARTMENTADMIN"))
         {
             <div class="col-md-6">
                 <button class="btn btn-link btn-lg" type="button" onclick="location.href = '@Url.Action("Create", "Stakeholder")'"><span class="glyphicon glyphicon-plus"></span>Ավելացնել շահակից</button>

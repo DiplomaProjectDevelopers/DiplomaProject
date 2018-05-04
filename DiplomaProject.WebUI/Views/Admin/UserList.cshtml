@@ -14,9 +14,9 @@
             <input type="text" class="form-control bs-searchbox" oninput="onSearch(this.value)" placeholder="Search by username, firstname and lastname" />
         </div>
         @if (TempData.ContainsKey("UserDeleted"))
-    {<label class="label-info">@TempData["UserDeleted"]</label>}
+    {<label class="alert alert-info">@TempData["UserDeleted"]</label>}
         @if (TempData.ContainsKey("UserUpdated"))
-    {<label class="label-info">@TempData["UserUpdated"]</label>}
+    {<label class="alert-info alert">@TempData["UserUpdated"]</label>}
         <div id="tblUsers">
 
         </div>

@@ -5,9 +5,16 @@
 }
 
 <h2>Առարկաների ցանկ</h2>
+<h4 class=""><em>«@ViewBag.Profession.Name»</em> մասնագիտության ներկայիս առարկաները</h4>
 <div class="table-responsive pre-scrollable">
-    <button class="btn btn-link" type="button" onclick="location.href = '@Url.Action("Subjects", "Outcomes", new { professionId = ViewBag.Profession.Id})'"><span class="glyphicon glyphicon-plus"></span>Ձևավորել առարկաներ</button>
-    <button class="btn btn-link" type="button" onclick="location.href = '@Url.Action("SubjectSequences", "Subject", new { professionId = ViewBag.Profession.Id})'"><span class="glyphicon glyphicon-plus"></span>Բաշխել ըստ կիսամյակների</button>
+    <div class="btn row">
+        @if (ViewBag.UserRoles.Contains("SUBJECTMAKER"))
+        {
+            <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("MakeDependencies", "Outcomes", new { professionId = ViewBag.Profession.Id})'"><span class="glyphicon glyphicon-wrench"></span>Որոշել վերջնարդյունքների կապերը</button>
+            <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("Subjects", "Outcomes", new { professionId = ViewBag.Profession.Id})'"><span class="glyphicon glyphicon-cog"></span>Ձևավորել առարկաներ</button>
+            <button class="btn btn-link" type="button" onclick="location.href = '@Url.Action("SubjectSequences", "Subject", new { professionId = ViewBag.Profession.Id})'"><span class="glyphicon glyphicon-plus"></span>Բաշխել ըստ կիսամյակների</button>
+        }
+    </div>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>

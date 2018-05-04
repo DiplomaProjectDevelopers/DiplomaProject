@@ -1,7 +1,7 @@
 ﻿@model UserViewModel
 
 @{
-    ViewData["Title"] = $"Խմբագրել {Model?.Username} օգտագործողին";
+    ViewData["Title"] = $"Դեր բաշխել {Model?.Username} օգտագործողին";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -18,34 +18,32 @@
             <div>
             </div>
             <div class="panel-body">
-                <form asp-action="EditProfessionAdmin" asp-controller="Admin" asp-antiforgery="true">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                    @Html.HiddenFor(m => m.Id)
+                <div>
                     <div id="roleProfessions">
 
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Պահպանել" class="btn btn-success" />
+                        <input type="submit" value="Պահպանել" onclick="onSubmit()" class="btn btn-success" />
                         <a asp-action="Index" class="btn btn-default">Հետ գնալ ցանկ</a>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 @section Scripts {
     <script>
         var professions;
         var roles;
         var nextId;
         var edges;
+        var model;
         var userId;
-       $(document).ready(function() {
+
+            $(document).ready(function () {
            edges = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UserRoles)))');
            userId = '@Model.Id';
-           nextId = -1;
+           nextId = @Model?.UserRoles.Min(s => s.Id) - 1;
            roles = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Roles)))');
            professions = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Professions)))');
            updateDependencies(edges);

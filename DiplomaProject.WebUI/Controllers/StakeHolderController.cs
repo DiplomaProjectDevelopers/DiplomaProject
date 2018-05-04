@@ -333,45 +333,78 @@ namespace DiplomaProject.WebUI.Controllers
             var finaloutcomemodel = finaloutcome.Select(f => mapper.Map<OutcomeViewModel>(f)).ToList();
             var outcome = service.GetAll<OutCome>().ToList();
             var outcomemodel = outcome.Select(o => mapper.Map<FinalOutcomeViewModel>(o)).ToList();
+            string[] arrname = new string[outcomemodel.Count];
+            float[] arrweight = new float[outcomemodel.Count];
+            int i = 0;
             foreach (var outcomeitem in outcomemodel)
             {
-                int count = 0;
+                arrname[i] = outcomeitem.Name;
+                foreach(var outcomeitem1 in outcomemodel)
+                {
+                    if (outcomeitem1.Name == outcomeitem.Name)
+                    {
+                        arrweight[i] += outcomeitem1.Weight;
+                        var outcomedelate = service.DeleteById<OutCome>(outcomeitem1.Id);
+                    }
+                }
+                i++;
+            }
+
+            for(var j=0; j<arrname.Length; j++)
+            {
                 foreach (var finaloutcomeitem in finaloutcomemodel)
                 {
-                    var data = new FinalOutCome { };
-                    if (finaloutcomeitem.Name.Trim() == (outcomeitem.Name.Trim()))
+                    if (finaloutcomeitem.Name == arrname[j])
                     {
-                        if (finaloutcomeitem.TotalWeight == null)
-                        {
-                            data.TotalWeight = finaloutcomeitem.TotalWeight + outcomeitem.Weight;
-                        }
-                        else
-                        {
-
-                            data.TotalWeight = (finaloutcomeitem.TotalWeight + outcomeitem.Weight) / 2;
-                        }
-                        data.InitialSubjectId = outcomeitem.InitialSubjectId;
+                        var outcomein=service.Insert<FinalOutCome>()
                     }
-                    else
-                    {
-                        count++;
-                        if (count == finaloutcomemodel.Count)
-                        {
-                            data.Name = outcomeitem.Name;
-                            data.InitialSubjectId = outcomeitem.InitialSubjectId;
-                            data.TotalWeight = outcomeitem.Weight;
-                            //var data = new FinalOutCome
-                            //{
-                            //    Name = outcomeitem.Name,
-                            //    InitialSubjectId = outcomeitem.InitialSubjectId,
-                            //    TotalWeight = outcomeitem.Weight,
-                            //}
-                        }
-                    }
-                    var finaloutcomeinsert = service.Insert<FinalOutCome>(data);
-                }
-                var outcomedelate = service.DeleteById<OutCome>(outcomeitem.Id);
             }
+            }
+
+            
+
+
+            //foreach (var outcomeitem in outcomemodel)
+            //{
+            //    int count = 0;
+            //    foreach (var finaloutcomeitem in finaloutcomemodel)
+            //    {
+            //        if (finaloutcomeitem.Name == outcomeitem.Name)
+            //        {
+            //            if (finaloutcomeitem.TotalWeight == null)
+            //            {
+            //               finaloutcomeitem.TotalWeight = finaloutcomeitem.TotalWeight + outcomeitem.Weight;
+            //            }
+            //            else
+            //            {
+
+            //                finaloutcomeitem.TotalWeight = (finaloutcomeitem.TotalWeight + outcomeitem.Weight) / 2;
+            //            }
+            //            finaloutcomeitem.InitialSubjectId = outcomeitem.InitialSubjectId;
+            //            var data = new FinalOutCome
+            //            {
+            //                InitialSubjectId = finaloutcomeitem.InitialSubjectId,
+            //                TotalWeight = finaloutcomeitem.TotalWeight,
+            //            };
+            //            var finaloutcomeinsert = service.Insert<FinalOutCome>(data);
+            //        }
+            //        else
+            //        {
+            //            count++;
+            //            if (count == finaloutcomemodel.Count)
+            //            {
+            //                var data = new FinalOutCome
+            //                {
+            //                    Name = outcomeitem.Name,
+            //                    InitialSubjectId = outcomeitem.InitialSubjectId,
+            //                    TotalWeight = outcomeitem.Weight,
+            //                };
+            //                var finaloutcomeinsert = service.Insert<FinalOutCome>(data);
+            //            }
+            //        }                    
+            //    }
+            //    var outcomedelate = service.DeleteById<OutCome>(outcomeitem.Id);
+            //}
             return View("Questionnaire2");
         }
     }

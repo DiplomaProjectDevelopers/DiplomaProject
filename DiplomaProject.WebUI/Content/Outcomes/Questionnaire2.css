@@ -59,3 +59,11 @@ select {
     padding: 8px 30px;
     border-color:darkturquoise;
 }
+
+input[type="radio"]:checked {
+    box-shadow: 0 0 0 5px #00ced1;
+}
+
+option:checked {
+    box-shadow: 0 0 0 3px #00ced1;
+}

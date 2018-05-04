@@ -11,51 +11,51 @@
             <select id="Professionname"
                     class="Professionnameclass"
                     asp-items="@(new SelectList(ViewBag.ListOfTypeName,"Id","TypeName"))">
-            <option>պաշտոն</option>
+                <option>պաշտոն</option>
             </select>
         </div>
-        <form asp-controller="StakeHolder" asp-action="Outcome" method="get" class="Form" >
+        <form asp-controller="StakeHolder" asp-action="Outcome" method="get" class="Form">
             @foreach (var subject in ViewBag.ListOfSubject)
-            {
-                 int k = 1;
-                @*@if (subject.ProfessionId == ViewBag.ProfessionId)
-                    {*@
-                <p class="Subject">Առարկա՝ @subject.Name </p>
-                @foreach (var outcome in ViewBag.ListOfOutcomes)
-                {
-                    if (outcome.InitialSubjectId == subject.Id)
-                    {
-                        <p id="textID">@k. @outcome.Name</p>
-                        <div id="Radiodiv" class="Radio">
-                            <label style="margin-left:16px">0</label>
-                            <label style="margin-left:18px">1</label>
-                            <label style="margin-left:20px">2</label>
-                            <label style="margin-left:20px">3</label>
-                            <label style="margin-left:19px">4</label>
-                            <label style="margin-left:19px">5</label>
-                            <label style="margin-left:19px">6</label>
-                            <label style="margin-left:19px">7</label>
-                            <label style="margin-left:19px">8</label>
-                            <label style="margin-left:19px">9</label>
-                            <label style="margin-left:15px">10</label>
-                            <br />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=0 />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=1 />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=2 />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=3 />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=4 />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=5 />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=6 />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=7 />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=8 />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=9 />
-                            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=10 />
-                        </div>
-                            k++;
-                        }
-                    }
-                    //}
-            }
+    {
+        int k = 1;
+        @*@if (subject.ProfessionId == ViewBag.ProfessionId)
+    {*@
+        <p class="Subject">Առարկա՝ @subject.Name </p>
+        @foreach (var outcome in ViewBag.ListOfOutcomes)
+{
+    if (outcome.InitialSubjectId == subject.Id)
+    {
+        <p id="textID">@k. @outcome.Name</p>
+        <div id="Radiodiv" class="Radio">
+            <label for="@outcome.OutComeTypeId" style="margin-left:16px">0</label>
+            <label for="@outcome.OutComeTypeId" style="margin-left:18px">1</label>
+            <label for="@outcome.OutComeTypeId" style="margin-left:20px">2</label>
+            <label for="@outcome.OutComeTypeId" style="margin-left:20px">3</label>
+            <label for="@outcome.OutComeTypeId" style="margin-left:19px">4</label>
+            <label for="@outcome.OutComeTypeId" style="margin-left:19px">5</label>
+            <label for="@outcome.OutComeTypeId" style="margin-left:19px">6</label>
+            <label for="@outcome.OutComeTypeId" style="margin-left:19px">7</label>
+            <label for="@outcome.OutComeTypeId" style="margin-left:19px">8</label>
+            <label for="@outcome.OutComeTypeId" style="margin-left:19px">9</label>
+            <label for="@outcome.OutComeTypeId" style="margin-left:15px">10</label>
+            <br />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=0 />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=1 />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=2 />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=3 />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=4 />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=5 />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=6 />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=7 />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=8 />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=9 />
+            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=10 />
+        </div>
+k++;
+}
+}
+//}
+}
             <div class="Azat">
                 <a class="Button" href="#" onclick="OK(); return false">
                     Հաստատել
@@ -73,12 +73,16 @@
 
 @section Scripts{
     <script type="text/javascript">
+        var j = 0
+        var a = 0;
+        var countofcheck = 0;
         var selectedName = [];
         var selectedWeight = [];
         var selectedId = [];
         var selectedSubject = [];
         var strName = "";
         var strWeight = "";
+        var k;
         var req = new XMLHttpRequest();
         var url = '@Url.Action("Outcome", "StakeHolder")';
         var data = new FormData();
@@ -96,7 +100,8 @@
                 //alert(branchtext);
                 data.set("stakeholderid", stakeholderid);
             });
-            $('#Radiodiv input[type=radio]').on('change',function () {
+            $('#Radiodiv input[type=radio]').on('change', function () {
+                $(this).css('background-color', 'Green');
                 var n = this.name;
                 var w = this.value;
                 var i = this.id;
@@ -116,26 +121,52 @@
             });
         });
         function OK() {
-            var x = document.querySelectorAll("#Radiodiv > input[type=radio]");
-            var i;
-            for (i = 0; i < x.length; i++) {
-                if (x[i].is(':checked')) { }
-                else {
-                    x[i].style.color = "red";
+            groups = {};
+            var arr = [];
+            var l = 0;
+            var all_input = document.querySelectorAll('input[type="radio"]');
+            for (var i = 0; i < all_input.length; ++i) {
+                if (!(all_input[i].name in groups)) {
+                    groups[all_input[i].name] = 0;
+                    arr[l] = all_input[i].name;
+                    l++;
                 }
             }
-            if ($('#Radiodiv:not(:has(:radio:checked))').length == 0) {
-                alert("All checked!!!");
+            //alert(arr.length);
+            //for (var i = 0; i < arr.length; i++) {
+            //    var v = arr[i];
+            //   // var check = $("#Radiodiv input[name='" + v + "']:checked").val();
+            //    if ($("#Radiodiv input[name='" + v + "']:checked").val()) {
+            //        $('#' + v).css("color", "green");
+            //    }
+            //    else {
+            //        $('#Radiodiv input[name="' + v + '"] label').css('color', 'red');
+            //    }
+            //}
+            for (var i = 0; i < all_input.length; i += 10 + a) {
+                j = i;
+                while (j <= i + 10) {
+                    if (all_input[j].checked) {
+                        countofcheck += 1;
+                        break;
+                    }
+                    j++;
+                }
+                a = 1;
+            }
+            if (countofcheck < arr.length) {
+                alert("Առկա են չլրացված դաշտեր, խնդրում ենք լրացնել դրանք", "Հաղորդագրություն");
+            }
+            else {
+                alert("Շնորհակալություն ուշադրության համար", "Հաղորդագրություն");
                 data.set("outcomeName", strName);
                 data.set("weight", strWeight);
                 data.set("subject", strSubject);
                 data.set("outcomeid", strId);
-                //alert("onclick");
+               // alert("onclick");
                 req.send(data);
             }
-            else {
-                alert("Please check all");
-            }
+            
         }
     </script>
 }

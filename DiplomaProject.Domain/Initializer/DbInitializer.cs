@@ -499,7 +499,7 @@ namespace DiplomaProject.Domain.Initializer
                        },
                        new InitialOutCome
                        {
-                           Name = "Ծրագրային ապահովման թեստովորման հմտություն",
+                           Name = "Ծրագրային ապահովման թեստավորման հմտություն",
                            OutComeTypeId = 3,
                            InitialSubjectId = 4
                        },
@@ -632,7 +632,7 @@ namespace DiplomaProject.Domain.Initializer
                        },
                        new FinalOutCome
                        {
-                           Name = "Ծրագրային ապահովման թեստովորման հմտություն",
+                           Name = "Ծրագրային ապահովման թեստավորման հմտություն",
                            OutComeTypeId = 3,
                            InitialSubjectId = 4,
                            ProfessionId = 1

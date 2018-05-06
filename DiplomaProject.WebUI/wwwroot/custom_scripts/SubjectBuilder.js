@@ -148,6 +148,7 @@ function addSubject() {
     model.subjects.push(subject);
     renderCards();
 }
+
 function onSave() {
     const data = model;
     const errorMessages = [];

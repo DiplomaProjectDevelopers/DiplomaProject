@@ -61,6 +61,7 @@ function updateDependencies(edges) {
         fromSelect.setAttribute('class', 'selectpicker form-control outcomeselector');
         fromSelect.style.width = '100%';
         fromSelect.setAttribute('data-live-search', true);
+        fromSelect.setAttribute('data-size', 6);
         fromSelect.addEventListener('change', (e) => onChange(edge.Id, 'FromNode', e.target.value));
 
         const toDiv = document.createElement('div');
@@ -70,6 +71,7 @@ function updateDependencies(edges) {
         toSelect.setAttribute('class', 'selectpicker form-control outcomeselector');
         toSelect.style.width = '100%';
         toSelect.setAttribute('data-live-search', true);
+        toSelect.setAttribute('data-size', 6);
         toSelect.addEventListener('change', (e) => onChange(edge.Id, 'ToNode', e.target.value));
 
         const deleteDiv = document.createElement('div');
@@ -98,7 +100,7 @@ function updateDependencies(edges) {
             optgroup1.label = key || 'Նոր վերջնարդյունքներ';
 
             const optgroup2 = document.createElement('optgroup');
-            optgroup2.label = key;
+            optgroup2.label = key || 'Նոր վերջնարդյունքներ';
             (options || []).forEach(option => {
 
                 const option1 = document.createElement('option');

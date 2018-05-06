@@ -84,7 +84,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> SubjectDetails(int subjectId)
+        public IActionResult SubjectDetails(int subjectId)
         {
             if (subjectId == 0) return NotFound();
             var subject = service.GetById<Subject>(subjectId);
@@ -111,7 +111,9 @@ namespace DiplomaProject.WebUI.Controllers
             return View("SubjectSequence", model);
         }
 
-        public async Task<IActionResult> SaveSubjectSequences([FromBody]List<List<SubjectViewModel>> model)
+        [HttpPost]
+        [Authorize(Roles = "SubjectMaker")]
+        public async Task<IActionResult> SaveSubjectSequences([FromQuery]int professionId, [FromBody]List<List<SubjectViewModel>> model)
         {
             if (model.Count != 8)
             {
@@ -128,7 +130,7 @@ namespace DiplomaProject.WebUI.Controllers
                 }
             }
             await service.UpdateRange(updatedModel);
-            return RedirectToAction("Index", "Subject");
+            return Json(new { redirect = Url.Action("Index", "Subject", new { professionId})});
         }
 
         private List<List<SubjectViewModel>> GetSubjectSequence(int professionId)

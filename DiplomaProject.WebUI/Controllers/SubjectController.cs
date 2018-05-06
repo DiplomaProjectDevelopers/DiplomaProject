@@ -83,6 +83,21 @@ namespace DiplomaProject.WebUI.Controllers
             return Json(new { model, redirect = Url.Action("SubjectSequences", "Subject", new { professionId = model.Profession.Id}) });
         }
 
+        [Authorize]
+        public async Task<IActionResult> SubjectDetails(int subjectId)
+        {
+            if (subjectId == 0) return NotFound();
+            var subject = service.GetById<Subject>(subjectId);
+            if (subject is null) return NotFound();
+            var outcomes = service.GetAll<FinalOutCome>().Where(f => f.SubjectId == subjectId).ToList();
+            var model = mapper.Map<SubjectViewModel>(subject);
+            for (int i = 0; i < outcomes.Count; i++)
+            {
+                var omodel = mapper.Map<OutcomeViewModel>(outcomes[i]);
+                model.Outcomes.Add(omodel);
+            }
+            return View(model);
+        }
         [HttpGet]
         [Authorize(Roles = "SubjectMaker")]
         public IActionResult SubjectSequences(int professionId)

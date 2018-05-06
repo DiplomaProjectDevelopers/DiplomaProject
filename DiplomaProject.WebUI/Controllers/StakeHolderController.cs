@@ -50,7 +50,6 @@ namespace DiplomaProject.WebUI.Controllers
         {
             GetRoles();
             var user = await userManager.GetUserAsync(User);
-            var role = await roleManager.FindByNameAsync(await userManager.GetRoleAsync(user));
             var stakeholders = service.GetAll<StakeHolder>().Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
             foreach (var s in stakeholders)
             {

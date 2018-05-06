@@ -40,41 +40,33 @@
 </div>
 @section Styles{
     <link rel="stylesheet" href="~/custom_contents/DependencyBuilder.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-select/dist/css/bootstrap-select.css" />
 }
 @section Scripts {
+    <script src="~/lib/bootstrap-select/dist/js/bootstrap-select.js" type="text/javascript"></script>
     <script src="~/custom_scripts/DependencyBuilder.js" type="text/javascript"></script>
-    <script>
+    <script type="text/javascript">
         window.onbeforeunload = () => {
             sessionStorage.clear();
         }
         var professionId = @(ViewBag.Profession?.Id);
-        $(document).ready(function ()
-        {
-                $(document).ready(() => {
-                    const edges = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))');
-                    const nodes = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Outcomes)))');
-                    nodes.forEach(node => {
-                        if (node.Subject)
-                            node.Name = `${node.Name}(${node.Subject})`;
+        $(document).ready(() => {
+            const edges = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)))');
+            const nodes = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Outcomes)))');
+            if (!sessionStorage.getItem('nextId')) {
+                sessionStorage.setItem('nextId', '-1');
+            }
+            if (!sessionStorage.getItem('nodes')) {
+                sessionStorage.setItem('nodes', JSON.stringify(nodes || []));
+            }
+            if (!sessionStorage.getItem('edges')) {
+                if (edges.length === 0) {
+                    edges.push({ Id: getNextId(), FromNode: -1, ToNode: -1, ProfessionId:  professionId })
 
-                    });
-                    if (!sessionStorage.getItem('nextId'))
-                    {
-                        sessionStorage.setItem('nextId', '-1');
-                    }
-                    if (!sessionStorage.getItem('nodes'))
-                    {
-                        sessionStorage.setItem('nodes', JSON.stringify(nodes || []));
-                    }
-                    if (!sessionStorage.getItem('edges')) {
-                        if (edges.length === 0) {
-                            edges.push({Id: getNextId(), FromNode: -1, ToNode: -1, professionId})
-
-                        }
-                        sessionStorage.setItem('edges', JSON.stringify(edges || []));
-                    }
-                    updateDependencies(edges);
-                 });
-    });
+                }
+                sessionStorage.setItem('edges', JSON.stringify(edges || []));
+            }
+            updateDependencies(edges);
+        });
     </script>
 }

@@ -10,6 +10,6 @@
     "requirejs": "2.3.5",
     "bootstrap-select": "v1.12.4",
     "bower-sigma": "v1.0.3",
-    "customSelect": "3.0.1"
+    "jquery-ui": "1.12.1"
   }
 }

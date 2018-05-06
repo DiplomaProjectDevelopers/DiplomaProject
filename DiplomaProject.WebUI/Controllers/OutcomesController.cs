@@ -29,15 +29,7 @@ namespace DiplomaProject.WebUI.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var user = userManager.GetUserAsync(User).Result;
-            var professions = service.GetAll<Profession>().ToList();//.Where(e => e.AdminId == user.Id).ToList();
-            var model = professions.Select(p =>
-            {
-                var profession = mapper.Map<ProfessionViewModel>(p);
-                profession.Department = service.GetById<Department>(profession.DepartmentId.Value).Name;
-                return profession;
-            });
-            return View("ProfessionList", model);
+            return NotFound();
         }
 
         [HttpGet]

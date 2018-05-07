@@ -29,23 +29,20 @@ namespace DiplomaProject.WebUI.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var user = userManager.GetUserAsync(User).Result;
-            var professions = service.GetAll<Profession>().ToList();//.Where(e => e.AdminId == user.Id).ToList();
-            var model = professions.Select(p =>
-            {
-                var profession = mapper.Map<ProfessionViewModel>(p);
-                profession.Department = service.GetById<Department>(profession.DepartmentId.Value).Name;
-                return profession;
-            });
-            return View("ProfessionList", model);
+            return NotFound();
         }
 
         [HttpGet]
         [Authorize(Roles = "SubjectMaker")]
         public IActionResult MakeDependencies(int professionId)
         {
+            GetRoles(professionId);
             var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
-            var model = outcomes.Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
+            var model = outcomes.Select(o => {
+                var m = mapper.Map<OutcomeViewModel>(o);
+                m.SubjectId = o.InitialSubjectId;
+                return m;
+                }).ToList();
             foreach (var o in model)
             {
                 if (o.SubjectId.HasValue && o.SubjectId.Value != 0)
@@ -70,6 +67,7 @@ namespace DiplomaProject.WebUI.Controllers
         [Authorize]
         public IActionResult GraphViewer(int professionId)
         {
+            GetRoles(professionId);
             ViewBag.Profession = new ProfessionViewModel
             {
                 Id = professionId,
@@ -114,7 +112,8 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult BuildSubgraphs(int? professionId)
         {
             if (!professionId.HasValue || professionId.Value <= 0)
-                throw new ArgumentException("Invalid profession id");
+                return NotFound();
+            GetRoles(professionId.Value);
             var subjectList = new SubjectListViewModel
             {
                 Profession = mapper.Map<ProfessionViewModel>(service.GetById<Profession>(professionId.Value))

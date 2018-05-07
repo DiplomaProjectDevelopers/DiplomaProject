@@ -28,41 +28,38 @@ namespace DiplomaProject.WebUI.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var user = userManager.GetUserAsync(User).Result;
             var users = service.GetAll<User>().ToList();
             var model = users.Where(u => u.Id != user.Id).
-                Select(async u =>
-                {
-                    var m = mapper.Map<UserViewModel>(u);
-                    var roleName = await userManager.GetRoleAsync(u);
-                    var r = await roleManager.FindByNameAsync(roleName);
-                    m.SelectedRoleId = r.Id;
-                    return m;
-                }
-                ).Select(u => u.Result).ToList();
+                Select(u =>  mapper.Map<UserViewModel>(u)    
+                ).ToList();
             var um = mapper.Map<UserViewModel>(user);
-            var proff = service.GetAll<UserRole>().ToList().Where(p => p.UserId == user.Id && p.ProfessionId.HasValue && p.ProfessionId.Value > 0).Select(ur => ur.ProfessionId.Value).Distinct()
-                .Select(p => service.GetById<Profession>(p)).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
+            var userRoles = service.GetAll<UserRole>().ToList().Where(p => p.UserId == user.Id).Select(p => mapper.Map<UserRoleViewModel>(p)).ToList();
+            for (int i = 0; i < userRoles.Count; i++)
+            {
+                userRoles[i].ProfessionName = service.GetById<Profession>(userRoles[i].ProfessionId)?.Name;
+                userRoles[i].UserName = (await userManager.FindByIdAsync(userRoles[i].UserId))?.UserName;
+                userRoles[i].RoleName = (await roleManager.FindByIdAsync(userRoles[i].RoleId))?.Name;
+                userRoles[i].RoleDisplayName = (await roleManager.FindByIdAsync(userRoles[i].RoleDisplayName))?.DisplayName;
+            }
+            um.UserRoles = userRoles;
+
+            um.Professions = service.GetAll<UserRole>().Where(up => up.UserId == user.Id).Select(p => p.ProfessionId).Distinct()
+                .Select(s => mapper.Map<ProfessionViewModel>(service.GetById<Profession>(s))).ToList();
+
             ViewBag.User = um;
             return View("UserList", model);
         }
 
         public IActionResult UserList(string searchTerm)
         {
+            GetRoles();
             var user = userManager.GetUserAsync(User).Result;
             var users = service.GetAll<User>().ToList();
             var model = users.Where(u => u.Id != user.Id).
-                Select(async u =>
-                {
-                    var m = mapper.Map<UserViewModel>(u);
-                    var roleName = await userManager.GetRoleAsync(u);
-                    var r = await roleManager.FindByNameAsync(roleName);
-                    m.SelectedRoleId = r.Id;
-                    return m;
-                }
-                ).Select(u => u.Result).ToList();
+                Select(u => mapper.Map<UserViewModel>(u)).ToList();
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 model = model.Where(u => u.Username.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) != -1 || u.FirstName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) != -1
@@ -137,7 +134,6 @@ namespace DiplomaProject.WebUI.Controllers
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, "DefaultRole");
                     TempData["UserRegistered"] = Messages.USER_ADDED_SUCCESS;
                     return RedirectToAction("Login");
                 }
@@ -149,85 +145,73 @@ namespace DiplomaProject.WebUI.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [Authorize(Roles = "BaseAdmin, DepartmentAdmin, FacultyAdmin")]
-        public async Task<IActionResult> UpdateRole([FromBody]UserRoleViewModel model)
-        {
-            var userId = model.UserId;
-            var roleId = model.RoleId;
-            var user = await userManager.FindByIdAsync(userId);
-            var role = await roleManager.FindByIdAsync(roleId);
-            if (user != null && role != null)
-            {
-                if (await userManager.IsInRoleAsync(user, role.Name) == false)
-                {
-                    var roles = await userManager.GetRolesAsync(user);
-                    await userManager.RemoveFromRolesAsync(user, roles);
-                    await userManager.AddToRoleAsync(user, role.Name);
-                    return Json(new { Message = Messages.ROLE_UPDATED_SUCCESS, Type = "success" });
-                }
-            }
-            return Json(new { Message = Messages.ROLE_UPDATED_FAILURE, Type = "danger" });
-        }
-
         [HttpGet]
-        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
         public async Task<IActionResult> Edit(string userId)
         {
             if (userId is null)
             {
                 return RedirectToAction("Index");
             }
-            var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
+            var user = await userManager.FindByIdAsync(userId);
             if (user == null)
                 return NotFound();
 
-            var current = service.GetUserAsync(User).GetAwaiter().GetResult();
+            var current = await service.GetUserAsync(User);
             var da = (await roleManager.FindByNameAsync("DepartmentAdmin"));
             var dap = service.GetAll<UserRole>().Where(ur => ur.UserId == current.Id && ur.RoleId == da.Id)
-                .Select(ur => ur.ProfessionId.Value).ToList();
+                .Select(ur => ur.ProfessionId).ToList();
             if (dap.Count > 0)
             {
-                //    .Where(u => u.UserId == current.Id && u.ProfessionId.HasValue && u.ProfessionId.Value > 0)
-                //    .Select(s => s.ProfessionId.Value).Distinct().ToList();
-
                 ViewBag.Roles = service.GetAll<Role>().Where(r => r.Priority > 3).Select(s => mapper.Map<RoleViewModel>(s)).ToList();
                 ViewBag.Professions = service.GetAll<Profession>().Where(p => dap.IndexOf(p.Id) != -1).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
-                var userroles = service.GetAll<UserRole>().Where(u => u.UserId == userId && dap.Contains(u.ProfessionId.Value)).Select(s => mapper.Map<UserRoleViewModel>(s)).ToList();
+                var userroles = service.GetAll<UserRole>().Where(u => u.UserId == userId && dap.Contains(u.ProfessionId)).Select(s => mapper.Map<UserRoleViewModel>(s)).ToList();
                 var model = mapper.Map<UserViewModel>(user);
                 model.UserRoles = userroles;
                 for (int i = 0; i < model.UserRoles.Count; i++)
                 {
-                    model.UserRoles[i].Id = i + 1;
+                    model.UserRoles[i].Id = -1 - i;
                 }
-                return View("EditProfessionAdmin", model);
+                return View("EditUser", model);
             }
             throw new NotImplementedException();
         }
 
-        [HttpPost, ActionName("EditProfessionAdmin")]
-        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditConfirmed(ProfessionAdminViewModel model)
+        [HttpPost]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
+        public async Task<IActionResult> EditConfirmed([FromBody]UserViewModel model)
         {
-            if (ModelState.IsValid && model != null && model.Id != null)
+            if (ModelState.IsValid && model != null && model.UserRoles.Count  != 0)
             {
-                var user = await userManager.FindByIdAsync(model.Id);
-                var userProfessions = service.GetAll<Profession>();
-                //if (userProfessions.FirstOrDefault(p => p.Id == model.ProfessionId) != null)
-                //{
-                //    var profession = service.GetById<Profession>(model.ProfessionId);
-                //    profession.AdminId = user.Id;
-                //    await service.Update<Profession>(profession);
-                //}
+                var currentUserProfessions = service.GetAll<UserRole>().Where(s => s.UserId == currentUser.Id).Select(s => s.ProfessionId).Distinct().ToList();
+                var enabledRoles = service.GetAll<Role>().ToList();
+                var previousroles = service.GetAll<UserRole>().Where(s => s.UserId == model.Id);
+                foreach (var item in previousroles)
+                {
+                    await service.Delete(item);
+                }
+                for (int i = 0; i < model.UserRoles.Count; i++)
+                {
+                    if (currentUserProfessions.Contains(model.UserRoles[i].ProfessionId))
+                    {
+                        var dataModel = new UserRole
+                        {
+                            UserId = model.Id,
+                            RoleId = model.UserRoles[i].RoleId,
+                            ProfessionId = model.UserRoles[i].ProfessionId
+                        };
+                        await service.Insert(dataModel);
+                    }
+                }
                 TempData["UserUpdated"] = Messages.USER_UPDATED_SUCCESS;
-                return RedirectToAction("Users");
+                return Json(new { redirect = Url.Action("Index", "Admin") });
             }
-            throw new Exception();
+            ViewBag.Message = "Սխալ տեղի ունեցավ: Խնդրում ենք փորձել կրկին";
+            return View("EditUser", model);
         }
 
         [HttpGet]
-        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
         public IActionResult Delete(string userId)
         {
             if (userId is null)
@@ -241,7 +225,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "BaseAdmin, FacultyAdmin, DepartmentAdmin")]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string userId)
         {

@@ -34,12 +34,19 @@ namespace DiplomaProject.Domain.Services
             for (int i = 0; i < inserted.Count; ++i)
             {
                 inserted[i].Id = 0;
-                inserted[i] = await dataService.Insert<Edge>(inserted[i]);
+                inserted[i] = await dataService.Insert(inserted[i]);
             }
 
             for (int i = 0; i < updated.Count; ++i)
             {
-               updated[i] = await dataService.Update<Edge>(updated[i]);
+                var previous = dataService.GetById<Edge>(updated[i].Id);
+                if (previous != null)
+                {
+                    previous.LeftOutComeId = updated[i].LeftOutComeId;
+                    previous.RightOutComeId = updated[i].RightOutComeId;
+                    updated[i] = await dataService.Update(previous);
+
+                }
             }
             return model;
         }

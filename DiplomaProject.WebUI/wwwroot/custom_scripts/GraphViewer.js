@@ -12,7 +12,7 @@
             y: Math.random(),
             size: Math.random(),
             type: 'cycle',
-            color: node.IsNew ? '#33ccff' : '#00cc66'
+            color: node.IsNew ? '#33ccff' : '#008000'
         });
     });
     edges.forEach((edge, index) => {
@@ -25,11 +25,12 @@
             color: '#999966'
         });
     });
-    var s = new sigma({
+    s = new sigma({
         graph,
         container: 'graph-container',
         settings: {
             labelColor: 'yellow',
+            nodeHoverColor: '#0000ff',
             autoResize: true,
             autoRescale: true,
             defaultLabelSize: 12,
@@ -44,5 +45,6 @@
             borderColor: '#eee'
         }
     });
+    s.refresh();
     var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
 }

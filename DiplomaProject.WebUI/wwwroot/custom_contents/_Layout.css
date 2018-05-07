@@ -1,11 +1,24 @@
-﻿.body-content{
-    padding-top:55px;
-   }
+﻿.body-content {
+    padding-top: 55px;
+    margin-left: 35px;
+}
 
 .btn{
     border-radius:0 !important;
 }
 
-.body-content{
-    margin-left: 35px;
+body {
+    background-color: #f5fffa !important;
+}
+
+.table-striped > tbody > tr{
+    background-color: #fff !important;
+}
+
+.table thead {
+    background-color: #45526e;
+}
+
+.table thead th{
+    color: white;
 }

@@ -1,7 +1,5 @@
 ﻿function getOptions() {
     let array = JSON.parse(sessionStorage.getItem('nodes'));
-    array.push({ Id: -1, Name: '-ընտրեք վերջնարդյունքը-' });
-    array.sort((x, y) => x.Id - y.Id);
     return array;
 
 }
@@ -60,16 +58,20 @@ function updateDependencies(edges) {
         fromDiv.setAttribute('class', 'col-md-5');
 
         const fromSelect = document.createElement('select');
-        fromSelect.setAttribute('class', 'select-box');
+        fromSelect.setAttribute('class', 'selectpicker form-control outcomeselector');
         fromSelect.style.width = '100%';
+        fromSelect.setAttribute('data-live-search', true);
+        fromSelect.setAttribute('data-size', 6);
         fromSelect.addEventListener('change', (e) => onChange(edge.Id, 'FromNode', e.target.value));
 
         const toDiv = document.createElement('div');
         toDiv.setAttribute('class', 'col-md-5');
 
         const toSelect = document.createElement('select');
-        toSelect.setAttribute('class', 'col-md-5 select-box');
+        toSelect.setAttribute('class', 'selectpicker form-control outcomeselector');
         toSelect.style.width = '100%';
+        toSelect.setAttribute('data-live-search', true);
+        toSelect.setAttribute('data-size', 6);
         toSelect.addEventListener('change', (e) => onChange(edge.Id, 'ToNode', e.target.value));
 
         const deleteDiv = document.createElement('div');
@@ -82,22 +84,42 @@ function updateDependencies(edges) {
         deleteDiv.appendChild(deleteLink);
 
         const options = getOptions();
-        (options || []).forEach(option => {
+        const empOption1 = document.createElement('option');
+        empOption1.value = '-1';
+        empOption1.text = '-ընտրեք վերջնարդյունքը-';
 
-            const option1 = document.createElement('option');
-            option1.value = option.Id;
-            option1.text = option.Name;
+        const empOption2 = document.createElement('option');
+        empOption2.value = '-1';
+        empOption2.text = '-ընտրեք վերջնարդյունքը-';
+        fromSelect.appendChild(empOption1);
+        toSelect.appendChild(empOption2);
+        
+        const groups = groupBy(options, o => o.Subject);
+        groups.forEach((options, key) => {
+            const optgroup1 = document.createElement('optgroup');
+            optgroup1.label = key || 'Նոր վերջնարդյունքներ';
 
-            const option2 = document.createElement('option');
-            option2.value = option.Id;
-            option2.text = option.Name;
+            const optgroup2 = document.createElement('optgroup');
+            optgroup2.label = key || 'Նոր վերջնարդյունքներ';
+            (options || []).forEach(option => {
 
-            if (option.IsNew) {
-                option1.setAttribute('class', 'isNewOutComeOption');
-                option2.setAttribute('class', 'isNewOutComeOption');
-            }
-            fromSelect.appendChild(option1);
-            toSelect.appendChild(option2);
+                const option1 = document.createElement('option');
+                option1.value = option.Id;
+                option1.text = option.Name;
+
+                const option2 = document.createElement('option');
+                option2.value = option.Id;
+                option2.text = option.Name;
+
+                if (option.IsNew) {
+                    option1.setAttribute('class', 'isNewOutComeOption');
+                    option2.setAttribute('class', 'isNewOutComeOption');
+                }
+                optgroup1.appendChild(option1);
+                optgroup2.appendChild(option2);
+            });
+            fromSelect.appendChild(optgroup1);
+            toSelect.appendChild(optgroup2);
         });
         fromSelect.value = edge.FromNode;
         fromDiv.appendChild(fromSelect);
@@ -115,6 +137,7 @@ function updateDependencies(edges) {
         dependencies.removeChild(dependencies.firstChild);
     }
     fields.forEach(field => document.getElementById('dependencies').appendChild(field));
+    $('.selectpicker').selectpicker();
 }
 
 

@@ -25,6 +25,7 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/lib/bootstrap-select/dist/css/bootstrap-select.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+
     </environment>
     @RenderSection("Styles", required: false)
 </head>
@@ -42,7 +43,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Գլխավոր</a></li>
+                    <li><a asp-area="" asp-controller="@(User.Identity.IsAuthenticated ? "Admin" : "Home")" asp-action="Index">Գլխավոր</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">Մեր մասին</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Հետադարձ կապ</a></li>
 
@@ -51,7 +52,7 @@
             </div>
         </div>
     </nav>
-    <div class="container-fluid body-content">
+    <div class="container-fluid bg-dark body-content ">
         @RenderBody()
     </div>
     <environment include="Development">
@@ -60,7 +61,6 @@
         <script src="~/lib/jquery-validator/validator.js"></script>
         <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/lib/requirejs/require.js"></script>
         <script src="~/custom_scripts/utils.js"></script>
 
     </environment>

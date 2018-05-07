@@ -27,8 +27,8 @@ namespace DiplomaProject.WebUI.Controllers
         protected UserManager<User> userManager;
         protected SignInManager<User> signInManager;
         protected RoleManager<Role> roleManager;
-        protected string roleName;
-
+        protected User currentUser;
+         
         public BaseController(IDPService service, IMapper mapper,
             UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
         {
@@ -47,6 +47,30 @@ namespace DiplomaProject.WebUI.Controllers
             }
         }
 
+        protected void GetRoles(params int[] professions)
+        {
+            if (User?.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var user = service.GetUserAsync(User).Result;
+                if (user != null)
+                {
+                    this.currentUser = user;
+                    IEnumerable<string> userroles;
+                    if (professions.Length > 0)
+                    {
+                        userroles = service.GetAll<UserRole>().Where(ur => professions.Contains(ur.ProfessionId) && ur.UserId == user.Id).
+                                Select(s => s.RoleId).Select(s => roleManager.FindByIdAsync(s).Result.Name.ToUpper());
+                    }
+                    else
+                    {
+                        userroles = service.GetAll<UserRole>().Where(ur => ur.UserId == user.Id).
+                                Select(s => s.RoleId).Select(s => roleManager.FindByIdAsync(s).Result.Name.ToUpper());
+                    }
+                    ViewBag.UserRoles = userroles.ToList();
+                }
+            }
+        }
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (User?.Identity != null && User.Identity.IsAuthenticated)
@@ -54,10 +78,9 @@ namespace DiplomaProject.WebUI.Controllers
                 var user = service.GetUserAsync(User).Result;
                 if (user != null)
                 {
-                    this.roleName = userManager.GetRoleAsync(user).Result;
+                    this.currentUser = user;
                 }
             }
-            ViewBag.RoleName = roleName?.ToUpper();
             base.OnActionExecuting(context);
         }
         protected override void Dispose(bool disposing)

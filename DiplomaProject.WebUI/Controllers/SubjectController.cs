@@ -25,6 +25,7 @@ namespace DiplomaProject.WebUI.Controllers
         [Authorize]
         public IActionResult Index(int professionId)
         {
+            GetRoles(professions: professionId);
             if (professionId == 0) return NotFound();
             var profession = service.GetById<Profession>(professionId);
             if (profession == null) return NotFound();
@@ -127,11 +128,27 @@ namespace DiplomaProject.WebUI.Controllers
             return Json(new { model, redirect = Url.Action("SubjectSequences", "Subject", new { professionId = model.Profession.Id}) });
         }
 
+        [Authorize]
+        public IActionResult SubjectDetails(int subjectId)
+        {
+            if (subjectId == 0) return NotFound();
+            var subject = service.GetById<Subject>(subjectId);
+            if (subject is null) return NotFound();
+            var outcomes = service.GetAll<FinalOutCome>().Where(f => f.SubjectId == subjectId).ToList();
+            var model = mapper.Map<SubjectViewModel>(subject);
+            for (int i = 0; i < outcomes.Count; i++)
+            {
+                var omodel = mapper.Map<OutcomeViewModel>(outcomes[i]);
+                model.Outcomes.Add(omodel);
+            }
+            return View(model);
+        }
         [HttpGet]
         [Authorize(Roles = "SubjectMaker")]
         public IActionResult SubjectSequences(int professionId)
         {
             if (professionId == 0) return NotFound();
+            GetRoles(professionId);
             var profession = service.GetById<Profession>(professionId);
             if (profession == null) return NotFound();
             else ViewBag.Profession = mapper.Map<ProfessionViewModel>(profession);
@@ -139,7 +156,9 @@ namespace DiplomaProject.WebUI.Controllers
             return View("SubjectSequence", model);
         }
 
-        public async Task<IActionResult> SaveSubjectSequences([FromBody]List<List<SubjectViewModel>> model)
+        [HttpPost]
+        [Authorize(Roles = "SubjectMaker")]
+        public async Task<IActionResult> SaveSubjectSequences([FromQuery]int professionId, [FromBody]List<List<SubjectViewModel>> model)
         {
             if (model.Count != 8)
             {
@@ -156,7 +175,7 @@ namespace DiplomaProject.WebUI.Controllers
                 }
             }
             await service.UpdateRange(updatedModel);
-            return RedirectToAction("Index", "Subject");
+            return Json(new { redirect = Url.Action("Index", "Subject", new { professionId})});
         }
 
         private List<List<SubjectViewModel>> GetSubjectSequence(int professionId)

@@ -4,5 +4,52 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Գլխավոր</h2>
+<div>
+    <h2 class="text-center">Ուսումնական պլանի ձևավորման համակարգ</h2>
+    <div class="row">
+        <div id="page-description" class="col-md-5">
+            <p class="text text-justify">
+                ԲՈՒՀ-ի ուսումնական գործընթացի ղեկավարումը բաղկացած է բազմաթիվ խնդիրներից։
+                Կարևորագույն խնդիրներից է՝ շահակիցների պահանջներին համապատասխանող վերջարդյունքների հիման վրա   ուսումնական պլանների ձևավորման գործընթացի իրականացումը։
+            </p>
+            <p class="text text-justify">
+                Ժամանակակից պահանջներին համապատասխանող մասնագետների պատրաստումը բերում է ուսումնական պլանների շարունակական (անընդմեջ) բարելավմանը:
+                Այդ շարունակական գործընթացը կապահովի ուսումնական պլանների ամբողջական համապատասխանությունը որակյալ մասնագետի պատրաստմանը:
+            </p>
+            <p class="text text-justify">Ելնելով վերը նշվածից, կարելի եզրակացնել, որ ուսումնական պլանները պետք է լինեն բավականին ճկուն մասնագետի նկատմամբ հաճախ փոփոխվող պահանջների նկատմամբ:</p>
+        </div>
+        <div class="col-md-7">
+            <div>
+                <p class="text-center" id="levelDescriptor">Ուսումնական պլանի ձևավորման փուլերը</p>
+                <div>
+                    <img id="arrow1" src="~/custom_contents/arrow.png">
+                </div>
+                <div id="rectangle1" class="text-center level">
+                    Ուսումնական պլանի ձևավորում
+                </div>
+                <div id="rectangle2" class="text-center level">
+                    Շահառուների հարցում և արդյունքների մշակում
+                </div>
+                <div>
+                    <img id="arrow2" src="~/custom_contents/arrow.png">
+                </div>
+                <div id="rectangle3" class="text-center level">
+                    Առարկաների ձևավորում և  դրանց ուսումնասիրման ճիշտ հերթականության որոշում
+                </div>
+                <div>
+                    <img id="arrow3" src="~/custom_contents/arrow.png">
+                </div>
+                <div id="rectangle4" class="text-center level">
+                    Առարկաների կրեդիտների և ըստ պարապմունքների տեսակի ժամերի որոշումը
+                </div>
+                <div>
+                    <img id="arrow4" src="~/custom_contents/arrow.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+@section Styles{
+    <link rel="stylesheet" href="~/custom_contents/HomePage.css" />
+}

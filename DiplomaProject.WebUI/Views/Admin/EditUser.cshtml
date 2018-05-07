@@ -1,0 +1,53 @@
+﻿@model UserViewModel
+
+@{
+    ViewData["Title"] = $"Դեր բաշխել {Model?.Username} օգտագործողին";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Խմբագրել @Model.Username օգտատիրոջը</h3>
+
+<h4>Ընտրեք դեր այս օգտատիրոջ համար.</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6 col-sm-12 col-lg-6 col-md-offset-3">
+        <div id="message"></div>
+        <button class="btn btn-link" onclick="addRole()"><i class="glyphicon glyphicon-plus"></i>Ավելացնել դեր</button>
+        <div class="panel panel-success">
+            <div class="panel-heading">Ընտրեք դերերը տվյալ օգտագոտծողի համար</div>
+            <div>
+            </div>
+            <div class="panel-body">
+                <div>
+                    <div id="roleProfessions">
+
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Պահպանել" onclick="onSubmit()" class="btn btn-success" />
+                        <a asp-action="Index" class="btn btn-default">Հետ գնալ ցանկ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var professions;
+        var roles;
+        var nextId;
+        var edges;
+        var model;
+        var userId;
+
+            $(document).ready(function () {
+           edges = @Model.UserRoles.Count > 0 ?  JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UserRoles)))') : [];
+           userId = '@Model.Id';
+           nextId = @(Model.UserRoles.Count > 0 ? Model.UserRoles.Min(s => s.Id) - 1 : -1);
+           roles = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Roles)))');
+           professions = @ViewBag.Professions.Count > 0 ? JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Professions)))') : [];
+           updateDependencies(edges);
+        });
+    </script>
+    <script src="~/custom_scripts/EditUser.js"></script>
+}

@@ -41,7 +41,8 @@ namespace DiplomaProject.WebUI
             services.AddTransient<OutcomesService>();
             services.AddDbContext<DiplomaProjectContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<User, Role>()
+            services.AddIdentity<User, Role>(options => {
+            })
                 .AddEntityFrameworkStores<DiplomaProjectContext>()
                 .AddDefaultTokenProviders();
             services.Configure<IdentityOptions>(options =>
@@ -96,21 +97,9 @@ namespace DiplomaProject.WebUI
             {
                 FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory())
             });
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(
-            //        Path.Combine(Directory.GetCurrentDirectory(), "Content")),
-            //    RequestPath = "/Content"
-            //});
 
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(
-            //        Path.Combine(Directory.GetCurrentDirectory(), "Scripts")),
-            //    RequestPath = "/Scripts"
-            //});
             app.UseAuthentication();
-            dbInitializer.Initialize().Wait();
+            dbInitializer.Initialize(app).Wait();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -121,7 +110,6 @@ namespace DiplomaProject.WebUI
             {
                 context.Response.StatusCode = 404;
                 await Task.FromResult(0);
-                //await context.Respons.WriteAsync("Hello World!");
             });
         }
     }

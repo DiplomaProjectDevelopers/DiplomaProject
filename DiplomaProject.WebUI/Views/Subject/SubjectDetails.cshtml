@@ -1,0 +1,62 @@
+﻿@model DiplomaProject.Domain.ViewModels.SubjectViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h2>@Model.Name</h2>
+
+<div>
+    <h4>Առարկայի կառուցվածքը</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ProfessionName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProfessionName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SubjectModule)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubjectModule)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Credit)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Credit)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Level)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Level)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalHours)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TotalHours)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Outcomes)
+        </dt>
+        <dd>
+            @foreach (var outcome in Model.Outcomes)
+            {
+                <p>@outcome.Name</p>
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Հետ գնալ ցանկ</a>
+</div>

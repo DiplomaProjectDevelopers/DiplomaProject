@@ -18,6 +18,8 @@ namespace DiplomaProject.Domain.ViewModels
         public string Name { get; set; }
         [Display(Name = "Մասնագիտություն")]
         public int? ProfessionId { get; set; }
+        [Display(Name = "Մասնագիտություն")]
+        public string ProfessionName { get; set; }
         [Required]
         [Display(Name = "Առարկայական մոդուլ")]
         public int? SubjectModuleId { get; set; }
@@ -32,7 +34,7 @@ namespace DiplomaProject.Domain.ViewModels
 
         [Display(Name = "Ընդհանուր ժամաքանակ")]
         public int? TotalHours { get; set; }
-
+        [Display(Name = "Վերջնարդյունքներ")]
         public List<OutcomeViewModel> Outcomes { get; set; }
 
         public List<int> DependentSubjects { get; set; }

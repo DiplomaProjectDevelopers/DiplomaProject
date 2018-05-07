@@ -25,15 +25,6 @@ namespace DiplomaProject.WebUI.Controllers
         [Authorize]
         public IActionResult Index(int professionId)
         {
-            var subject = service.GetAll<Subject>().ToList();
-            var sbmodel = subject.Select(sb => mapper.Map<SubjectViewModel>(sb)).ToList();
-            var subjectlist = sbmodel.Select(sb => sb.Name).ToList();
-            ViewBag.ListofSubject = subjectlist;
-            var finaloutcome = service.GetAll<FinalOutCome>().ToList();
-            var fomodel = finaloutcome.Select(fo => mapper.Map<FinalOutcomeViewModel>(fo));
-            ViewBag.ListOfFinalOutcome = finaloutcome;
-            return View("SubjectDistribution");
-        }
             if (professionId == 0) return NotFound();
             var profession = service.GetById<Profession>(professionId);
             if (profession == null) return NotFound();
@@ -47,6 +38,15 @@ namespace DiplomaProject.WebUI.Controllers
             }
             ViewBag.Profession = mapper.Map<ProfessionViewModel>(profession);
             return View("SubjectList", subjects);
+        }
+            var subject = service.GetAll<Subject>().ToList();
+            var sbmodel = subject.Select(sb => mapper.Map<SubjectViewModel>(sb)).ToList();
+            var subjectlist = sbmodel.Select(sb => sb.Name).ToList();
+            ViewBag.ListofSubject = subjectlist;
+            var finaloutcome = service.GetAll<FinalOutCome>().ToList();
+            var fomodel = finaloutcome.Select(fo => mapper.Map<FinalOutcomeViewModel>(fo));
+            ViewBag.ListOfFinalOutcome = finaloutcome;
+            return View("SubjectDistribution");
         }
 
         [HttpPost]

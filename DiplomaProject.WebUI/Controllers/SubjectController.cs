@@ -79,11 +79,11 @@ namespace DiplomaProject.WebUI.Controllers
                 totalsum = totalsum + sum;
                 
                 credit = 30 * sum / totalsum; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
-               // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
-                return View();
-                
+               // totalHours = credit / gWeight + credit / kWeight + credit / hWeight                
 
         }
+            return View();
+
 
         }
 
@@ -247,7 +247,7 @@ namespace DiplomaProject.WebUI.Controllers
                     model[i].Add(m);
                 }
             }
-            return model․ToList();
+            return model.ToList();
         }   
     }
 }

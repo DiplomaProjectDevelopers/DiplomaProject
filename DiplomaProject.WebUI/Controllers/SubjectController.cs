@@ -40,8 +40,53 @@ namespace DiplomaProject.WebUI.Controllers
             ViewBag.Profession = mapper.Map<ProfessionViewModel>(profession);
             return View("SubjectList", subjects);
         }
+        [HttpGet]
+        [Authorize]
+        public IActionResult IndexDist()
+        {
+            var subject = service.GetAll<Subject>().ToList();
+            var sbmodel = subject.Select(sb => mapper.Map<SubjectViewModel>(sb)).ToList();
+            var subjectlist = sbmodel.Select(sb => sb.Name).ToList();
+            ViewBag.ListofSubject = subjectlist;
+            var finaloutcome = service.GetAll<FinalOutCome>().ToList();
+            var fomodel = finaloutcome.Select(fo => mapper.Map<FinalOutcomeViewModel>(fo));
+            ViewBag.ListOfFinalOutcome = finaloutcome;
+            return View("SubjectDistribution");
+        }
 
-        [Authorize(Roles = "SubjectMaker")]
+        [HttpGet]
+        public IActionResult Distribution(int professionId)
+
+        {
+            var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList();
+            for (int i = 0; i < finalSubjects.Count; i++)
+            {
+
+                var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubjects[i].Id);
+                var giteliq = outcomes.Where(o => o.OutComeTypeId == 1);
+                var karoxutyun = outcomes.Where(o => o.OutComeTypeId == 2);
+                var hmtutyun = outcomes.Where(o => o.OutComeTypeId == 3);
+                double credit = 0;
+                var totalHours = 0;
+                double totalsum = 0;
+                double gWeight = giteliq.Sum(g => g.TotalWeight.Value);
+                double kWeight = karoxutyun.Sum(k => k.TotalWeight.Value);
+                double hWeight = hmtutyun.Sum(h => h.TotalWeight.Value);
+                double sum = gWeight + kWeight + hWeight;
+                finalSubjects[i].Credit = Convert.ToInt32(credit);
+                finalSubjects[i].TotalHours = totalHours;
+                service.Update(finalSubjects[i]);
+                totalsum = totalsum + sum;
+                
+                credit = 30 * sum / totalsum; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
+               // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
+                return View();
+                
+
+        }
+
+        }
+
         [HttpPost]
         public async Task<IActionResult> SaveSubjects([FromBody]SubjectListViewModel model)
         {
@@ -202,8 +247,7 @@ namespace DiplomaProject.WebUI.Controllers
                     model[i].Add(m);
                 }
             }
-            return model.ToList();
-        }
-
+            return model․ToList();
+        }   
     }
 }

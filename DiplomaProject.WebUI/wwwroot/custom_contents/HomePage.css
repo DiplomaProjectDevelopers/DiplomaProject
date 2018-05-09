@@ -8,6 +8,10 @@
 	margin-top:160px;
 	
 }
+
+body{
+    background-image: url(../backgrounds/begin.jpg) !important;
+}
 h2{
     margin-bottom: 50px;
 }

@@ -13,7 +13,7 @@
                 <span>
                     Ընտրված մասնագիտությունը՝ <em>@ViewBag.Profession?.Name</em>
                 </span>
-                <a class="btn btn-link text-right" onclick="location.href ='@Url.Action("GraphViewer", "Outcomes", new { professionId = ViewBag.Profession?.Id})'">
+                <a class="btn btn-link text-right defGroup" onclick="location.href ='@Url.Action("GraphViewer", "Outcomes", new { professionId = ViewBag.Profession?.Id})'">
                     Դիտել գրաֆիկական ներկայացումը
                 </a>
             </div>
@@ -35,7 +35,7 @@
     </div>
     <div>
         <a class="btn btn-primary" onclick="onSubmit()">Պահպանել</a>
-        <a class="btn btn-link" onclick="location.href='@Url.Action("Index", "Subject", new { professionId = ViewBag.Profession?.Id })'">Չեղարկել</a>
+        <a class="btn btn-link defGroup" onclick="location.href='@Url.Action("Index", "Subject", new { professionId = ViewBag.Profession?.Id })'">Չեղարկել</a>
     </div>
 </div>
 @section Styles{

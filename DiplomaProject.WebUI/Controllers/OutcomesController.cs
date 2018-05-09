@@ -76,20 +76,21 @@ namespace DiplomaProject.WebUI.Controllers
 
             var outcomes = service.GetAll<FinalOutCome>().Where(o => o.ProfessionId == professionId).ToList();
             var model = outcomes.Select(o => mapper.Map<OutcomeViewModel>(o)).ToList();
-
-            foreach (var o in model)
+            for (int i = 0; i < outcomes.Count; i++)
             {
-                if (o.SubjectId.HasValue && o.SubjectId.Value != 0)
+                if (outcomes[i].InitialSubjectId != null && outcomes[i].InitialSubjectId.Value != 0)
                 {
-                    o.Subject = service.GetById<InitialSubject>(o.SubjectId.Value)?.Name;
+                    model[i].Subject = service.GetById<InitialSubject>(outcomes[i].InitialSubjectId.Value).Name;
                 }
             }
+
             ViewBag.Outcomes = model;
 
             var edges = service.GetAll<Edge>().Where(e => e.ProfessionId == professionId).ToList();
             var viewModel = edges.Select(e => mapper.Map<EdgeViewModel>(e));
             return View("GraphViewer", viewModel);
         }
+
         [HttpPost]
         [Authorize(Roles = "SubjectMaker")]
         public async Task<IActionResult> SaveDependencies([FromBody]List<EdgeViewModel> model)

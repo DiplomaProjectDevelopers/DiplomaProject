@@ -29,7 +29,7 @@
         graph,
         container: 'graph-container',
         settings: {
-            labelColor: 'yellow',
+            defaultLabelColor: '#fff',
             nodeHoverColor: '#0000ff',
             autoResize: true,
             autoRescale: true,

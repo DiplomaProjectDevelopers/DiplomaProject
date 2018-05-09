@@ -105,11 +105,11 @@ function updateDependencies(edges) {
 
                 const option1 = document.createElement('option');
                 option1.value = option.Id;
-                option1.text = option.Name;
+                option1.text = `${option.Name}(${option.TotalWeight || 0})`;
 
                 const option2 = document.createElement('option');
                 option2.value = option.Id;
-                option2.text = option.Name;
+                option2.text = `${option.Name}(${option.TotalWeight || 0})`;
 
                 if (option.IsNew) {
                     option1.setAttribute('class', 'isNewOutComeOption');

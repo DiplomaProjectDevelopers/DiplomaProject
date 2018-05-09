@@ -23,29 +23,8 @@ namespace DiplomaProject.WebUI.Controllers
         {
 
         }
-        public IActionResult Index2()
-        {
-            var branch = service.GetAll<Branch>().ToList();
-            var branchmodel = branch.Select(b => mapper.Map<BranchViewModel>(b)).ToList();
-            branchmodel.Insert(0, new BranchViewModel { Id = 0, Name = "ճյուղ" });
-            ViewBag.ListOfBranch = branchmodel;
-            var professions = service.GetAll<Profession>().ToList();
-            var proffmodel = professions.Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
-            proffmodel.Insert(0, new ProfessionViewModel { Id = 0, Name = "մասնագիտություն" });
-            ViewBag.ListofProfession = proffmodel;
-            ViewBag.ListOfTypeName = service.GetAll<StakeHolderType>().Select(s => new StakeHolderTypeViewModel
-            {
-                Id = s.Id,
-                TypeName = s.ProfessionName ?? s.TypeName
-            });
-            var stakeHolders = service.GetAll<StakeHolder>().ToList();
-            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
-            sthmodel.Insert(0, new StakeHolderViewModel { Id = 0, CompanyName = "կազմակերպություն" });
-            ViewBag.ListofCompany = sthmodel;
-            return View("Questionnaire1");
-        }
 
-        [Authorize]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin, RequestSender")]
         public async Task<IActionResult> Index()
         {
             GetRoles();

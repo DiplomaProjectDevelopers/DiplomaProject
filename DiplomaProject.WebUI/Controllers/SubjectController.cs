@@ -187,8 +187,8 @@ namespace DiplomaProject.WebUI.Controllers
             subjectLevels[0].AddRange(rootNodes);
             for (int i = 1; i < subjectLevels.Length - 1; i++)
             {
-                var prevoious = subjectLevels[i - 1];
-                var currunt = subjects.Select(s => s.Id).Where(s => filteredEdges.Any(e => e.Item2 == s && prevoious.Contains(e.Item1)));
+                var previous = subjectLevels[i - 1];
+                var currunt = subjects.Select(s => s.Id).Where(s => filteredEdges.Any(e => e.Item2 == s && previous.Contains(e.Item1)));
                 subjectLevels[i] = currunt.ToList();
             }
             subjectLevels[8] = subjects.Select(s => s.Id).Where(s => subjectLevels.All(l => l.All(v => v != s))).ToList();

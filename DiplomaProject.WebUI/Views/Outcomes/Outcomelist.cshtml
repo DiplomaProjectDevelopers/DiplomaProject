@@ -1,0 +1,63 @@
+﻿@model IEnumerable<DiplomaProject.Domain.ViewModels.FinalOutcomeViewModel>
+@{
+    ViewData["Title"] = "Վերջնարդյունքների ցանկ";
+}
+
+<h2>Վերջնարդյունքներ</h2>
+<h4 class=""><em>«@ViewBag.ProfessionList.Name»</em> մասնագիտության ներկայիս առարկաները</h4>
+@*<h4 class=""><em>«@ViewBag.ProfessionList.Name»</em> մասնագիտության ներկայիս վերջնարդյունքները</h4>
+<div class="table-responsive pre-scrollable">
+    <div class="btn row">
+        @if (ViewBag.UserRoles.Contains("SUBJECTMAKER"))
+        {
+            <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("Question", "StakeHolder")'"><span class="glyphicon glyphicon-cog"></span>Կազմելհարցաթերթիկ</button>
+            <button class="btn btn-link" type="button" onclick="location.href = '@Url.Action("SubjectSequences", "Subject", new { professionId = ViewBag.Profession.Id})'"><span class="glyphicon glyphicon-plus"></span>Բաշխել ըստ կիսամյակների</button>
+        }
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SubjectModule)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalHours)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Level)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Credit)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubjectModule)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalHours)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Level)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Credit)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-controller="Subject" asp-route-subjectId="@item.Id">Մանրամասներ</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>*@

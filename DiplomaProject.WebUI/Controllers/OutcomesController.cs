@@ -27,17 +27,27 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        [Authorize]
+        public IActionResult Index(int professionoId)
         {
-            var user = userManager.GetUserAsync(User).Result;
-            var professions = service.GetAll<Profession>().ToList();//.Where(e => e.AdminId == user.Id).ToList();
-            var model = professions.Select(p =>
-            {
-                var profession = mapper.Map<ProfessionViewModel>(p);
-                profession.Department = service.GetById<Department>(profession.DepartmentId.Value).Name;
-                return profession;
-            });
-            return View("ProfessionList", model);
+            ViewBag.p = professionoId;
+            GetRoles(professions: professionoId);
+            if (professionoId == 0) return NotFound();
+            var profession = service.GetById<Profession>(professionoId);
+            if (profession == null) return NotFound();
+            var finaloutcome = service.GetAll<FinalOutCome>().Where(fo => fo.ProfessionId == professionoId).ToList();
+            var subjects = service.GetAll<InitialSubject>().Where(s => s.ProfessionId == professionoId).ToList();
+            ViewBag.Sub = subjects;
+            ViewBag.Finaloutcome = finaloutcome;
+            ViewBag.ProfessionList = mapper.Map<ProfessionViewModel>(profession);
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Request()
+        {
+            Index(ViewBag.p);
+            return View();
         }
 
         [HttpGet]

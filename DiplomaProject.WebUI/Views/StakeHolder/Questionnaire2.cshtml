@@ -39,17 +39,17 @@
             <label for="@outcome.OutComeTypeId" style="margin-left:19px">9</label>
             <label for="@outcome.OutComeTypeId" style="margin-left:15px">10</label>
             <br />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=0 />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=1 />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=2 />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=3 />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=4 />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=5 />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=6 />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=7 />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=8 />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=9 />
-            <input style="margin-left:14px" type="radio" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Name" value=10 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=0 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=1 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=2 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=3 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=4 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=5 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=6 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=7 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=8 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=9 />
+            <input style="margin-left:14px" type="radio" title="@outcome.Name" class="@outcome.InitialSubjectId" id="@outcome.OutComeTypeId" name="@outcome.Id" value=10 />
         </div>
 k++;
 }
@@ -66,7 +66,7 @@ k++;
 </div>
 
 @section Styles {
-    <link href="~/Content/Outcomes/Questionnaire2.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/custom_contents/Questionnaire2.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="~/Content/Images/questionnaire.jpg" rel="icon" />
 }
@@ -102,7 +102,7 @@ k++;
             });
             $('#Radiodiv input[type=radio]').on('change', function () {
                 $(this).css('background-color', 'Green');
-                var n = this.name;
+                var n = this.title;
                 var w = this.value;
                 var i = this.id;
                 var c = this.className;
@@ -132,17 +132,6 @@ k++;
                     l++;
                 }
             }
-            //alert(arr.length);
-            //for (var i = 0; i < arr.length; i++) {
-            //    var v = arr[i];
-            //   // var check = $("#Radiodiv input[name='" + v + "']:checked").val();
-            //    if ($("#Radiodiv input[name='" + v + "']:checked").val()) {
-            //        $('#' + v).css("color", "green");
-            //    }
-            //    else {
-            //        $('#Radiodiv input[name="' + v + '"] label').css('color', 'red');
-            //    }
-            //}
             for (var i = 0; i < all_input.length; i += 10 + a) {
                 j = i;
                 while (j <= i + 10) {
@@ -163,7 +152,6 @@ k++;
                 data.set("weight", strWeight);
                 data.set("subject", strSubject);
                 data.set("outcomeid", strId);
-               // alert("onclick");
                 req.send(data);
             }
             

@@ -24,9 +24,17 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="list-group-item">
+                <a id="lnProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessionsforoutcome" aria-expanded="false">
                     <i class="glyphicon glyphicon-asterisk"></i> Վերջնարդյունքներ
                 </a>
+                <ul class="collapse" id="prefessionsforoutcome" role="menu" aria-labelledby="lnPrefessions">
+                    @foreach (var item in Model.Professions)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "Outcomes", new { professionoId = item.Id } )">@item.Name</a>
+                </li>
+    }
+                </ul>
             </li>
             <li>
                 <a id="lnkProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessions" aria-expanded="false">
@@ -34,11 +42,11 @@
                 </a>
                 <ul class="collapse" id="prefessions" role="menu" aria-labelledby="lnkPrefessions">
                     @foreach (var item in Model.Professions)
-                    {
-                        <li>
-                            <a href="@Url.Action("Index", "Subject", new { professionId = item.Id } )">@item.Name</a>
-                        </li>
-                    }
+            {
+                <li>
+                    <a href="@Url.Action("Index", "Subject", new { professionId = item.Id } )">@item.Name</a>
+                </li>
+    }
                 </ul>
             </li>
             <li>

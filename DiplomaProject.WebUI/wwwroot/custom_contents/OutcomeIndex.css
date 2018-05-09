@@ -1,15 +1,16 @@
 ﻿body {
-    background-image: url('subject.jpg');
+    background-image: url('Outcomes.png');
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    color: black;
+}
+h2{
+    color: deepskyblue;
 }
 
-#card-list{
-    border: 3px solid #555;
-    padding:4px;
-    margin: 5px 5px;
-    min-height:550px;
+h4{
+    color: deepskyblue;
 }

@@ -40,8 +40,53 @@ namespace DiplomaProject.WebUI.Controllers
             ViewBag.Profession = mapper.Map<ProfessionViewModel>(profession);
             return View("SubjectList", subjects);
         }
+        [HttpGet]
+        [Authorize]
+        public IActionResult IndexDist()
+        {
+            var subject = service.GetAll<Subject>().ToList();
+            var sbmodel = subject.Select(sb => mapper.Map<SubjectViewModel>(sb)).ToList();
+            var subjectlist = sbmodel.Select(sb => sb.Name).ToList();
+            ViewBag.ListofSubject = subjectlist;
+            var finaloutcome = service.GetAll<FinalOutCome>().ToList();
+            var fomodel = finaloutcome.Select(fo => mapper.Map<FinalOutcomeViewModel>(fo));
+            ViewBag.ListOfFinalOutcome = finaloutcome;
+            return View("SubjectDistribution");
+        }
 
-        [Authorize(Roles = "SubjectMaker")]
+        [HttpGet]
+        public IActionResult Distribution(int professionId)
+
+        {
+            var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList();
+            for (int i = 0; i < finalSubjects.Count; i++)
+            {
+
+                var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubjects[i].Id);
+                var giteliq = outcomes.Where(o => o.OutComeTypeId == 1);
+                var karoxutyun = outcomes.Where(o => o.OutComeTypeId == 2);
+                var hmtutyun = outcomes.Where(o => o.OutComeTypeId == 3);
+                double credit = 0;
+                var totalHours = 0;
+                double totalsum = 0;
+                double gWeight = giteliq.Sum(g => g.TotalWeight.Value);
+                double kWeight = karoxutyun.Sum(k => k.TotalWeight.Value);
+                double hWeight = hmtutyun.Sum(h => h.TotalWeight.Value);
+                double sum = gWeight + kWeight + hWeight;
+                finalSubjects[i].Credit = Convert.ToInt32(credit);
+                finalSubjects[i].TotalHours = totalHours;
+                service.Update(finalSubjects[i]);
+                totalsum = totalsum + sum;
+                
+                credit = 30 * sum / totalsum; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
+               // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
+                return View();
+                
+
+        }
+
+        }
+
         [HttpPost]
         public async Task<IActionResult> SaveSubjects([FromBody]SubjectListViewModel model)
         {
@@ -83,6 +128,21 @@ namespace DiplomaProject.WebUI.Controllers
             return Json(new { model, redirect = Url.Action("SubjectSequences", "Subject", new { professionId = model.Profession.Id}) });
         }
 
+        [Authorize]
+        public IActionResult SubjectDetails(int subjectId)
+        {
+            if (subjectId == 0) return NotFound();
+            var subject = service.GetById<Subject>(subjectId);
+            if (subject is null) return NotFound();
+            var outcomes = service.GetAll<FinalOutCome>().Where(f => f.SubjectId == subjectId).ToList();
+            var model = mapper.Map<SubjectViewModel>(subject);
+            for (int i = 0; i < outcomes.Count; i++)
+            {
+                var omodel = mapper.Map<OutcomeViewModel>(outcomes[i]);
+                model.Outcomes.Add(omodel);
+            }
+            return View(model);
+        }
         [HttpGet]
         [Authorize(Roles = "SubjectMaker")]
         public IActionResult SubjectSequences(int professionId)
@@ -96,7 +156,9 @@ namespace DiplomaProject.WebUI.Controllers
             return View("SubjectSequence", model);
         }
 
-        public async Task<IActionResult> SaveSubjectSequences([FromBody]List<List<SubjectViewModel>> model)
+        [HttpPost]
+        [Authorize(Roles = "SubjectMaker")]
+        public async Task<IActionResult> SaveSubjectSequences([FromQuery]int professionId, [FromBody]List<List<SubjectViewModel>> model)
         {
             if (model.Count != 8)
             {
@@ -113,7 +175,7 @@ namespace DiplomaProject.WebUI.Controllers
                 }
             }
             await service.UpdateRange(updatedModel);
-            return RedirectToAction("Index", "Subject");
+            return Json(new { redirect = Url.Action("Index", "Subject", new { professionId})});
         }
 
         private List<List<SubjectViewModel>> GetSubjectSequence(int professionId)
@@ -170,8 +232,8 @@ namespace DiplomaProject.WebUI.Controllers
             subjectLevels[0].AddRange(rootNodes);
             for (int i = 1; i < subjectLevels.Length - 1; i++)
             {
-                var prevoious = subjectLevels[i - 1];
-                var currunt = subjects.Select(s => s.Id).Where(s => filteredEdges.Any(e => e.Item2 == s && prevoious.Contains(e.Item1)));
+                var previous = subjectLevels[i - 1];
+                var currunt = subjects.Select(s => s.Id).Where(s => filteredEdges.Any(e => e.Item2 == s && previous.Contains(e.Item1)));
                 subjectLevels[i] = currunt.ToList();
             }
             subjectLevels[8] = subjects.Select(s => s.Id).Where(s => subjectLevels.All(l => l.All(v => v != s))).ToList();
@@ -185,8 +247,7 @@ namespace DiplomaProject.WebUI.Controllers
                     model[i].Add(m);
                 }
             }
-            return model.ToList();
-        }
-
+            return model․ToList();
+        }   
     }
 }

@@ -18,11 +18,15 @@
                     <span class="glyphicon glyphicon-user"></span> Օգտագործողներ
                 </a>
             </li>
-            <li>
-                <a href="@Url.Action("Index", "Stakeholder")" class="list-group-item">
-                    <i class="glyphicon glyphicon-education"></i> Շահակիցներ
-                </a>
-            </li>
+            @{ if (Model.UserRoles.Any(s => s.RoleName.ToUpper() == "BASEADMIN" || s.RoleName.ToUpper() == "DEPARTMENTADMIN" || s.RoleName.ToUpper() == "REQUESTSENDER"))
+                {
+                    <li>
+                        <a href="@Url.Action("Index", "Stakeholder")" class="list-group-item">
+                            <i class="glyphicon glyphicon-education"></i> Շահակիցներ
+                        </a>
+                    </li>
+                }
+            }
             <li>
                 <a id="lnProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessionsforoutcome" aria-expanded="false">
                     <i class="glyphicon glyphicon-asterisk"></i> Վերջնարդյունքներ
@@ -52,11 +56,6 @@
             <li>
                 <a href="#" class="list-group-item">
                     <i class="glyphicon glyphicon-screenshot"></i> Ուսումնական պլան
-                </a>
-            </li>
-            <li>
-                <a href="#" class="list-group-item">
-                    <i class="glyphicon glyphicon-bell"></i> Ծանուցումներ <span class="badge">14</span>
                 </a>
             </li>
         </ul>

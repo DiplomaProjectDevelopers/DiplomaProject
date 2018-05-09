@@ -1,7 +1,7 @@
 ﻿@model List<List<SubjectViewModel>>
 
 @{
-    ViewData["Title"] = "SubjectSequence";
+    ViewData["Title"] = "Առարկաների ուսումնասիրման հերթականությունը";
 }
 
 <h2>Առարկաների ուսումնասիրման հաջորդականությունը «@ViewBag.Profession.Name» մասնագիտության համար</h2>
@@ -15,7 +15,7 @@
     <div class="col-md-6">
         <div class="row pull-right">
             <button type="submit" value="Save subjects" class="btn btn-primary" onclick="onSave()">Պահպանել</button>
-            <button type="button" value="Cancel" asp-action="Cancel" class="btn btn-default">Չեղարկել</button>
+            <a value="Cancel" onclick="location.href='@Url.Action("Index","Subject", new { professionId = ViewBag.Profession?.Id})'" class="btn btn-link">Չեղարկել</a>
         </div>
     </div>
 </div>
@@ -43,8 +43,12 @@
     <script src="~/custom_scripts/SubjectSequenceBuilder.js"></script>
     <script>
         var model;
+        var professionId = @ViewBag.Profession?.Id;
         $(document).ready(function () {
             model = @Html.Raw(Json.Serialize(Model));
+            if (model.length === 9 && model[8].length === 0) {
+                model.splice(8, 1);
+            }
             renderSemesters();
         });
 

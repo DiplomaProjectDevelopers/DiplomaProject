@@ -41,11 +41,11 @@
         var userId;
 
             $(document).ready(function () {
-           edges = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UserRoles)))');
+           edges = @Model.UserRoles.Count > 0 ?  JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UserRoles)))') : [];
            userId = '@Model.Id';
-           nextId = @Model?.UserRoles.Min(s => s.Id) - 1;
+           nextId = @(Model.UserRoles.Count > 0 ? Model.UserRoles.Min(s => s.Id) - 1 : -1);
            roles = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Roles)))');
-           professions = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Professions)))');
+           professions = @ViewBag.Professions.Count > 0 ? JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Professions)))') : [];
            updateDependencies(edges);
         });
     </script>

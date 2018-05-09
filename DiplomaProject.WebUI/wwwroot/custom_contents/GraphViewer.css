@@ -7,15 +7,6 @@
 }
 
 
-/*#graph-container {
-    position: relative;
-    left: 20px;
-    right: 20px;
-    top: 10px;
-    min-height: 500px;
-
-}*/
-
 #graph {
     position: relative;
     width: 100%;
@@ -23,7 +14,7 @@
     margin-top: 2%;
     margin-left: auto;
     margin-right: auto;
-    border: 6px solid #555;
+    border: 3px solid #808080;
     padding: 20px;
     text-align: center;
     background-color: #fff;
@@ -31,11 +22,13 @@
 
 #graph-container {
     position: absolute;
+    background-color: #566a76;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
 }
+
 .sigma-scene, .sigma-labels, .sigma-mouse {
     left: 0;
 }

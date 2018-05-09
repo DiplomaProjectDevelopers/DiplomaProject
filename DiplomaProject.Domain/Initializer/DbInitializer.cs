@@ -53,12 +53,6 @@ namespace DiplomaProject.Domain.Initializer
                         }, //DepartmentAdmin
                         new Role
                         {
-                            Name="ProfessionAdmin",
-                            Priority = 4,
-                            DisplayName = "Մասնագիտության ադմին"
-                        }, //ProfessionAdmin
-                        new Role
-                        {
                             Name="RequestSender",
                             Priority = 5,
                             DisplayName = "Հարցում կատարող"
@@ -80,13 +74,7 @@ namespace DiplomaProject.Domain.Initializer
                             Priority = 5,
                             Name = "CurriculumMaker",
                             DisplayName = "Ուսումնական պլան կազմող"
-                        }, //CurriculumMaker
-                        new Role
-                        {
-                            Name = "DefaultRole",
-                            Priority = 6,
-                            DisplayName = "Նոր օգտատեր"
-                        } //Defaultrole
+                        } //CurriculumMaker
                     };
                 if (!_context.Roles.Any())
                 {
@@ -114,14 +102,6 @@ namespace DiplomaProject.Domain.Initializer
                         LastName = "Admin",
                         UserName = "da",
                         Email = "da@sa.com",
-                        EmailConfirmed = true
-                    },
-                    new User
-                    {
-                        FirstName = "Profession",
-                        LastName = "Admin",
-                        UserName = "pa",
-                        Email = "pa@sa.com",
                         EmailConfirmed = true
                     },
                     new User
@@ -156,15 +136,7 @@ namespace DiplomaProject.Domain.Initializer
                         UserName = "kim_sargsyan",
                         Email = "kim.sargsian@gmail.com",
                         EmailConfirmed = true
-                    },
-                    new User
-                    {
-                        FirstName = "Simple",
-                        LastName = "Admin",
-                        Email = "sa@sa.com",
-                        UserName = "sa",
-                        EmailConfirmed = true,
-                    },
+                    }
                 };
 
                 if (!_context.Users.Any())
@@ -391,7 +363,7 @@ namespace DiplomaProject.Domain.Initializer
                 if (!_context.UserRoles.Any())
                 {
                     var userroles = new List<UserRole>();
-                    for (int i = 0; i < 8; i++)
+                    for (int i = 0; i < 6; i++)
                     {
                         userroles.Add(new UserRole { ProfessionId = 1, UserId = users[i].Id, RoleId = roles[i].Id });
                     }
@@ -515,7 +487,7 @@ namespace DiplomaProject.Domain.Initializer
                        },
                        new InitialOutCome
                        {
-                           Name = "Կիրառական ծրագրերի գործնական նախագշման կարողություն",
+                           Name = "Կիրառական ծրագրերի գործնական նախագծման կարողություն",
                            OutComeTypeId = 2,
                            InitialSubjectId = 4
                        },
@@ -527,7 +499,7 @@ namespace DiplomaProject.Domain.Initializer
                        },
                        new InitialOutCome
                        {
-                           Name = "Ծրագրային ապահովման թեստովորման հմտություն",
+                           Name = "Ծրագրային ապահովման թեստավորման հմտություն",
                            OutComeTypeId = 3,
                            InitialSubjectId = 4
                        },
@@ -646,7 +618,7 @@ namespace DiplomaProject.Domain.Initializer
                        },
                        new FinalOutCome
                        {
-                           Name = "Կիրառական ծրագրերի գործնական նախագշման կարողություն",
+                           Name = "Կիրառական ծրագրերի գործնական նախագծման կարողություն",
                            OutComeTypeId = 2,
                            InitialSubjectId = 4,
                            ProfessionId = 1
@@ -660,7 +632,7 @@ namespace DiplomaProject.Domain.Initializer
                        },
                        new FinalOutCome
                        {
-                           Name = "Ծրագրային ապահովման թեստովորման հմտություն",
+                           Name = "Ծրագրային ապահովման թեստավորման հմտություն",
                            OutComeTypeId = 3,
                            InitialSubjectId = 4,
                            ProfessionId = 1
@@ -735,6 +707,12 @@ namespace DiplomaProject.Domain.Initializer
                            InitialSubjectId = 8,
                            OutComeTypeId =2,
                            ProfessionId = 2
+                       },
+                       new FinalOutCome
+                       {
+                           Name = "Տրամաբանական խնդիրներ լուծելու հմտություն",
+                           OutComeTypeId = 3,
+                           ProfessionId = 1
                        }
                     };
                     _context.FinalOutComes.AddRange(outComes);

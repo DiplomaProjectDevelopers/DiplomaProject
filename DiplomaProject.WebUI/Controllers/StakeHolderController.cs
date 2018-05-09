@@ -26,12 +26,11 @@ namespace DiplomaProject.WebUI.Controllers
 
         }
 
-        [Authorize]
+        [Authorize(Roles = "BaseAdmin, DepartmentAdmin, RequestSender")]
         public async Task<IActionResult> Index()
         {
             GetRoles();
             var user = await userManager.GetUserAsync(User);
-            var role = await roleManager.FindByNameAsync(await userManager.GetRoleAsync(user));
             var stakeholders = service.GetAll<StakeHolder>().Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
             foreach (var s in stakeholders)
             {

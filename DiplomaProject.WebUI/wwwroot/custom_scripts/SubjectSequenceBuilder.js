@@ -11,7 +11,7 @@
         const panel = document.createElement('div');
         panel.setAttribute('class', 'panel panel-primary');
         const heading = document.createElement('div');
-        heading.innerText = i === model.length - 1 ? `Չտեղավորված առարկաներ` : `Կիսամյակ ${i + 1}`; 
+        heading.innerText = i === model.length - 1 ? `Չտեղավորված առարկաներ` : `Կիսամյակ ${i + 1}`;
         heading.setAttribute('class', 'panel-heading');
         panel.appendChild(heading);
         const body = document.createElement('div');
@@ -22,7 +22,7 @@
             p.setAttribute('class', 'thumbnail');
             p.innerText = model[i][j].name;
             const a = document.createElement('a');
-            a.setAttribute('class', 'moveBtn');
+            a.setAttribute('class', 'moveBtn pull-right');
             a.setAttribute('data-toggle', 'modal');
             a.setAttribute('data-target', '#moveModal');
             a.setAttribute('data-id', model[i][j].id);
@@ -71,7 +71,7 @@ function renderModal() {
     empOption.text = 'Ընտրեք կիսամյակը';
     select.appendChild(empOption);
     model.forEach((semester, index) => {
-        if (index === 8) return; 
+        if (index === 8) return;
         const option = document.createElement('option');
         option.value = index;
         option.text = `${index + 1} կիսամյակ`;
@@ -102,7 +102,16 @@ function moveSubject() {
 
 }
 
-function onSubmit() {
-
+function onSave() {
+    $.ajax({
+        type: "POST",
+        data: JSON.stringify(model),
+        url: '/Subject/SaveSubjectSequences/?professionId=' + professionId,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            location.href = data.redirect;
+        }
+    });
 }
 

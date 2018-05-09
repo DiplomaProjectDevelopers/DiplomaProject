@@ -59,15 +59,7 @@ namespace DiplomaProject.WebUI.Controllers
             var user = userManager.GetUserAsync(User).Result;
             var users = service.GetAll<User>().ToList();
             var model = users.Where(u => u.Id != user.Id).
-                Select(async u =>
-                {
-                    var m = mapper.Map<UserViewModel>(u);
-                    var roleName = await userManager.GetRoleAsync(u);
-                    var r = await roleManager.FindByNameAsync(roleName);
-                    m.SelectedRoleId = r.Id;
-                    return m;
-                }
-                ).Select(u => u.Result).ToList();
+                Select(u => mapper.Map<UserViewModel>(u)).ToList();
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 model = model.Where(u => u.Username.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) != -1 || u.FirstName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) != -1
@@ -142,7 +134,6 @@ namespace DiplomaProject.WebUI.Controllers
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, "DefaultRole");
                     TempData["UserRegistered"] = Messages.USER_ADDED_SUCCESS;
                     return RedirectToAction("Login");
                 }
@@ -154,27 +145,6 @@ namespace DiplomaProject.WebUI.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
-        public async Task<IActionResult> UpdateRole([FromBody]UserRoleViewModel model)
-        {
-            var userId = model.UserId;
-            var roleId = model.RoleId;
-            var user = await userManager.FindByIdAsync(userId);
-            var role = await roleManager.FindByIdAsync(roleId);
-            if (user != null && role != null)
-            {
-                if (await userManager.IsInRoleAsync(user, role.Name) == false)
-                {
-                    var roles = await userManager.GetRolesAsync(user);
-                    await userManager.RemoveFromRolesAsync(user, roles);
-                    await userManager.AddToRoleAsync(user, role.Name);
-                    return Json(new { Message = Messages.ROLE_UPDATED_SUCCESS, Type = "success" });
-                }
-            }
-            return Json(new { Message = Messages.ROLE_UPDATED_FAILURE, Type = "danger" });
-        }
-
         [HttpGet]
         [Authorize(Roles = "BaseAdmin, DepartmentAdmin")]
         public async Task<IActionResult> Edit(string userId)
@@ -183,19 +153,16 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
+            var user = await userManager.FindByIdAsync(userId);
             if (user == null)
                 return NotFound();
 
-            var current = service.GetUserAsync(User).GetAwaiter().GetResult();
+            var current = await service.GetUserAsync(User);
             var da = (await roleManager.FindByNameAsync("DepartmentAdmin"));
             var dap = service.GetAll<UserRole>().Where(ur => ur.UserId == current.Id && ur.RoleId == da.Id)
                 .Select(ur => ur.ProfessionId).ToList();
             if (dap.Count > 0)
             {
-                //    .Where(u => u.UserId == current.Id && u.ProfessionId.HasValue && u.ProfessionId.Value > 0)
-                //    .Select(s => s.ProfessionId.Value).Distinct().ToList();
-
                 ViewBag.Roles = service.GetAll<Role>().Where(r => r.Priority > 3).Select(s => mapper.Map<RoleViewModel>(s)).ToList();
                 ViewBag.Professions = service.GetAll<Profession>().Where(p => dap.IndexOf(p.Id) != -1).Select(p => mapper.Map<ProfessionViewModel>(p)).ToList();
                 var userroles = service.GetAll<UserRole>().Where(u => u.UserId == userId && dap.Contains(u.ProfessionId)).Select(s => mapper.Map<UserRoleViewModel>(s)).ToList();

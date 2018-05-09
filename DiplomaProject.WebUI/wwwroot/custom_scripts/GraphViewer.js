@@ -7,12 +7,12 @@
     nodes.forEach((node, index) => {
         graph.nodes.push({
             id: node.Id,
-            label: node.Subject ? `${node.Name}(${node.Subject})` : node.Name,
+            label: node.InitialSubject ? `${node.Name}(${node.InitialSubject})` : node.Name,
             x: Math.random(),
             y: Math.random(),
             size: Math.random(),
             type: 'cycle',
-            color: node.IsNew ? '#33ccff' : '#00cc66'
+            color: node.IsNew ? '#4ddbff' : '#99ff66'
         });
     });
     edges.forEach((edge, index) => {
@@ -25,14 +25,14 @@
             color: '#999966'
         });
     });
-    var s = new sigma({
+    s = new sigma({
         graph,
         container: 'graph-container',
         settings: {
-            labelColor: 'yellow',
+            defaultLabelColor: '#fff',
             autoResize: true,
             autoRescale: true,
-            defaultLabelSize: 12,
+            defaultLabelSize: 14,
             maxNodeSize: 8,
             minNodeSize: 8,
             maxEdgeSize: 2,
@@ -44,5 +44,6 @@
             borderColor: '#eee'
         }
     });
+    s.refresh();
     var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
 }

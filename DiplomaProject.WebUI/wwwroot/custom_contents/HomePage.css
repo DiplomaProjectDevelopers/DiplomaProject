@@ -1,0 +1,86 @@
+#rectangle1{
+	width: 200px;
+	height: 100px;
+	background: #0f1b8a;
+	border-radius: 15%;
+	position: absolute;
+	margin:100px;
+	margin-top:160px;
+	
+}
+
+body{
+    background-image: url(../backgrounds/begin.jpg) !important;
+}
+h2{
+    margin-bottom: 50px;
+}
+#levelDescriptor{
+    text-indent: 100px;
+ }
+#page-description{
+    text-indent:50px;
+}
+.level{
+    color: azure;
+    align-items:center;
+    display: flex;
+}
+	#rectangle2{
+	width: 200px;
+	height: 100px;
+	background: #0f1b8a;
+	border-radius: 15%;
+	margin-left:330px;
+	margin-top:30px;
+	position:absolute;
+}
+#rectangle3{
+	width: 200px;
+	height: 100px;
+	background: #0f1b8a;
+	border-radius: 15%;
+	margin-left:560px;
+
+	margin-top: 0px;
+}
+#rectangle4{
+	width: 200px;
+	height: 100px;
+	background: #0f1b8a;
+	border-radius: 15%;
+	margin-left: 330px;
+	margin-top: 15px;
+	position:absolute;
+}
+#arrow1{
+	width: 150px;
+	height: 100px;	
+	margin-top: 50px;
+	margin-left: 180px;
+	position:absolute;
+	}
+
+	#arrow2{
+	width: 150px;
+	height: 100px;	
+	margin-top: 55px;
+	margin-left: 545px;	
+	transform:          rotate(48deg);
+	}
+
+#arrow3{
+	width: 150px;
+	height: 100px;	
+	margin-top: 10px;
+	margin-left: 540px;	
+	transform:          rotate(175deg);
+	position:absolute;
+	}
+#arrow4{
+	width: 150px;
+	height: 100px;	
+	margin-top: 5px;
+	margin-left: 165px;	
+	transform:          rotate(230deg);
+	}

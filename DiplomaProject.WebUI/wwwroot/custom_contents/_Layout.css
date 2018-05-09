@@ -6,3 +6,19 @@
 .btn{
     border-radius:0 !important;
 }
+
+body {
+    background-color: #f5fffa !important;
+}
+
+.table-striped > tbody > tr{
+    background-color: #fff !important;
+}
+
+.table thead {
+    background-color: #45526e;
+}
+
+.table thead th{
+    color: white;
+}

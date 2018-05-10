@@ -56,7 +56,6 @@ namespace DiplomaProject.WebUI.Controllers
 
         [HttpGet]
         public IActionResult Distribution(int professionId)
-
         {
             var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList();
             for (int i = 0; i < finalSubjects.Count; i++)
@@ -77,14 +76,11 @@ namespace DiplomaProject.WebUI.Controllers
                 finalSubjects[i].TotalHours = totalHours;
                 service.Update(finalSubjects[i]);
                 totalsum = totalsum + sum;
-                
+
                 credit = 30 * sum / totalsum; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
-               // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
-                return View();
-                
-
-        }
-
+                                              // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;                
+            }
+            return View();
         }
 
         [HttpPost]
@@ -125,7 +121,7 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 await service.DeleteById<Subject>(s);
             }
-            return Json(new { model, redirect = Url.Action("SubjectSequences", "Subject", new { professionId = model.Profession.Id}) });
+            return Json(new { model, redirect = Url.Action("SubjectSequences", "Subject", new { professionId = model.Profession.Id }) });
         }
 
         [Authorize]
@@ -175,7 +171,7 @@ namespace DiplomaProject.WebUI.Controllers
                 }
             }
             await service.UpdateRange(updatedModel);
-            return Json(new { redirect = Url.Action("Index", "Subject", new { professionId})});
+            return Json(new { redirect = Url.Action("Index", "Subject", new { professionId }) });
         }
 
         private List<List<SubjectViewModel>> GetSubjectSequence(int professionId)
@@ -247,7 +243,7 @@ namespace DiplomaProject.WebUI.Controllers
                     model[i].Add(m);
                 }
             }
-            return model․ToList();
-        }   
+            return model.ToList();
+        }
     }
 }

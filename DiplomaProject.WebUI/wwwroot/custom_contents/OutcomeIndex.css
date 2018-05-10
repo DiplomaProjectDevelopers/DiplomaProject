@@ -14,3 +14,7 @@ h2{
 h4{
     color: deepskyblue;
 }
+
+.table-striped > tbody > tr{
+    background-color: unset !important;
+}

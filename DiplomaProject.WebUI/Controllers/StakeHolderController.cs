@@ -9,11 +9,11 @@ using DiplomaProject.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using DiplomaProject.Domain.Helpers;
-using DiplomaProject.Domain.Extentions;
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.Extensions.Options;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DiplomaProject.WebUI.Controllers
@@ -267,7 +267,7 @@ namespace DiplomaProject.WebUI.Controllers
                 TypeName = s.ProfessionName ?? s.TypeName
             });
             var stakeHolders = service.GetAll<StakeHolder>().ToList();
-            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
+            var sthmodel = stakeHolders.Where(s=>s.CompanyName!=null).Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
             ViewBag.ListofCompany = sthmodel;
             return View("Questionnaire1");
         }
@@ -292,39 +292,45 @@ namespace DiplomaProject.WebUI.Controllers
             var stakeholdermodel = stakeholder.Select(sh => mapper.Map<StakeHolderViewModel>(sh)).ToList();
 
             //geting email in array
-            for (var j = 0; j < stakeholderid.Length; j++)
-            {
-                var emailAddress = stakeholdermodel.Where(sh => sh.BranchId == branchid && sh.CompanyName == companyname && sh.TypeId == stakeholderid[i]).FirstOrDefault();
-                if (emailAddress != null) {
-                    email.Add(emailAddress.Email);
-                    name.Add(emailAddress.FirstName + " " + emailAddress.LastName);
-                }
-            }
-
-            //sendind email
-            MailMessage msg = new MailMessage();
-            SmtpClient smt = new SmtpClient();
-            msg.From = new MailAddress("lgrigoryan@25gmail.com");
-            //for (var j = 0; j < email.Count; j++)
+            //for (var j = 0; j < stakeholderid.Length; j++)
             //{
-                msg.To.Add("narine-aslanyan25@gmail.com");
-                msg.Subject = "Հարգելի անձ";
-
-
-                smt.Host = "smtp.gmail.com";
-                System.Net.NetworkCredential ntwd = new NetworkCredential();
-                ntwd.UserName = "lgrigoryan@25gmail.com"; //Your Email ID  
-                ntwd.Password = "lianka31302513123"; // Your Password  
-                smt.UseDefaultCredentials = true;
-                smt.Credentials = ntwd;
-                smt.Port = 587;
-                smt.EnableSsl = true;
-                smt.Send(msg);
+            //    var emailAddress = stakeholdermodel.Where(sh => sh.BranchId == branchid && sh.CompanyName == companyname && sh.TypeId == stakeholderid[i]).FirstOrDefault();
+            //    if (emailAddress != null) {
+            //        email.Add(emailAddress.Email);
+            //        name.Add(emailAddress.FirstName + " " + emailAddress.LastName);
+            //    }
             //}
 
+            SendEmail();
+            return RedirectToAction("Question");
+        }
 
 
-            return View();
+        protected void SendEmail()
+        {
+            using (MailMessage mm = new MailMessage("lgrig145@gmail.com","narine-aslanyan30@mail.ru"))
+            {
+                mm.Subject = "Subject";
+                mm.Body = "http://localhost:59468/StakeHolder/Outcome.";
+                mm.IsBodyHtml = false;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.EnableSsl = true;
+                NetworkCredential NetworkCred = new NetworkCredential("lgrig145@gmail.com", "webapplication");
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = NetworkCred;
+                smtp.Port = 587;
+                try
+                {
+                    smtp.Send(mm);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    return;
+                }
+                Console.WriteLine("Send!!");
+            }
         }
 
         [HttpGet]

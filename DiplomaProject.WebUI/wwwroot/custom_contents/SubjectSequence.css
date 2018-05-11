@@ -2,13 +2,6 @@
     background-image: url(/backgrounds/SubjectPreview.png);
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-size: cover;
+    background-size:cover;
     color: black;
-}
-
-#card-list{
-    border: 3px solid #555;
-    padding:4px;
-    margin: 5px 5px;
-    min-height:550px;
 }

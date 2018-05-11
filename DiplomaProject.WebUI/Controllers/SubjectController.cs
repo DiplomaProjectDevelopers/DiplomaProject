@@ -54,33 +54,34 @@ namespace DiplomaProject.WebUI.Controllers
             return View("SubjectDistribution");
         }
 
-        //[HttpGet]
-        //public IActionResult Distribution(int professionId)
-        //{
-        //    var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList();
-        //    for (int i = 0; i < finalSubjects.Count; i++)
-        //    {
-        //        var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubjects[i].Id);
-        //        var giteliq = outcomes.Where(o => o.OutComeTypeId == 1);
-        //        var karoxutyun = outcomes.Where(o => o.OutComeTypeId == 2);
-        //        var hmtutyun = outcomes.Where(o => o.OutComeTypeId == 3);
-        //        double credit = 0;
-        //        var totalHours = 0;
-        //        double totalsum = 0;
-        //        double gWeight = giteliq.Sum(g => g.TotalWeight.Value);
-        //        double kWeight = karoxutyun.Sum(k => k.TotalWeight.Value);
-        //        double hWeight = hmtutyun.Sum(h => h.TotalWeight.Value);
-        //        double sum = gWeight + kWeight + hWeight;
-        //        finalSubjects[i].Credit = Convert.ToInt32(credit);
-        //        finalSubjects[i].TotalHours = totalHours;
-        //        service.Update(finalSubjects[i]);
-        //        totalsum = totalsum + sum;
+        [HttpGet]
+        public IActionResult Distribution(int professionId)
+        {
+            var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList();
+            for (int i = 0; i < finalSubjects.Count; i++)
+            {
 
-        //        credit = 30 * sum / totalsum; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
-        //                                      // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
-        //        return View();
-        //    }
-        //}
+                var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubjects[i].Id);
+                var giteliq = outcomes.Where(o => o.OutComeTypeId == 1);
+                var karoxutyun = outcomes.Where(o => o.OutComeTypeId == 2);
+                var hmtutyun = outcomes.Where(o => o.OutComeTypeId == 3);
+                double credit = 0;
+                var totalHours = 0;
+                double totalsum = 0;
+                double gWeight = giteliq.Sum(g => g.TotalWeight.Value);
+                double kWeight = karoxutyun.Sum(k => k.TotalWeight.Value);
+                double hWeight = hmtutyun.Sum(h => h.TotalWeight.Value);
+                double sum = gWeight + kWeight + hWeight;
+                finalSubjects[i].Credit = Convert.ToInt32(credit);
+                finalSubjects[i].TotalHours = totalHours;
+                service.Update(finalSubjects[i]);
+                totalsum = totalsum + sum;
+
+                credit = 30 * sum / totalsum; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
+                                              // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;                
+            }
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> SaveSubjects([FromBody]SubjectListViewModel model)
@@ -120,7 +121,7 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 await service.DeleteById<Subject>(s);
             }
-            return Json(new { model, redirect = Url.Action("SubjectSequences", "Subject", new { professionId = model.Profession.Id}) });
+            return Json(new { model, redirect = Url.Action("SubjectSequences", "Subject", new { professionId = model.Profession.Id }) });
         }
 
         [Authorize]
@@ -170,7 +171,7 @@ namespace DiplomaProject.WebUI.Controllers
                 }
             }
             await service.UpdateRange(updatedModel);
-            return Json(new { redirect = Url.Action("Index", "Subject", new { professionId})});
+            return Json(new { redirect = Url.Action("Index", "Subject", new { professionId }) });
         }
 
         private List<List<SubjectViewModel>> GetSubjectSequence(int professionId)

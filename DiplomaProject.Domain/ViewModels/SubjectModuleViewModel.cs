@@ -11,5 +11,6 @@ namespace DiplomaProject.Domain.ViewModels
         public string Name { get; set; }
 
         public string Group { get; set; }
+        public List<SubjectViewModel> Subjects { get; set; }
     }
 }

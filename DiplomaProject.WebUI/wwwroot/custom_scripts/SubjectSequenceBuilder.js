@@ -22,7 +22,7 @@
             p.setAttribute('class', 'thumbnail');
             p.innerText = model[i][j].name;
             const a = document.createElement('a');
-            a.setAttribute('class', 'moveBtn');
+            a.setAttribute('class', 'moveBtn pull-right');
             a.setAttribute('data-toggle', 'modal');
             a.setAttribute('data-target', '#moveModal');
             a.setAttribute('data-id', model[i][j].id);

@@ -18,15 +18,27 @@
                     <span class="glyphicon glyphicon-user"></span> Օգտագործողներ
                 </a>
             </li>
+            @{ if (Model.UserRoles.Any(s => s.RoleName.ToUpper() == "BASEADMIN" || s.RoleName.ToUpper() == "DEPARTMENTADMIN" || s.RoleName.ToUpper() == "REQUESTSENDER"))
+                {
+                    <li>
+                        <a href="@Url.Action("Index", "Stakeholder")" class="list-group-item">
+                            <i class="glyphicon glyphicon-education"></i> Շահակիցներ
+                        </a>
+                    </li>
+                }
+            }
             <li>
-                <a href="@Url.Action("Index", "Stakeholder")" class="list-group-item">
-                    <i class="glyphicon glyphicon-education"></i> Շահակիցներ
-                </a>
-            </li>
-            <li>
-                <a href="#" class="list-group-item">
+                <a id="lnProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessionsforoutcome" aria-expanded="false">
                     <i class="glyphicon glyphicon-asterisk"></i> Վերջնարդյունքներ
                 </a>
+                <ul class="collapse" id="prefessionsforoutcome" role="menu" aria-labelledby="lnPrefessions">
+                    @foreach (var item in Model.Professions)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "Outcomes", new { professionoId = item.Id } )">@item.Name</a>
+                </li>
+    }
+                </ul>
             </li>
             <li>
                 <a id="lnkProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessions" aria-expanded="false">
@@ -47,7 +59,7 @@
                 </ul>
             </li>
             <li>
-                <a href="#" class="list-group-item">
+                <a href="@Url.Action("SubOut", "SubjectList")" class="list-group-item">
                     <i class="glyphicon glyphicon-screenshot"></i> Ուսումնական պլան
                 </a>
             </li>

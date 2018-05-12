@@ -6,7 +6,6 @@
 
 <h2>Առարկաների ցանկ</h2>
 <h4 class=""><em>«@ViewBag.Profession.Name»</em> մասնագիտության ներկայիս առարկաները</h4>
-<div class="table-responsive pre-scrollable">
     <div class="btn row">
         @if (ViewBag.UserRoles.Contains("SUBJECTMAKER"))
     {
@@ -16,6 +15,7 @@
 }
 
     </div>
+<div class="table-responsive pre-scrollable">
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -63,3 +63,7 @@
         </tbody>
     </table>
 </div>
+
+@section Styles{ 
+    <link rel="stylesheet" href="~/custom_contents/SubjectList.css" />
+}

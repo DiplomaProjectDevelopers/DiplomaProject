@@ -20,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using static DiplomaProject.WebUI.Controllers.StakeholderController;
 
 namespace DiplomaProject.WebUI
 {
@@ -38,21 +39,21 @@ namespace DiplomaProject.WebUI
             services.AddTransient<IDPService, DataService>();
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddTransient<IDPRepository, DPRepository>();
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<OutcomesService>();
             services.AddDbContext<DiplomaProjectContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<User, Role>(options => {
-            })
+            services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<DiplomaProjectContext>()
                 .AddDefaultTokenProviders();
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 2;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
                 //options.Password.RequiredUniqueChars = 6;
                 // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);

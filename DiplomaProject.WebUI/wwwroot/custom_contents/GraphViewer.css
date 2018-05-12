@@ -7,20 +7,6 @@
 }
 
 
-.sigma-edge {
-    stroke: #14191C;
-}
-
-.sigma-node {
-    fill: green;
-    stroke: #14191C;
-    stroke-width: 2px;
-}
-
-.sigma-node:hover {
-    fill: blue;
-}
-
 #graph {
     position: relative;
     width: 100%;

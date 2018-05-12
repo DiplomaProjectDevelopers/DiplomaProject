@@ -156,34 +156,34 @@ namespace DiplomaProject.Domain.Initializer
                         {
                             TypeName = "Գործատու",
                             ProfessionName = "Տնօրեն",
-                            Coefficient = 1
+                            Coefficient = 0.8,
                         },
                         new StakeHolderType
                         {
                             TypeName = "Գործատու",
                             ProfessionName = "Թիմի ղեկավար",
-                            Coefficient = 5
+                            Coefficient = 0.9,
                         },
                         new StakeHolderType
                         {
                             TypeName = "Գործատու",
                             ProfessionName = "Ծրագրավորող",
-                            Coefficient = 4
+                            Coefficient = 0.7,
                         },
                         new StakeHolderType
                         {
                             TypeName = "Դասախոս",
-                            Coefficient = 5
+                            Coefficient = 0.5,
                         },
                         new StakeHolderType
                         {
                             TypeName = "Ուսանող",
-                            Coefficient = 2
+                            Coefficient = 0.2,
                         },
                         new StakeHolderType
                         {
                             TypeName = "Շրջանավարտ",
-                            Coefficient = 3
+                            Coefficient = 0.4,
                         }
                     };
                     _context.StakeHolderTypes.AddRange(types);
@@ -296,8 +296,8 @@ namespace DiplomaProject.Domain.Initializer
                     {
                         new StakeHolder
                         {
-                            FirstName = "Hakob",
-                            LastName = "Papazyan",
+                            FirstName = "Հակոբ",
+                            LastName = "Փափազյան",
                             CompanyName = "Factumsoft LLC",
                             BranchId = 1,
                             Email = "hakobpapazyan2@gmail.com",
@@ -305,16 +305,16 @@ namespace DiplomaProject.Domain.Initializer
                         },
                         new StakeHolder
                         {
-                            FirstName = "Kim",
-                            LastName = "Sargsyan",
+                            FirstName = "Կիմա",
+                            LastName = "Գասպարյան",
                             BranchId = 1,
                             Email = "kim.sargsian@gmail.com",
                             TypeId = 2
                         },
                         new StakeHolder
                         {
-                            FirstName = "Kristine",
-                            LastName = "Serobyan",
+                            FirstName = "Քրիստինե",
+                            LastName = "Սերոբյան",
                             CompanyName = "Appa",
                             BranchId = 1,
                             Email = "serobyanqristine@gmail.com",
@@ -322,8 +322,8 @@ namespace DiplomaProject.Domain.Initializer
                         },
                         new StakeHolder
                         {
-                            FirstName = "Lian",
-                            LastName = "Grigoryan",
+                            FirstName = "Լիանա",
+                            LastName = "Գրիգորյան",
                             CompanyName = "NPUA",
                             BranchId = 1,
                             Email = "lgrigoryan25@gmail.com",

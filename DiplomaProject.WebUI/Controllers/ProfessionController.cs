@@ -13,8 +13,8 @@ namespace DiplomaProject.WebUI.Controllers
 {
     public class ProfessionController : BaseController
     {
-        public ProfessionController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
-            : base(service, mapper, userManager, signInManager, roleManager)
+        public ProfessionController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IEmailSender emailSender)
+            : base(service, mapper, userManager, signInManager, roleManager, emailSender)
         {
 
         }

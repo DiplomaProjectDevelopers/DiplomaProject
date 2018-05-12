@@ -27,16 +27,18 @@ namespace DiplomaProject.WebUI.Controllers
         protected UserManager<User> userManager;
         protected SignInManager<User> signInManager;
         protected RoleManager<Role> roleManager;
+        protected IEmailSender emailSender;
         protected User currentUser;
          
         public BaseController(IDPService service, IMapper mapper,
-            UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
+            UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IEmailSender emailSender)
         {
             this.service = service;
             this.mapper = mapper;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
+            this.emailSender = emailSender;
         }
 
         protected void AddErrors(IdentityResult result)

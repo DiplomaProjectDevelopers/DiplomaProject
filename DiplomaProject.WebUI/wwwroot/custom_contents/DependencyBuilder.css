@@ -2,6 +2,13 @@
     color: darkslateblue;
 }
 
+body{
+    background-image: url(../backgrounds/dependencies.png) !important;
+}
+
+.defGroup{
+    color:darkblue !important;
+}
 .select-box select {
     background: transparent;
     width: 200px;

@@ -58,7 +58,8 @@ namespace DiplomaProject.WebUI.Controllers
         public IActionResult Distribution(int professionId)
 
         {
-            var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList();
+            var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList().GroupBy(s=> s.SubjectModuleId);
+           finalSubjects.ForEache;
             for (int i = 0; i < finalSubjects.Count; i++)
             {
 
@@ -67,8 +68,11 @@ namespace DiplomaProject.WebUI.Controllers
                 var karoxutyun = outcomes.Where(o => o.OutComeTypeId == 2);
                 var hmtutyun = outcomes.Where(o => o.OutComeTypeId == 3);
                 double credit = 0;
-                var totalHours = 0;
+                int totalHours = 0;
                 double totalsum = 0;
+                double c1 = 1.3;
+                double c2 = 0.2;
+                double c3 = 0;
                 double gWeight = giteliq.Sum(g => g.TotalWeight.Value);
                 double kWeight = karoxutyun.Sum(k => k.TotalWeight.Value);
                 double hWeight = hmtutyun.Sum(h => h.TotalWeight.Value);
@@ -77,14 +81,15 @@ namespace DiplomaProject.WebUI.Controllers
                 finalSubjects[i].TotalHours = totalHours;
                 service.Update(finalSubjects[i]);
                 totalsum = totalsum + sum;
-                
-                credit = 30 * sum / totalsum; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
-               // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
-                return View();
-                
 
+                for (int n = 1; n <= 8; n++)
+                {
+                    credit = 30 * sum / totalsum; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
+                    totalHours = (30*credit-1)/ 16 * sum + (c1 * gWeight + c2 * kWeight + c3 * hWeight);                     // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
+
+                }
         }
-
+            return View();
         }
 
         [HttpPost]
@@ -247,7 +252,7 @@ namespace DiplomaProject.WebUI.Controllers
                     model[i].Add(m);
                 }
             }
-            return model․ToList();
+            return model.ToList();
         }   
     }
 }

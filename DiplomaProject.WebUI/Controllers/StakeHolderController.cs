@@ -273,7 +273,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult IndexSel([FromForm]int branchid, string profftext, string stakeholderstr, string companyname)
+        public IActionResult IndexSel([FromForm]int branchid, string profftext, string stakeholderstr, string companyname, string gmail, string pass)
         {
             //convert string to string array
             string[] listSTH = stakeholderstr.Split(",");
@@ -281,55 +281,61 @@ namespace DiplomaProject.WebUI.Controllers
             List<string> email = new List<string>();
             List<string> name = new List<string>();
             var i = 0;
-            //convert string array to int
             foreach (var item in listSTH)
             {
                 stakeholderid[i] = int.Parse(item);
                 i++;
             }
-            //connect with database table StakeHolder
             var stakeholder = service.GetAll<StakeHolder>().ToList();
             var stakeholdermodel = stakeholder.Select(sh => mapper.Map<StakeHolderViewModel>(sh)).ToList();
 
-            //geting email in array
-            //for (var j = 0; j < stakeholderid.Length; j++)
-            //{
-            //    var emailAddress = stakeholdermodel.Where(sh => sh.BranchId == branchid && sh.CompanyName == companyname && sh.TypeId == stakeholderid[i]).FirstOrDefault();
-            //    if (emailAddress != null) {
-            //        email.Add(emailAddress.Email);
-            //        name.Add(emailAddress.FirstName + " " + emailAddress.LastName);
-            //    }
-            //}
+            for (var j = 0; j < stakeholderid.Length; j++)
+            {
+                var emailAddress = stakeholdermodel.Where(sh => sh.BranchId == branchid && sh.CompanyName == companyname && sh.TypeId == stakeholderid[j]).FirstOrDefault();
+                if (emailAddress != null)
+                {
+                    email.Add(emailAddress.Email);
+                    name.Add(emailAddress.FirstName + " " + emailAddress.LastName);
+                }
+            }
 
-            SendEmail();
+            if (email.Count != 0)
+            {
+                SendEmail(gmail, pass, email, name);
+            }
             return RedirectToAction("Question");
         }
 
 
-        protected void SendEmail()
+        protected void SendEmail(string gmail, string pass, List<string> email, List<string> name)
         {
-            using (MailMessage mm = new MailMessage("lgrig145@gmail.com","narine-aslanyan30@mail.ru"))
+            for (var j = 0; j < email.Count; j++)
             {
-                mm.Subject = "Subject";
-                mm.Body = "http://localhost:59468/StakeHolder/Outcome.";
-                mm.IsBodyHtml = false;
-                SmtpClient smtp = new SmtpClient();
-                smtp.Host = "smtp.gmail.com";
-                smtp.EnableSsl = true;
-                NetworkCredential NetworkCred = new NetworkCredential("lgrig145@gmail.com", "webapplication");
-                smtp.UseDefaultCredentials = true;
-                smtp.Credentials = NetworkCred;
-                smtp.Port = 587;
-                try
+                using (MailMessage mm = new MailMessage(gmail, email[j]))
                 {
-                    smtp.Send(mm);
+                    mm.Subject = "Հարցաթերթիկ";
+                    mm.Body = "Հարգելի " + name[j] + " խնդրում ենք տրամադրել մի փոքր ժամանակ և լրացնել հետևյալ հղումով տրված հարցաթերթիկը։" +
+                        " Նախապես շնորհակալություն\n" + "http://localhost:59468/StakeHolder/Outcome." + "\n\n\nՀարգանքներով` "
+                        + currentUser.FirstName + " " + currentUser.LastName;
+                    mm.IsBodyHtml = false;
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.EnableSsl = true;
+                    NetworkCredential NetworkCred = new NetworkCredential(gmail, pass);
+                    smtp.UseDefaultCredentials = true;
+                    smtp.Credentials = NetworkCred;
+                    smtp.Port = 587;
+                    try
+                    {
+                        smtp.Send(mm);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        return;
+                    }
+                    Console.WriteLine("Send!!");
                 }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    return;
-                }
-                Console.WriteLine("Send!!");
             }
         }
 
@@ -390,7 +396,7 @@ namespace DiplomaProject.WebUI.Controllers
             return RedirectToAction("FinalOutcomeFunc");
         }
 
-        public async Task<ActionResult> FinalOutcomeFunc()
+        public ActionResult FinalOutcomeFunc()
         {
             var finaloutcome = service.GetAll<FinalOutCome>().ToList();
             var finaloutcomemodel = finaloutcome.Select(f => mapper.Map<OutcomeViewModel>(f)).ToList();
@@ -410,7 +416,7 @@ namespace DiplomaProject.WebUI.Controllers
                     if (outcomeitem1.Name == outcomeitem.Name && outcomeitem1.InitialSubjectId==outcomeitem.InitialSubjectId)
                     {
                         arrweight[i] += outcomeitem1.Weight;
-                        await service.DeleteById<OutCome>(outcomeitem1.Id);
+                        service.DeleteById<OutCome>(outcomeitem1.Id);
                     }
                 }
                 i++;

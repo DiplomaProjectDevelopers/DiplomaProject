@@ -20,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using static DiplomaProject.WebUI.Controllers.StakeholderController;
 
 namespace DiplomaProject.WebUI
 {

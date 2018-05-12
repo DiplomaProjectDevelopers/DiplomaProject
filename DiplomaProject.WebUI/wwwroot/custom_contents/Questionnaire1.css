@@ -57,3 +57,26 @@ select {
     padding: 8px 30px;
     border-color: darkturquoise;
 }
+
+.Gmail{
+    height:40px;
+    width:350px;
+    border:inset;
+    border-color:darkgrey;
+    border-width:2px;
+    border-radius:10px;
+}
+
+.modal-header {
+    background-color: #5bc0de;
+}
+
+.modal-title {
+    padding-left: 150px;
+    font-size: 20px;
+}
+
+.modal-body {
+    padding-left:150px;
+}
+

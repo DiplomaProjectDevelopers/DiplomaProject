@@ -1,6 +1,6 @@
 ﻿body {
     background-image: url(../backgrounds/userlist.png) !important;
-    background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 1400px 400px;
+    background-position: 0px 300px;
 }

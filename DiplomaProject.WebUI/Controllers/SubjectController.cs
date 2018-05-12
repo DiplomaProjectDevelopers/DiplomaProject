@@ -56,6 +56,7 @@ namespace DiplomaProject.WebUI.Controllers
 
         [HttpGet]
         public IActionResult Distribution(int professionId)
+
         {
             var finalSubjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList();
             for (int i = 0; i < finalSubjects.Count; i++)
@@ -76,11 +77,14 @@ namespace DiplomaProject.WebUI.Controllers
                 finalSubjects[i].TotalHours = totalHours;
                 service.Update(finalSubjects[i]);
                 totalsum = totalsum + sum;
-
+                
                 credit = 30 * sum / totalsum; // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
-                                              // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;                
-            }
+               // totalHours = credit / gWeight + credit / kWeight + credit / hWeight                
+
+        }
             return View();
+
+
         }
 
         [HttpPost]
@@ -121,7 +125,7 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 await service.DeleteById<Subject>(s);
             }
-            return Json(new { model, redirect = Url.Action("SubjectSequences", "Subject", new { professionId = model.Profession.Id }) });
+            return Json(new { model, redirect = Url.Action("SubjectSequences", "Subject", new { professionId = model.Profession.Id}) });
         }
 
         [Authorize]
@@ -171,7 +175,7 @@ namespace DiplomaProject.WebUI.Controllers
                 }
             }
             await service.UpdateRange(updatedModel);
-            return Json(new { redirect = Url.Action("Index", "Subject", new { professionId }) });
+            return Json(new { redirect = Url.Action("Index", "Subject", new { professionId})});
         }
 
         private List<List<SubjectViewModel>> GetSubjectSequence(int professionId)
@@ -228,8 +232,8 @@ namespace DiplomaProject.WebUI.Controllers
             subjectLevels[0].AddRange(rootNodes);
             for (int i = 1; i < subjectLevels.Length - 1; i++)
             {
-                var previous = subjectLevels[i - 1];
-                var currunt = subjects.Select(s => s.Id).Where(s => filteredEdges.Any(e => e.Item2 == s && previous.Contains(e.Item1)));
+                var prevoious = subjectLevels[i - 1];
+                var currunt = subjects.Select(s => s.Id).Where(s => filteredEdges.Any(e => e.Item2 == s && prevoious.Contains(e.Item1)));
                 subjectLevels[i] = currunt.ToList();
             }
             subjectLevels[8] = subjects.Select(s => s.Id).Where(s => subjectLevels.All(l => l.All(v => v != s))).ToList();
@@ -244,6 +248,6 @@ namespace DiplomaProject.WebUI.Controllers
                 }
             }
             return model.ToList();
-        }
+        }   
     }
 }

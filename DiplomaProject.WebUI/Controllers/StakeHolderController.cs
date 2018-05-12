@@ -9,11 +9,11 @@ using DiplomaProject.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using DiplomaProject.Domain.Helpers;
-using DiplomaProject.Domain.Extentions;
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.Extensions.Options;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DiplomaProject.WebUI.Controllers
@@ -267,13 +267,13 @@ namespace DiplomaProject.WebUI.Controllers
                 TypeName = s.ProfessionName ?? s.TypeName
             });
             var stakeHolders = service.GetAll<StakeHolder>().ToList();
-            var sthmodel = stakeHolders.Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
+            var sthmodel = stakeHolders.Where(s=>s.CompanyName!=null).Select(s => mapper.Map<StakeHolderViewModel>(s)).ToList();
             ViewBag.ListofCompany = sthmodel;
             return View("Questionnaire1");
         }
 
         [HttpPost]
-        public IActionResult IndexSel([FromForm]int branchid, string profftext, string stakeholderstr, string companyname)
+        public IActionResult IndexSel([FromForm]int branchid, string profftext, string stakeholderstr, string companyname, string gmail, string pass)
         {
             //convert string to string array
             string[] listSTH = stakeholderstr.Split(",");
@@ -281,50 +281,62 @@ namespace DiplomaProject.WebUI.Controllers
             List<string> email = new List<string>();
             List<string> name = new List<string>();
             var i = 0;
-            //convert string array to int
             foreach (var item in listSTH)
             {
                 stakeholderid[i] = int.Parse(item);
                 i++;
             }
-            //connect with database table StakeHolder
             var stakeholder = service.GetAll<StakeHolder>().ToList();
             var stakeholdermodel = stakeholder.Select(sh => mapper.Map<StakeHolderViewModel>(sh)).ToList();
 
-            //geting email in array
             for (var j = 0; j < stakeholderid.Length; j++)
             {
-                var emailAddress = stakeholdermodel.Where(sh => sh.BranchId == branchid && sh.CompanyName == companyname && sh.TypeId == stakeholderid[i]).FirstOrDefault();
-                if (emailAddress != null) {
+                var emailAddress = stakeholdermodel.Where(sh => sh.BranchId == branchid && sh.CompanyName == companyname && sh.TypeId == stakeholderid[j]).FirstOrDefault();
+                if (emailAddress != null)
+                {
                     email.Add(emailAddress.Email);
                     name.Add(emailAddress.FirstName + " " + emailAddress.LastName);
                 }
             }
 
-            //sendind email
-            MailMessage msg = new MailMessage();
-            SmtpClient smt = new SmtpClient();
-            msg.From = new MailAddress("lgrigoryan@25gmail.com");
-            //for (var j = 0; j < email.Count; j++)
-            //{
-                msg.To.Add("narine-aslanyan25@gmail.com");
-                msg.Subject = "Հարգելի անձ";
+            if (email.Count != 0)
+            {
+                SendEmail(gmail, pass, email, name);
+            }
+            return RedirectToAction("Question");
+        }
 
 
-                smt.Host = "smtp.gmail.com";
-                System.Net.NetworkCredential ntwd = new NetworkCredential();
-                ntwd.UserName = "lgrigoryan@25gmail.com"; //Your Email ID  
-                ntwd.Password = "lianka31302513123"; // Your Password  
-                smt.UseDefaultCredentials = true;
-                smt.Credentials = ntwd;
-                smt.Port = 587;
-                smt.EnableSsl = true;
-                smt.Send(msg);
-            //}
-
-
-
-            return View();
+        protected void SendEmail(string gmail, string pass, List<string> email, List<string> name)
+        {
+            for (var j = 0; j < email.Count; j++)
+            {
+                using (MailMessage mm = new MailMessage(gmail, email[j]))
+                {
+                    mm.Subject = "Հարցաթերթիկ";
+                    mm.Body = "Հարգելի " + name[j] + " խնդրում ենք տրամադրել մի փոքր ժամանակ և լրացնել հետևյալ հղումով տրված հարցաթերթիկը։" +
+                        " Նախապես շնորհակալություն\n" + "http://localhost:59468/StakeHolder/Outcome." + "\n\n\nՀարգանքներով` "
+                        + currentUser.FirstName + " " + currentUser.LastName;
+                    mm.IsBodyHtml = false;
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.EnableSsl = true;
+                    NetworkCredential NetworkCred = new NetworkCredential(gmail, pass);
+                    smtp.UseDefaultCredentials = true;
+                    smtp.Credentials = NetworkCred;
+                    smtp.Port = 587;
+                    try
+                    {
+                        smtp.Send(mm);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        return;
+                    }
+                    Console.WriteLine("Send!!");
+                }
+            }
         }
 
         [HttpGet]
@@ -384,7 +396,7 @@ namespace DiplomaProject.WebUI.Controllers
             return RedirectToAction("FinalOutcomeFunc");
         }
 
-        public async Task<ActionResult> FinalOutcomeFunc()
+        public ActionResult FinalOutcomeFunc()
         {
             var finaloutcome = service.GetAll<FinalOutCome>().ToList();
             var finaloutcomemodel = finaloutcome.Select(f => mapper.Map<OutcomeViewModel>(f)).ToList();
@@ -404,7 +416,7 @@ namespace DiplomaProject.WebUI.Controllers
                     if (outcomeitem1.Name == outcomeitem.Name && outcomeitem1.InitialSubjectId==outcomeitem.InitialSubjectId)
                     {
                         arrweight[i] += outcomeitem1.Weight;
-                        await service.DeleteById<OutCome>(outcomeitem1.Id);
+                        service.DeleteById<OutCome>(outcomeitem1.Id);
                     }
                 }
                 i++;

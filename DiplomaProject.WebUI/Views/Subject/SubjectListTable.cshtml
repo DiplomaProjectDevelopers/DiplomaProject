@@ -1,0 +1,51 @@
+﻿@model IEnumerable<UserViewModel>
+@{
+    ViewData["Title"] = "Օգտատերերի ցուցակ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    @Html.Partial("_AdminSideMenu", ViewBag.User as UserViewModel)
+    <div class="table-responsive col-md-9 col-sm-8">
+        <div>
+            <h4 class="col-md-6">Ներկայացված են բոլոր ներկայիս օգտատերերը</h4>
+        </div>
+        @*<div class="col-md-6">
+            <input type="text" class="form-control bs-searchbox" oninput="onSearch(this.value)" placeholder="Search by username, firstname and lastname" />
+        </div>*@
+        @if (TempData.ContainsKey("UserDeleted"))
+        {<label class="alert alert-info">@TempData["SubjectDeleted"]</label>}
+        @if (TempData.ContainsKey("UserUpdated"))
+        {<label class="alert-info alert">@TempData["SubjectUpdated"]</label>}
+        <div id="tblUsers">
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/custom_scripts/SubjectList.js">
+    </script>
+    <script>
+        $(document).ready(function () {
+            onSearch("");
+        });
+
+        function onSearch(searchTerm) {
+            $.ajax({
+                method: "GET",
+                data: {
+                    searchTerm
+                },
+                url: "/Subject/SubjectListTable"
+            }).done(function (data) {
+                $("#tblSubjects").html(data);
+            });
+
+        }
+
+    </script>
+}
+
+@section Styles{
+    <link href="~/custom_contents/_BaseAdminSideMenu.css" />
+}

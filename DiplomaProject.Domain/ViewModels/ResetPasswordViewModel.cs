@@ -14,7 +14,7 @@ namespace DiplomaProject.Domain.ViewModels
 
         [Required(ErrorMessage = "Գաղտնաբառ դաշտը լրացված չէ")]
         [Display(Name = "Գաղտնաբառ")]
-        [StringLength(32, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
+        [StringLength(32, ErrorMessage = "{0}ը կարող է ունենալ առնվազն {2} և առավելագույնը {1} նիշ երկարություն", MinimumLength = 8)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

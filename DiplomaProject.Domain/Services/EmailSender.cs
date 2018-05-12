@@ -22,7 +22,8 @@ namespace DiplomaProject.Domain.Services
             {
                 From = new MailAddress("issd.armenianteam@gmail.com", "ISSD Support Team"),
                 Subject = subject,
-                Body = message
+                Body = message,
+                IsBodyHtml = true
             };
             mailMessage.To.Add(email);
             client.Send(mailMessage);

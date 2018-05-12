@@ -341,7 +341,7 @@ namespace DiplomaProject.WebUI.Controllers
                 var code = await userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
                 await emailSender.SendEmailAsync(model.Email, "Reset Password",
-                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                   $"Գաղտնաբառը վերականգնելու համար սեղմեք հղման վրա <a href='{callbackUrl}'>այստեղ</a>");
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 

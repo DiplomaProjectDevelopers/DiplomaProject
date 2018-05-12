@@ -20,8 +20,9 @@ namespace DiplomaProject.WebUI.Controllers
     public class OutcomesController : BaseController
     {
         private OutcomesService outcomesService;
-        public OutcomesController(IDPService service, OutcomesService outcomesService, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
-                        : base(service, mapper, userManager, signInManager, roleManager)
+        public OutcomesController(IDPService service, OutcomesService outcomesService, IMapper mapper,
+            UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IEmailSender emailSender)
+                        : base(service, mapper, userManager, signInManager, roleManager, emailSender)
         {
             this.outcomesService = outcomesService;
         }

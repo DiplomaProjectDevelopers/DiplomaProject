@@ -20,8 +20,8 @@ namespace DiplomaProject.WebUI.Controllers
 {
     public class StakeholderController : BaseController
     {
-        public StakeholderController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
-            : base(service, mapper, userManager, signInManager, roleManager)
+        public StakeholderController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IEmailSender emailSender)
+            : base(service, mapper, userManager, signInManager, roleManager, emailSender)
         {
 
         }

@@ -1,0 +1,70 @@
+﻿
+#ax2 {
+    position: absolute;
+    left: 140px;
+    border: 1px solid black;
+    width: 80%;
+    color: black;
+    top: 250px;
+    font-size: 10px;
+    font-family: cursive;
+    background-color: snow;
+}
+
+#ax3 {
+    position: absolute;
+    left: 140px;
+    border: 1px solid black;
+    width: 80%;
+    color: black;
+    top: 2035px;
+    font-size: 10px;
+    font-family: cursive;
+    background-color: snow;
+}
+
+#ax4 {
+    position: absolute;
+    left: 140px;
+    border: 1px solid black;
+    width: 80%;
+    color: black;
+    top: 4111px;
+    font-size: 10px;
+    font-family: cursive;
+    background-color: snow;
+}
+
+#ax5 {
+    position: absolute;
+    left: 140px;
+    border: 1px solid black;
+    width: 80%;
+    color: black;
+    top: 6420px;
+    font-size: 10px;
+    font-family: cursive;
+    background-color: snow;
+}
+
+p {
+    font-family: cursive;
+    font-size: 18px;
+}
+
+.vernagir {
+    font-family: cursive
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    display: table;
+    vertical-align: baseline;
+}
+
+
+
+/* #barcr{
+    height:80px ;
+} */

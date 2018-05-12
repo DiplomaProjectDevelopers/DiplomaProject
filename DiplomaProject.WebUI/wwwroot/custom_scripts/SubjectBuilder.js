@@ -72,9 +72,9 @@
         for (let j = 0; j < model.subjects[i].outcomes.length; j++) {
             const p = document.createElement('p');
             p.setAttribute('class', 'thumbnail');
-            p.innerText = model.subjects[i].outcomes[j].name;
+            p.innerText = `${model.subjects[i].outcomes[j].name}(${model.subjects[i].outcomes[j].totalWeight || 0})`;
             const a = document.createElement('a');
-            a.setAttribute('class', 'moveBtn');
+            a.setAttribute('class', 'moveBtn pull-right');
             a.setAttribute('data-toggle', 'modal');
             a.setAttribute('data-target', '#moveModal');
             a.setAttribute('data-id', model.subjects[i].outcomes[j].id);

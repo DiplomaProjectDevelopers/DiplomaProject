@@ -1,0 +1,17 @@
+﻿body{
+    background-image: url(../backgrounds/330109.jpg) !important;
+}
+
+.table-striped > tbody > tr{
+   background-color: unset !important;
+   color:black;
+}
+
+.btn > .btn-link {
+    color: darkslateblue;
+    font-weight:bold;
+}
+
+h2, h4 {
+color:darkblue;
+}

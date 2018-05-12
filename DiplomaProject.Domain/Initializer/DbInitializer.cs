@@ -156,34 +156,34 @@ namespace DiplomaProject.Domain.Initializer
                         {
                             TypeName = "Գործատու",
                             ProfessionName = "Տնօրեն",
-                            Coefficient = 1
+                            Coefficient = 0.8,
                         },
                         new StakeHolderType
                         {
                             TypeName = "Գործատու",
                             ProfessionName = "Թիմի ղեկավար",
-                            Coefficient = 5
+                            Coefficient = 0.9,
                         },
                         new StakeHolderType
                         {
                             TypeName = "Գործատու",
                             ProfessionName = "Ծրագրավորող",
-                            Coefficient = 4
+                            Coefficient = 0.7,
                         },
                         new StakeHolderType
                         {
                             TypeName = "Դասախոս",
-                            Coefficient = 5
+                            Coefficient = 0.5,
                         },
                         new StakeHolderType
                         {
                             TypeName = "Ուսանող",
-                            Coefficient = 2
+                            Coefficient = 0.2,
                         },
                         new StakeHolderType
                         {
                             TypeName = "Շրջանավարտ",
-                            Coefficient = 3
+                            Coefficient = 0.4,
                         }
                     };
                     _context.StakeHolderTypes.AddRange(types);

@@ -1,4 +1,10 @@
-﻿.mini-submenu {
+﻿body{
+    background-image:url(/backgrounds/user.png);
+    background-repeat:no-repeat;
+    background-size:cover;
+}
+
+.mini-submenu {
     display: none;
     background-color: rgba(0, 0, 0, 0);
     border: 1px solid rgba(0, 0, 0, 0.9);

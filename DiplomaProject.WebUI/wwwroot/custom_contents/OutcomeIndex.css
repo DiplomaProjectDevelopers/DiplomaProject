@@ -1,0 +1,20 @@
+﻿body {
+    background-image: url(/backgrounds/Outcomes.png);
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: black;
+}
+h2{
+    color: deepskyblue;
+}
+
+h4{
+    color: deepskyblue;
+}
+
+.table-striped > tbody > tr{
+    background-color: unset !important;
+}

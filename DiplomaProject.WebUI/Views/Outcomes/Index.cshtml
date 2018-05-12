@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DiplomaProject.Domain.ViewModels.FinalOutcomeViewModel>
+@{
+    ViewData["Title"] = "Վերջնարդյունքների ցանկ";
+}
+
+<div class="Div">
+    <h2>Վերջնարդյունքներ</h2>
+    <h4> <em>«@ViewBag.ProfessionList.Name»</em> մասնագիտության ներկայիս վերջնարդյունքները</h4>
+    <div class="table-responsive">
+        <div class="btn row">
+            @if (ViewBag.UserRoles.Contains("REQUESTSENDER"))
+            {
+                <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("Question", "StakeHolder")'"><span class="glyphicon glyphicon-pencil"></span> Կազմել հարցաթերթիկ</button>
+            }
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr style="background-color:none" >
+                    <th>N</th>
+                    <th>Առարկա</th>
+                    <th>Վերջնարդյունք</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{var k = 1; }
+                @foreach (var sub in ViewBag.Sub)
+                {
+                    @foreach (var item in ViewBag.Finaloutcome)
+                    {
+                        if (item.InitialSubjectId == sub.Id)
+                        {
+                            <tr style="background-color:none">
+                                <th>@(k++)</th>
+                                <th>@sub.Name</th>
+                                <th>@item.Name</th>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/custom_contents/OutcomeIndex.css" />
+}

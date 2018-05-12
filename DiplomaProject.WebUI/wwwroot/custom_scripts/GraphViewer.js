@@ -7,12 +7,12 @@
     nodes.forEach((node, index) => {
         graph.nodes.push({
             id: node.Id,
-            label: node.Subject ? `${node.Name}(${node.Subject})` : node.Name,
+            label: node.InitialSubject ? `${node.Name}(${node.InitialSubject})` : node.Name,
             x: Math.random(),
             y: Math.random(),
             size: Math.random(),
             type: 'cycle',
-            color: node.IsNew ? '#33ccff' : '#008000'
+            color: node.IsNew ? '#4ddbff' : '#99ff66'
         });
     });
     edges.forEach((edge, index) => {
@@ -29,11 +29,10 @@
         graph,
         container: 'graph-container',
         settings: {
-            labelColor: 'yellow',
-            nodeHoverColor: '#0000ff',
+            defaultLabelColor: '#fff',
             autoResize: true,
             autoRescale: true,
-            defaultLabelSize: 12,
+            defaultLabelSize: 14,
             maxNodeSize: 8,
             minNodeSize: 8,
             maxEdgeSize: 2,

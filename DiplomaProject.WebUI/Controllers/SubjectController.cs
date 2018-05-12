@@ -15,8 +15,8 @@ namespace DiplomaProject.WebUI.Controllers
 {
     public class SubjectController : BaseController
     {
-        public SubjectController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
-            : base(service, mapper, userManager, signInManager, roleManager)
+        public SubjectController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IEmailSender emailSender)
+            : base(service, mapper, userManager, signInManager, roleManager, emailSender)
         {
 
         }

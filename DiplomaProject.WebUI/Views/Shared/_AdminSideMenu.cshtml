@@ -29,9 +29,11 @@
             }
             @if (Model.UserRoles.Any(s => s.RoleName == "DepartmentAdmin"))
             {
-                <li>
-                    <a href="@Url.Action("Index", "Profession")" class="list-group-item">Կարգավորումներ</a>
-                </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Profession")" class="list-group-item">
+                            <i class="glyphicon glyphicon-wrench"></i> Կարգավորումներ
+                        </a>
+                    </li>
 
             }
             @if (Model.UserRoles.Any(s => s.RoleName == "RequestSender"))

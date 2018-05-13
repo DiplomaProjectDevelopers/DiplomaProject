@@ -27,67 +27,67 @@
                     </li>
                 }
             }
-            <li>
-                <a id="lnProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessionsforoutcome" aria-expanded="false">
-                    <i class="glyphicon glyphicon-asterisk"></i> Վերջնարդյունքներ
-                </a>
-                <ul class="collapse" id="prefessionsforoutcome" role="menu" aria-labelledby="lnPrefessions">
-                    @foreach (var item in Model.Professions)
-            {
-                <li>
-                    <a href="@Url.Action("Index", "Outcomes", new { professionoId = item.Id } )">@item.Name</a>
-                </li>
-    }
-                </ul>
-            </li>
-            <li>
-                <a id="lnkProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessions" aria-expanded="false">
-                    <i class="glyphicon glyphicon-book"></i> Առարկաներ
 
-                    @if (ViewBag.UserRoles.Contains("SUBJECTMAKER"))
-            {
-                <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("Distribution", "SubjectController", new { professionId = ViewBag.Profession.Id })'"><span class="glyphicon glyphicon-wrench"></span>Որոշել վերջնարդյունքների կապերը</button>
-    }
-                </a>
-                <ul class="collapse" id="prefessions" role="menu" aria-labelledby="lnkPrefessions">
-                    @foreach (var item in Model.Professions)
+            @if (Model.UserRoles.Any(s => s.RoleName == "RequestSender"))
             {
                 <li>
-                    <a href="@Url.Action("Index", "Subject", new { professionId = item.Id } )">@item.Name</a>
+                    <a id="lnProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessionsforoutcome" aria-expanded="false">
+                        <i class="glyphicon glyphicon-asterisk"></i> Վերջնարդյունքներ
+                    </a>
+                    <ul class="collapse" id="prefessionsforoutcome" role="menu" aria-labelledby="lnPrefessions">
+                        @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "RequestSender"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Outcomes", new { professionoId = item.ProfessionId } )">@item.ProfessionName</a>
+                            </li>
+                        }
+                    </ul>
                 </li>
-    }
-                </ul>
-            </li>
+            }
+
+            @if (Model.UserRoles.Any(s => s.RoleName == "SubjectMaker" || s.RoleName == "DepartmentAdmin"))
+            {
+                <li>
+                    <a id="lnkProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessions" aria-expanded="false">
+                        <i class="glyphicon glyphicon-book"></i> Առարկաներ
+
+                    </a>
+                    <ul class="collapse" id="prefessions" role="menu" aria-labelledby="lnkPrefessions">
+                        @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "SubjectMaker" || s.RoleName == "DepartmentAdmin"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Subject", new { professionId = item.ProfessionId } )">@item.ProfessionName</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+
+            }
+
+            @if (Model.UserRoles.Any(s => s.RoleName == "LaborMaker"))
+            {
+                <li>
+                    <a id="creditProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#professionsCredit" aria-expanded="false">
+                        <i class="glyphicon glyphicon-book"></i> Կրեդիտի և ժամերի հաշվարկ
+                    </a>
+                    <ul class="collapse" id="professionsCredit" role="menu" aria-labelledby="creditProfessions">
+                        @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "LaborMaker"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Subject", new { professionId = item.ProfessionId } )">@item.ProfessionName</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+            }
+
             <li>
                 <a href="@Url.Action("SubOut", "SubjectList")" class="list-group-item">
                     <i class="glyphicon glyphicon-screenshot"></i> Ուսումնական պլան
                 </a>
             </li>
-            </li>
-            <li>
-                <a id="lnkProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessions" aria-expanded="false">
-                    <i class="glyphicon glyphicon-book"></i> Կրեդիտի և ժամերի հաշվարկ
-
-                    @if (ViewBag.UserRoles.Contains("LABORMARKER"))
-    {
-                <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("Distribution", "SubjectController", new { professionId = ViewBag.Profession.Id })'"><span class="glyphicon glyphicon-wrench"></span>Կատարել հաշվարկ </button>
-                <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("Distribution", "SubjectController", new { professionId = ViewBag.Profession.Id })'"><span class="glyphicon glyphicon-wrench"></span> Արդյունքի դիտում </button>
-}
-                </a>
-                <ul class="collapse" id="prefessions" role="menu" aria-labelledby="lnkPrefessions">
-                    @foreach (var item in Model.Professions)
-            {
-                <li>
-                    <a href="@Url.Action("Index", "Subject", new { professionId = item.Id } )">@item.Name</a>
-                </li>
-    }
-                </ul>
-            </li>
-            @*<li>
-            <a href="#" class="list-group-item">
-                <i class="glyphicon glyphicon-bell"></i> Ծանուցումներ <span class="badge">14</span>
-            </a>
-        </li>*@
         </ul>
     </div>
 </div>

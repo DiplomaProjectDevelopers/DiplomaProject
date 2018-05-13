@@ -15,7 +15,7 @@
     }
     @if (ViewBag.UserRoles.Contains("LABORMAKER"))
     {
-        <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("MakeDependencies", "Subject", new { professionId = ViewBag.Profession.Id})'"><span class="glyphicon glyphicon-wrench"></span>Կրեդիտների և ժամերի հաշվարկ</button>
+        <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("Distribution", "Subject", new { professionId = ViewBag.Profession.Id})'"><span class="glyphicon glyphicon-wrench"></span>Կրեդիտների և ժամերի հաշվարկ</button>
         <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("MakeDependencies", "Subject", new { professionId = ViewBag.Profession.Id})'"><span class="glyphicon glyphicon-wrench"></span>Կրեդիտների և ժամերի դիտում</button>
 
     }

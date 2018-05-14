@@ -20,7 +20,7 @@
         <div class="row pull-right">
             <button style="color:blue" class=" btn btn-link" onclick="addSubject()"><span class="glyphicon glyphicon-plus "></span>Ավելացնել առարկա</button>
             <button type="submit" value="Save subjects" class="btn btn-primary" onclick="onSave()">Պահպանել</button>
-            <button type="button" value="Cancel" asp-action="Cancel" class="btn btn-default">Չեղարկել</button>
+            <button type="button" value="Cancel" onclick="location.href = '@Url.Action("Index","Subject", new { professionId = Model.Profession.Id})'" class="btn btn-default">Չեղարկել</button>
         </div>
     </div>
 </div>

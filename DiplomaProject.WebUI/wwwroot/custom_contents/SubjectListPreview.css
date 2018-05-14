@@ -1,9 +1,9 @@
 ﻿body {
     background-image: url(/backgrounds/SubjectPreview.png);
     background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
     color: black;
+    background-size: 1400px 500px;
+    background-position: 0px 170px;
 }
 
 #card-list{

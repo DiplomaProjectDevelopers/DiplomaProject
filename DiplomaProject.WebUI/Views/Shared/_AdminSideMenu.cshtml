@@ -27,32 +27,70 @@
                     </li>
                 }
             }
-            <li>
-                <a id="lnProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessionsforoutcome" aria-expanded="false">
-                    <i class="glyphicon glyphicon-asterisk"></i> Վերջնարդյունքներ
-                </a>
-                <ul class="collapse" id="prefessionsforoutcome" role="menu" aria-labelledby="lnPrefessions">
-                    @foreach (var item in Model.Professions)
+            @if (Model.UserRoles.Any(s => s.RoleName == "DepartmentAdmin"))
+            {
+                    <li>
+                        <a href="@Url.Action("Index", "Profession")" class="list-group-item">
+                            <i class="glyphicon glyphicon-wrench"></i> Կարգավորումներ
+                        </a>
+                    </li>
+
+            }
+            @if (Model.UserRoles.Any(s => s.RoleName == "RequestSender"))
             {
                 <li>
-                    <a href="@Url.Action("Index", "Outcomes", new { professionoId = item.Id } )">@item.Name</a>
+                    <a id="lnProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessionsforoutcome" aria-expanded="false">
+                        <i class="glyphicon glyphicon-asterisk"></i> Վերջնարդյունքներ
+                    </a>
+                    <ul class="collapse" id="prefessionsforoutcome" role="menu" aria-labelledby="lnPrefessions">
+                        @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "RequestSender"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Outcomes", new { professionoId = item.ProfessionId } )">@item.ProfessionName</a>
+                            </li>
+                        }
+                    </ul>
                 </li>
-    }
-                </ul>
-            </li>
-            <li>
-                <a id="lnkProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessions" aria-expanded="false">
-                    <i class="glyphicon glyphicon-book"></i> Առարկաներ
-                </a>
-                <ul class="collapse" id="prefessions" role="menu" aria-labelledby="lnkPrefessions">
-                    @foreach (var item in Model.Professions)
+            }
+
+            @if (Model.UserRoles.Any(s => s.RoleName == "SubjectMaker" || s.RoleName == "DepartmentAdmin"))
             {
                 <li>
-                    <a href="@Url.Action("Index", "Subject", new { professionId = item.Id } )">@item.Name</a>
+                    <a id="lnkProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessions" aria-expanded="false">
+                        <i class="glyphicon glyphicon-book"></i> Առարկաներ
+
+                    </a>
+                    <ul class="collapse" id="prefessions" role="menu" aria-labelledby="lnkPrefessions">
+                        @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "SubjectMaker" || s.RoleName == "DepartmentAdmin"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Subject", new { professionId = item.ProfessionId } )">@item.ProfessionName</a>
+                            </li>
+                        }
+                    </ul>
                 </li>
-    }
-                </ul>
-            </li>
+
+
+            }
+
+            @if (Model.UserRoles.Any(s => s.RoleName == "LaborMaker"))
+            {
+                <li>
+                    <a id="creditProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#professionsCredit" aria-expanded="false">
+                        <i class="glyphicon glyphicon-book"></i> Կրեդիտի և ժամերի հաշվարկ
+                    </a>
+                    <ul class="collapse" id="professionsCredit" role="menu" aria-labelledby="creditProfessions">
+                        @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "LaborMaker"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Subject", new { professionId = item.ProfessionId } )">@item.ProfessionName</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+            }
+
             <li>
                 <a href="@Url.Action("SubOut", "SubjectList")" class="list-group-item">
                     <i class="glyphicon glyphicon-screenshot"></i> Ուսումնական պլան

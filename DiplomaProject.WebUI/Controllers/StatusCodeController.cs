@@ -16,8 +16,8 @@ namespace DiplomaProject.WebUI.Controllers
     {
         private readonly ILogger<HomeController> logger;
 
-        public StatusCodeController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, ILogger<HomeController> logger)
-            : base(service, mapper, userManager, signInManager, roleManager)
+        public StatusCodeController(IDPService service, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, ILogger<HomeController> logger, IEmailSender emailSender)
+            : base(service, mapper, userManager, signInManager, roleManager, emailSender)
         {
             this.logger = logger;
         }

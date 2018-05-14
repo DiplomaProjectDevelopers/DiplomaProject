@@ -1,0 +1,57 @@
+﻿@model IEnumerable<DiplomaProject.Domain.ViewModels.ProfessionViewModel>
+
+@{
+    ViewData["Title"] = "Մասնագիտություններ";
+}
+
+<h2>Մասնագիտությունների ցանկ</h2>
+
+<p>
+    <button onclick="location.href = '@Url.Action("EditDepartment", "Profession")'" class="btn btn-primary">Փոփոխել ամբիոնի կարգավորումները</button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Branch)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Department)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Branch)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+            <td>
+                <p data-placement="top" data-toggle="tooltip" title="Խմբագրել">
+                    <a asp-action="Edit" asp-controller="Profession" asp-route-professionId="@item.Id" class="btn btn-success btn-xs" data-title="Խմբագրել" data-toggle="modal">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                </p>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

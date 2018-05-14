@@ -3,7 +3,7 @@
 }
 
 .table-striped > tbody > tr{
-   background-color: unset !important;
+   background-color: #f3ecec !important;
    color:black;
 }
 

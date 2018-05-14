@@ -85,7 +85,7 @@ namespace DiplomaProject.Domain.Initializer
                 }
 
                 //Create the default Admin account and apply the Administrator role
-                string password = "sa";
+                string password  = "Webapp_18";
                 var users = new List<User>
                 {
                     new User

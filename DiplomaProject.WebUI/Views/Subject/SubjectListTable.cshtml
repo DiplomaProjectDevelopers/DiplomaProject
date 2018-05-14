@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UserViewModel>
+﻿@model IEnumerable<SubjectViewModel>
 @{
     ViewData["Title"] = "Օգտատերերի ցուցակ";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,13 +10,47 @@
         <div>
             <h4 class="col-md-6">Ներկայացված են բոլոր ներկայիս օգտատերերը</h4>
         </div>
-        @*<div class="col-md-6">
-            <input type="text" class="form-control bs-searchbox" oninput="onSearch(this.value)" placeholder="Search by username, firstname and lastname" />
-        </div>*@
+        @<h4 class=""><em>«@ViewBag.Profession.Name»</em> մասնագիտության ներկայիս առարկաները</h4>
+        <div class="table-responsive pre-scrollable">
+            <div class="btn row">
+                @if (ViewBag.UserRoles.Contains("SUBJECTMAKER"))
+            {
+                <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("MakeDependencies", "Outcomes", new { professionId = ViewBag.Profession.Id})'"><span class="glyphicon glyphicon-wrench"></span>Edit</button>
+
+        }
+            </div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.Level)*@ hqb  kmklas
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.SubjectModule)*@ anvtangutyun
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Credit)
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Credit) @Html.DisplayNameFor(model => model.LactionHours):@Html.DisplayNameFor(model => model.LabHours):@Html.DisplayNameFor(model => model.CoursHours)
+                        </th>
+                    </tr>
+                </thead>
+               
+            </table>
+        </div>
+
         @if (TempData.ContainsKey("UserDeleted"))
-        {<label class="alert alert-info">@TempData["SubjectDeleted"]</label>}
+    {<label class="alert alert-info">@TempData["SubjectDeleted"]</label>}
         @if (TempData.ContainsKey("UserUpdated"))
-        {<label class="alert-info alert">@TempData["SubjectUpdated"]</label>}
+    {<label class="alert-info alert">@TempData["SubjectUpdated"]</label>}
         <div id="tblUsers">
 
         </div>

@@ -32,12 +32,14 @@ namespace DiplomaProject.Domain.ViewModels
         [Display(Name = "Կիսամյակ")]
         public int? Level { get; set; }
 
+        public int? PracticalHours { get; set; }
+
         [Display(Name = "Ընդհանուր ժամաքանակ")]
         public int? TotalHours { get; set; }
         [Display(Name = "Ընդհանուր ժամաքանակ")]
         public int? LabHours { get; set; }
         [Display(Name = "Ընդհանուր ժամաքանակ")]
-        public int? LactionHours { get; set; }
+        public int? LectionHours { get; set; }
         [Display(Name = "Ընդհանուր ժամաքանակ")]
         public int? CoursHours { get; set; }
         [Display(Name = "Վերջնարդյունքներ")]

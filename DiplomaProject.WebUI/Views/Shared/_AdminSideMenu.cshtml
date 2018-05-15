@@ -47,6 +47,7 @@
                         {
                             <li>
                                 <a href="@Url.Action("Index", "Outcomes", new { professionoId = item.ProfessionId } )">@item.ProfessionName</a>
+                               @Html.Hidden(@Url.Action("Outcome", "StakeHolder", new { professionoId = item.ProfessionId }));
                             </li>
                         }
                     </ul>

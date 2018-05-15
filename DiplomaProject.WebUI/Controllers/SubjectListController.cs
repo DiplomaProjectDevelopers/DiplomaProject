@@ -28,16 +28,21 @@ namespace DiplomaProject.WebUI.Controllers
         }
         [Authorize]
         [HttpGet]
-        public IActionResult SubOut(int proffesionId)
+        public IActionResult SubOut(int professionsId)
         {
-
+            ViewBag.p = professionsId;
+            GetRoles(professions: professionsId);
+            if (professionsId == 0) return NotFound();
+            var profession = service.GetById<Profession>(professionsId);
+            ViewBag.ProfessionsList = mapper.Map<ProfessionViewModel>(profession);
             var modules = service.GetAll<SubjectModule>().Select(s => mapper.Map<SubjectModuleViewModel>(s)).ToList();
-            var subjects = service.GetAll<Subject>().Where(s => s.ProfessionId == proffesionId).Select(s => mapper.Map<SubjectViewModel>(s)).ToList();
-            for (int i = 0; i < subjects.Count; i++)
-            {
-                modules.Find(m => m.Id == subjects[i].SubjectModuleId).Subjects.Add(subjects[i]);
-            }
-            return View("SubjectList", modules);
+            var subjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionsId).Select(s => mapper.Map<SubjectViewModel>(s)).ToList();
+            //for (int i = 0; i < subjects.Count; i++)
+            //{
+            //    modules.Find(m => m.Id == subjects[i].SubjectModuleId).Subjects.Add(subjects[i]);
+            //}
+            ViewBag.Subject = subjects;
+            return View("SubjectListTable", modules);
 
         }
     }

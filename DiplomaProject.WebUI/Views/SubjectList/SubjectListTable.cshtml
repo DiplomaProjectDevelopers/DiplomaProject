@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "Առարկաների ցանկ";
+}
+<div>
+    <h2>Ուսումնական պլան</h2>
+    <h4>@ViewBag.ProfessionsList.Name</h4>
+    <div class="table-responsive">
+        <div class="btn row">
+            @if (ViewBag.UserRoles.Contains("CURRICULUMMAKER"))
+            {
+            <button class="btn btn-primary" type="button" onclick="ֆունկցիայի անուն"><span class="glyphicon glyphicon-pencil"></span> Փոփոխել </button>
+            }
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr style="background-color:none">
+                    <th>Դասըթացներ/Կիսամյակներ</th>
+                    @foreach (var item in ViewBag.Subject)
+                    {
+            <th>@item.Level</th>
+}
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Subject)
+    {
+                <tr>
+                    <th>@item.Name</th>
+                    @foreach (var item1 in ViewBag.Subject)
+                    {
+
+                        if (item1.Name == item.Name)
+                        {
+                <th>@item.Name</th>
+                <th>@item.Credit+"("+@item.LactionHours+":"+@item.LabHours+":"+@item.CoursHourse+")"</th>
+                        }
+                    }
+                </tr>
+                
+
+                }
+            </tbody>
+
+        </table>
+    </div>
+    </div>

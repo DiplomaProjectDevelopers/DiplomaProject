@@ -62,7 +62,7 @@ namespace DiplomaProject.WebUI.Controllers
             foreach (var group in subjectGroups)
             {
                 var moduleId = group.moduleId.Value;
-                var finalSubjects = group.subjects.ToList();
+                var finalSubject = group.subjects.ToList();
                 switch (moduleId)
                 {
                     case 1:
@@ -87,10 +87,10 @@ namespace DiplomaProject.WebUI.Controllers
                         c3 = 0.5;
                         break;
                 }
-                for (int i = 0; i < finalSubjects.Count; i++)
+                for (int i = 0; i < finalSubject.Count; i++)
                 {
 
-                    var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubjects[i].Id);
+                    var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubject[i].Id);
                     var giteliq = outcomes.Where(o => o.OutComeTypeId == 1);
                     var karoxutyun = outcomes.Where(o => o.OutComeTypeId == 2);
                     var hmtutyun = outcomes.Where(o => o.OutComeTypeId == 3);
@@ -101,18 +101,20 @@ namespace DiplomaProject.WebUI.Controllers
                     double kWeight = karoxutyun.Sum(k => k.TotalWeight.Value);
                     double hWeight = hmtutyun.Sum(h => h.TotalWeight.Value);
                     double sum = gWeight + kWeight + hWeight;
-                    finalSubjects[i].Credit = Convert.ToInt32(credit);
-                    finalSubjects[i].TotalHours = totalHours;
-                    service.Update(finalSubjects[i]);
+                    //finalSubjects[i].Credit = Convert.ToInt32(credit);
+                    //finalSubjects[i].TotalHours = totalHours;
+                    //service.Update(finalSubjects[i]);
                     totalsum = totalsum + sum;
 
                     for (int n = 1; n <= 8; n++)
                     {
                         credit = 30 * sum / totalsum;
                         // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
-                        totalHours = Convert.ToInt32((30 * credit - 1) / 16 * sum + (c1 * gWeight + c2 * kWeight + c3 * hWeight)); 
+                       totalHours = Convert.ToInt32((30 * credit - 1) / 16 * sum + (c1 * gWeight + c2 * kWeight + c3 * hWeight));
                         // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
-
+                        finalSubject[i].Credit = Convert.ToInt32(credit);
+                        finalSubject[i].TotalHours = totalHours;
+                        service.Update(finalSubject[i]);
                     }
                 }
             }

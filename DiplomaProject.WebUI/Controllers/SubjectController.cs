@@ -214,6 +214,21 @@ namespace DiplomaProject.WebUI.Controllers
         {
             var finaloutcomes = service.GetAll<FinalOutCome>().Select(o => mapper.Map<FinalOutCome>(o)).ToList();
             var subjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).Select(s => mapper.Map<SubjectViewModel>(s)).ToList();
+            if (subjects.All(s => s.Level.HasValue && s.Level.Value > 0)){
+                var subjectModel = new List<SubjectViewModel>[8];
+                foreach (var subject in subjects)
+                {
+                    if (subject.Level <= 8)
+                    {
+                        if (subjectModel[subject.Level.Value - 1] == null)
+                        {
+                            subjectModel[subject.Level.Value - 1] = new List<SubjectViewModel>();
+                        }
+                        subjectModel[subject.Level.Value - 1].Add(subject);
+                    }
+                }
+                return subjectModel.ToList();
+            }
             var edges = service.GetAll<Edge>().Where(e => e.ProfessionId == professionId).Select(s => mapper.Map<EdgeViewModel>(s)).ToList();
             List<int> left = new List<int>();
             List<int> right = new List<int>();

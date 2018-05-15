@@ -273,7 +273,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult IndexSel([FromForm]int branchid, string profftext, string stakeholderstr, string companyname, string gmail, string pass)
+        public IActionResult IndexSel([FromForm]int branchid, int proffid, string stakeholderstr, string companyname, string gmail, string pass)
         {
             //convert string to string array
             string[] listSTH = stakeholderstr.Split(",");
@@ -301,13 +301,13 @@ namespace DiplomaProject.WebUI.Controllers
 
             if (email.Count != 0)
             {
-                SendEmail(gmail, pass, email, name);
+                SendEmail(gmail, pass, email, name, proffid);
             }
             return RedirectToAction("Question");
         }
 
 
-        protected void SendEmail(string gmail, string pass, List<string> email, List<string> name)
+        protected void SendEmail(string gmail, string pass, List<string> email, List<string> name, int proffid)
         {
             for (var j = 0; j < email.Count; j++)
             {
@@ -315,7 +315,7 @@ namespace DiplomaProject.WebUI.Controllers
                 {
                     mm.Subject = "Հարցաթերթիկ";
                     mm.Body = "Հարգելի " + name[j] + " խնդրում ենք տրամադրել մի փոքր ժամանակ և լրացնել հետևյալ հղումով տրված հարցաթերթիկը։" +
-                        " Նախապես շնորհակալություն\n" + "http://localhost:59468/StakeHolder/Outcome." + "\n\n\nՀարգանքներով` "
+                        " Նախապես շնորհակալություն\n" + "http://localhost:59468/StakeHolder/Outcome?professionoId="+proffid+"." + "\n\n\nՀարգանքներով` "
                         + currentUser.FirstName + " " + currentUser.LastName;
                     mm.IsBodyHtml = false;
                     SmtpClient smtp = new SmtpClient();
@@ -340,7 +340,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Outcome()
+        public IActionResult Outcome(int professionoId)
         {
             ViewBag.ListOfTypeName = service.GetAll<StakeHolderType>().Select(s => new StakeHolderTypeViewModel
             {
@@ -348,7 +348,7 @@ namespace DiplomaProject.WebUI.Controllers
                 TypeName = s.ProfessionName ?? s.TypeName
             });
             var subject = service.GetAll<InitialSubject>().ToList();
-            var subjectmodel = subject.Select(sb => mapper.Map<InitialSubjectViewModel>(sb)).ToList();
+            var subjectmodel = subject.Where(sb=>sb.ProfessionId==professionoId).Select(sb => mapper.Map<InitialSubjectViewModel>(sb)).ToList();
             ViewBag.ListOfSubject = subjectmodel;
             var outcome = service.GetAll<InitialOutCome>().ToList();
             var outcomemodel = outcome.Select(o => mapper.Map<InitialOutcomeViewModel>(o)).ToList();
@@ -357,7 +357,7 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Outcome([FromForm]int stakeholderid, string outcomeName, string weight, string outcomeid, string subject)
+        public IActionResult Outcome([FromForm]int stakeholderid, string outcomeName, string weight, string outcomeid, string subject, int professionoId)
         {
             string[] outcomelist = outcomeName.Split(",");
             string[] weightstr = weight.Split(",");
@@ -441,7 +441,7 @@ namespace DiplomaProject.WebUI.Controllers
                             {
                                 sum =(float) (update.TotalWeight + arrweight[j]) / 2;
                             }
-                            update.TotalWeight = sum;
+                            update.TotalWeight = Math.Round(sum,2);
                             var itemupdate = service.Update<FinalOutCome>(update);
                             j++;
                             break;

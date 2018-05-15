@@ -86,19 +86,28 @@ namespace DiplomaProject.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await service.SignInAsync(model);
-                if (result.Succeeded)
+                var user = await userManager.FindByNameAsync(model.Username);
+                if (user != null)
                 {
-                    return RedirectToAction("Index", "Admin");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Wrong username or password. Please try again.");
+                    var result = await signInManager.PasswordSignInAsync(user, model.Password, true, true);
+                    if (result.Succeeded)
+                    {
+                        await userManager.ResetAccessFailedCountAsync(user);
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else if (result.IsLockedOut)
+                    {
+                        ModelState.AddModelError("", "Չափից ավելի անհաջող մուտքի փորձ կատարվեց: Խնդրում ենք փորձել ավելի ուշ");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Սխալ մուտքանուն կամ գաղտնաբառ: Խնդրում ենք փորձել կրկին");
+                    }
                 }
             }
             else
             {
-                ModelState.AddModelError("", "Incorrect username or password");
+                ModelState.AddModelError("", "Մուտքանունի կամ գաղտնաբառի սխալ ձևաչափ");
             }
             return View(model);
         }

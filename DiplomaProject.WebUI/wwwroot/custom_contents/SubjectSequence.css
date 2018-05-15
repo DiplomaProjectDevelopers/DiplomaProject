@@ -1,6 +1,6 @@
 ﻿body {
-    background-image: url(/backgrounds/SubjectPreview.png);
+    background-image: url(/backgrounds/PaintSwatches.jpg);
     background-repeat: no-repeat;
-    background-size: 1400px 500px;
-    background-position: 0px 170px;
+    background-size: cover;
+    color:black;
 }

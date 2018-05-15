@@ -27,7 +27,15 @@
                     </li>
                 }
             }
+            @if (Model.UserRoles.Any(s => s.RoleName == "DepartmentAdmin"))
+            {
+                    <li>
+                        <a href="@Url.Action("Index", "Profession")" class="list-group-item">
+                            <i class="glyphicon glyphicon-wrench"></i> Կարգավորումներ
+                        </a>
+                    </li>
 
+            }
             @if (Model.UserRoles.Any(s => s.RoleName == "RequestSender"))
             {
                 <li>
@@ -39,6 +47,7 @@
                         {
                             <li>
                                 <a href="@Url.Action("Index", "Outcomes", new { professionoId = item.ProfessionId } )">@item.ProfessionName</a>
+                               @Html.Hidden(@Url.Action("Outcome", "StakeHolder", new { professionoId = item.ProfessionId }));
                             </li>
                         }
                     </ul>
@@ -82,12 +91,22 @@
                 </li>
 
             }
-
-            <li>
-                <a href="@Url.Action("SubOut", "SubjectList")" class="list-group-item">
-                    <i class="glyphicon glyphicon-screenshot"></i> Ուսումնական պլան
-                </a>
-            </li>
+            @if (Model.UserRoles.Any(s => s.RoleName == "CurriculumMaker"))
+            {
+                <li>
+                    <a id="curriculumProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#professionsCurriculum" aria-expanded="false">
+                        <i class="glyphicon glyphicon-screenshot"></i> Ուսումնական պլան
+                    </a>
+                    <ul class="collapse" id="professionsCurriculum" role="menu" aria-labelledby="curriculumProfessions">
+       @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "CurriculumMaker"))
+        {
+                <li>
+                    <a href="@Url.Action("SubOut", "SubjectList", new { professionsId = item.ProfessionId }  )">@item.ProfessionName</a>
+                </li>
+        }
+                    </ul>
+                </li>
+            }
         </ul>
     </div>
 </div>

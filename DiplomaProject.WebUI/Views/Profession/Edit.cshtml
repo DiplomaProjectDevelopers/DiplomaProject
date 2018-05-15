@@ -1,0 +1,100 @@
+﻿@model DiplomaProject.Domain.ViewModels.ProfessionViewModel
+
+@{
+    ViewData["Title"] = "Փոփոխել մասնագիտության տվյալները";
+}
+
+<h2>@Model.Name</h2>
+
+<div class="row">
+    <span>Փոփոխել մասնագիտության տվյալները</span>
+    <div class="pull-right">
+        <button class="btn btn-link" onclick="location.href = '@Url.Action("Index", "Profession")'">Հետ գնալ ցանկ</button>
+        <button type="submit" form="editProf" class="btn btn-primary">Պահպանել</button>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="form-horizontal">
+        <form asp-action="Edit" id="editProf" asp-antiforgery="true">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.HiddenFor(m => Model.Id)
+            <div class="col-md-5">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-5">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="clearfix"></div>
+            <hr />
+            <div class="col-md-4">
+                <label asp-for="BdfullTime" class="control-label"></label>
+                <div>
+                    <label>Այո</label>
+                    <input asp-for="BdfullTime" type="radio" value="true" class="form-control-static" />
+                    <label>Ոչ</label>
+                    <input asp-for="BdfullTime" type="radio" value="false" class="form-control-static" />
+                </div>
+                <span asp-validation-for="BdfullTime" class="text-danger"></span>
+            </div>
+            <div class="col-md-1">
+                <label asp-for="BdfullTimeSemesters" class="control-label"></label>
+                <input asp-for="BdfullTimeSemesters" class="form-control" />
+                <span asp-validation-for="BdfullTimeSemesters" class="text-danger"></span>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+                <label asp-for="BdpartTime" class="control-label"></label>
+                <div>
+                    <label>Այո</label>
+                    <input asp-for="BdpartTime" type="radio" value="true" class="form-control-static" />
+                    <label>Ոչ</label>
+                    <input asp-for="BdpartTime" type="radio" value="false" class="form-control-static" />
+                </div>                <span asp-validation-for="BdpartTime" class="text-danger"></span>
+            </div>
+            <div class="col-md-1">
+                <label asp-for="BdpartTimeSemesters" class="control-label"></label>
+                <input asp-for="BdpartTimeSemesters" class="form-control" />
+                <span asp-validation-for="BdpartTimeSemesters" class="text-danger"></span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-4">
+                <label asp-for="MdfullTime" class="control-label"></label>
+                <div>
+                    <label>Այո</label>
+                    <input asp-for="MdfullTime" type="radio" value="true" class="form-control-static" />
+                    <label>Ոչ</label>
+                    <input asp-for="MdfullTime" type="radio" value="false" class="form-control-static" />
+                </div>
+                <span asp-validation-for="MdfullTime" class="text-danger"></span>
+            </div>
+            <div class="col-md-1">
+                <label asp-for="MdfullTimeSemesters" class="control-label"></label>
+                <input asp-for="MdfullTimeSemesters" class="form-control" />
+                <span asp-validation-for="MdfullTimeSemesters" class="text-danger"></span>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+                <label asp-for="MdpartTime" class="control-label"></label>
+                <div>
+                    <label>Այո</label>
+                    <input asp-for="MdpartTime" type="radio" value="true" class="form-control-static" />
+                    <label>Ոչ</label>
+                    <input asp-for="MdpartTime" type="radio" value="false" class="form-control-static" />
+                </div>
+                <span asp-validation-for="MdpartTime" class="text-danger"></span>
+            </div>
+            <div class="col-md-1">
+                <label asp-for="MdpartTimeSemesters" class="control-label"></label>
+                <input asp-for="MdpartTimeSemesters" class="form-control" />
+                <span asp-validation-for="MdpartTimeSemesters" class="text-danger"></span>
+            </div>
+        </form>
+    </div>
+</div>
+

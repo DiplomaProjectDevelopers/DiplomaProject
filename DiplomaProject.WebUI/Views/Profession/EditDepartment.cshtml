@@ -1,0 +1,76 @@
+﻿@model DiplomaProject.Domain.ViewModels.DepartmentViewModel
+
+@{
+    ViewData["Title"] = "Փոփոխել ամբիոնի կարգավորումները";
+}
+
+<h2>«@Model.Name»  ամբիոն</h2>
+
+<div class="row">
+    <span>Փոփոխել ամբիոնի կարգավորումները</span>
+    <div class="pull-right">
+        <button class="btn btn-link" onclick="location.href = '@Url.Action("Index", "Profession")'">Հետ գնալ ցանկ</button>
+        <button type="submit" form="editDep" class="btn btn-primary">Պահպանել</button>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="form-horizontal">
+        <form asp-action="EditDepartment" id="editDep" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-md-2">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="HeadOfDepartment" class="control-label"></label>
+                <input asp-for="HeadOfDepartment" class="form-control" />
+                <span asp-validation-for="HeadOfDepartment" class="text-danger"></span>
+            </div>
+            <div class="clearfix"></div>
+            <hr />
+            <div class=" col-md-5">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="clearfix"></div>
+            <hr />
+            <div class="col-md-2">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="clearfix"></div>
+            <hr />
+            <div class="col-md-2">
+                <label asp-for="ExamMaxCount" class="control-label"></label>
+                <input asp-for="ExamMaxCount" class="form-control" />
+                <span asp-validation-for="ExamMaxCount" class="text-danger"></span>
+            </div>
+            <div class="col-md-2 col-md-offset-1">
+                <label asp-for="TestMaxCount" class="control-label"></label>
+                <input asp-for="TestMaxCount" class="form-control" />
+                <span asp-validation-for="TestMaxCount" class="text-danger"></span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-2">
+                <label asp-for="CreditMaxCount" class="control-label"></label>
+                <input asp-for="CreditMaxCount" class="form-control" />
+                <span asp-validation-for="CreditMaxCount" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="CourseWorkMaxCount" class="control-label"></label>
+                <input asp-for="CourseWorkMaxCount" class="form-control" />
+                <span asp-validation-for="CourseWorkMaxCount" class="text-danger"></span>
+            </div>
+        </form>
+    </div>
+</div>
+

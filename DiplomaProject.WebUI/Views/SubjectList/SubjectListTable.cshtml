@@ -14,32 +14,54 @@
         </div>
         <table class="table table-bordered table-striped">
             <thead>
+                @{ List<int> level = new List<int>();
+                    level.Add(0);
+                 }
                 <tr style="background-color:none">
                     <th>Դասըթացներ/Կիսամյակներ</th>
                     @foreach (var item in ViewBag.Subject)
                     {
-            <th>@item.Level</th>
-}
+                        var c = 0;
+                        @for (var i = 0; i < level.Count; i++)
+                        {
+                            if (item.Level == level[i])
+                            {
+                                c++;
+                                break;
+                            }
+                        }
+                        if (c == 0)
+                        {
+                            <th>@item.Level</th>
+                            level.Add(item.Level);
+                            c++;
+                        }
+                    }
                 </tr>
             </thead>
             <tbody>
+                @{var n=""; }
                 @foreach (var item in ViewBag.Subject)
-    {
-                <tr>
-                    <th>@item.Name</th>
-                    @foreach (var item1 in ViewBag.Subject)
-    {
+                {
+                    if (item.Name == n)
+                    {
 
-        if (item1.Name == item.Name)
-        {
-                <th>@item.Name</th>
-                @*<th>@item1.Credit"("@item1.LactionHours":"@item1.LabHours":"@item1.CoursHourse")"</th>*@
-                
-}
-}
-                </tr>
-                
+                    }
+                    else
+                    {
+                        <tr>
+                            <th>@item.Name</th>
+                            @foreach (var item1 in ViewBag.Subject)
+                            {
 
+                                if (item1.Name == item.Name)
+                                {
+                                    <th>@item1.Credit ( @item.LabHours:@item.LectionHours:@item.PracticalHours )</th>
+                                }
+                            }
+                        </tr>
+                            n = item.Name;
+                    }
                 }
             </tbody>
 

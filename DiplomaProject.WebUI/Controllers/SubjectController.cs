@@ -55,14 +55,14 @@ namespace DiplomaProject.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Distribution(int professionId)
+        public async  Task<IActionResult> Distribution(int professionId)
         {
             double c1 = 0, c2 = 0, c3 = 0;
             var subjectGroups = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).ToList().GroupBy(s => s.SubjectModuleId, p => p, (moduleId, subjects) => new { moduleId, subjects });
             foreach (var group in subjectGroups)
             {
                 var moduleId = group.moduleId.Value;
-                var finalSubjects = group.subjects.ToList();
+                var finalSubject = group.subjects.ToList();
                 switch (moduleId)
                 {
                     case 1:
@@ -87,10 +87,10 @@ namespace DiplomaProject.WebUI.Controllers
                         c3 = 0.5;
                         break;
                 }
-                for (int i = 0; i < finalSubjects.Count; i++)
+                for (int i = 0; i < finalSubject.Count; i++)
                 {
 
-                    var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubjects[i].Id);
+                    var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubject[i].Id);
                     var giteliq = outcomes.Where(o => o.OutComeTypeId == 1);
                     var karoxutyun = outcomes.Where(o => o.OutComeTypeId == 2);
                     var hmtutyun = outcomes.Where(o => o.OutComeTypeId == 3);
@@ -101,18 +101,21 @@ namespace DiplomaProject.WebUI.Controllers
                     double kWeight = karoxutyun.Sum(k => k.TotalWeight.Value);
                     double hWeight = hmtutyun.Sum(h => h.TotalWeight.Value);
                     double sum = gWeight + kWeight + hWeight;
-                    finalSubjects[i].Credit = Convert.ToInt32(credit);
-                    finalSubjects[i].TotalHours = totalHours;
-                    service.Update(finalSubjects[i]);
+                    //finalSubjects[i].Credit = Convert.ToInt32(credit);
+                    //finalSubjects[i].TotalHours = totalHours;
+                    //service.Update(finalSubjects[i]);
                     totalsum = totalsum + sum;
 
                     for (int n = 1; n <= 8; n++)
                     {
-                        credit = 30 * sum / totalsum;
+                        if (totalsum != 0)
+                            credit = 30 * sum / totalsum;
                         // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
-                        totalHours = Convert.ToInt32((30 * credit - 1) / 16 * sum + (c1 * gWeight + c2 * kWeight + c3 * hWeight)); 
+                        totalHours = Convert.ToInt32((30 * credit - 1) / 16 * sum + (c1 * gWeight + c2 * kWeight + c3 * hWeight));
                         // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
-
+                        finalSubject[i].Credit = Convert.ToInt32(credit);
+                        finalSubject[i].TotalHours = totalHours;
+                        await service.Update(finalSubject[i]);
                     }
                 }
             }
@@ -284,6 +287,22 @@ namespace DiplomaProject.WebUI.Controllers
         {
             var finaloutcomes = service.GetAll<FinalOutCome>().Select(o => mapper.Map<FinalOutCome>(o)).ToList();
             var subjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).Select(s => mapper.Map<SubjectViewModel>(s)).ToList();
+            if (subjects.All(s => s.Level.HasValue && s.Level.Value > 0))
+            {
+                var subjectModel = new List<SubjectViewModel>[8];
+                foreach (var subject in subjects)
+                {
+                    if (subject.Level <= 8)
+                    {
+                        if (subjectModel[subject.Level.Value - 1] == null)
+                        {
+                            subjectModel[subject.Level.Value - 1] = new List<SubjectViewModel>();
+                        }
+                        subjectModel[subject.Level.Value - 1].Add(subject);
+                    }
+                }
+                return subjectModel.ToList();
+            }
             var edges = service.GetAll<Edge>().Where(e => e.ProfessionId == professionId).Select(s => mapper.Map<EdgeViewModel>(s)).ToList();
             List<int> left = new List<int>();
             List<int> right = new List<int>();

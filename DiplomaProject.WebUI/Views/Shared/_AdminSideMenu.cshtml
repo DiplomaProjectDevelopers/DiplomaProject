@@ -46,7 +46,7 @@
                         @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "RequestSender"))
                         {
                             <li>
-                                <a href="@Url.Action("Index", "Outcomes", new { professionoId = item.ProfessionId } )">@item.ProfessionName</a>
+                                <a href="@Url.Action("Index", "Outcomes", new { professionoId = item.ProfessionId })">@item.ProfessionName</a>
                                @Html.Hidden(@Url.Action("Outcome", "StakeHolder", new { professionoId = item.ProfessionId }));
                             </li>
                         }
@@ -54,7 +54,7 @@
                 </li>
             }
 
-            @if (Model.UserRoles.Any(s => s.RoleName == "SubjectMaker" || s.RoleName == "DepartmentAdmin"))
+            @if (Model.UserRoles.Any(s => s.RoleName == "SubjectMaker" || s.RoleName == "DepartmentAdmin" || s.RoleName == "CurriculumMaker"))
             {
                 <li>
                     <a id="lnkProfessions" href="#" class="list-group-item" data-toggle="collapse" data-target="#prefessions" aria-expanded="false">
@@ -62,7 +62,7 @@
 
                     </a>
                     <ul class="collapse" id="prefessions" role="menu" aria-labelledby="lnkPrefessions">
-                        @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "SubjectMaker" || s.RoleName == "DepartmentAdmin"))
+                        @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "SubjectMaker" || s.RoleName == "DepartmentAdmin" || s.RoleName == "CurriculumMaker"))
                         {
                             <li>
                                 <a href="@Url.Action("Index", "Subject", new { professionId = item.ProfessionId } )">@item.ProfessionName</a>

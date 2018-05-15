@@ -90,12 +90,22 @@
                 </li>
 
             }
-
-            <li>
-                <a href="@Url.Action("SubOut", "SubjectList")" class="list-group-item">
-                    <i class="glyphicon glyphicon-screenshot"></i> Ուսումնական պլան
-                </a>
-            </li>
+            @if (Model.UserRoles.Any(s => s.RoleName == "CurriculumMaker"))
+            {
+                <li>
+                    <a href="@Url.Action("SubOut", "SubjectListTable")" class="list-group-item">
+                        <i class="glyphicon glyphicon-screenshot"></i> Ուսումնական պլան
+                    </a>
+                    <ul class="collapse" id="professionsCredit" role="menu" aria-labelledby="creditProfessions">
+       @foreach (var item in Model.UserRoles.Where(s => s.RoleName == "CurriculumMaker"))
+        {
+                <li>
+                    <a href="@Url.Action("Index", "Subject", new { professionId = item.ProfessionId } )">@item.ProfessionName</a>
+                </li>
+        }
+                    </ul>
+                </li>
+            }
         </ul>
     </div>
 </div>

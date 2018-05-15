@@ -118,6 +118,76 @@ namespace DiplomaProject.WebUI.Controllers
             }
             return View("SubjectDistribution");
         }
+        [HttpGet]
+        public IActionResult ControlDistribution(int professionsId)
+        {
+            var creditcontrol = service.GetAll<Subject>().Where(s => s.ProfessionId == professionsId).ToList().GroupBy(s => s.Credit, p => p, (credit, subjects) => new { credit, subjects });
+            var hourscontrol = service.GetAll<Subject>().Where(s => s.ProfessionId == professionsId).ToList().GroupBy(s => s.TotalHours, p => p, (totalhours, subjects) => new { totalhours, subjects });
+            if ((creditcontrol.Count() >= 30 && hourscontrol.Count() >= 25) || (creditcontrol.Count() <= 30 && hourscontrol.Count() >= 25))
+            {
+                double c1 = 0, c2 = 0, c3 = 0;
+                var subjectGroups = service.GetAll<Subject>().Where(s => s.ProfessionId == professionsId).ToList().GroupBy(s => s.SubjectModuleId, p => p, (moduleId, subjects) => new { moduleId, subjects });
+                foreach (var group in subjectGroups)
+                {
+                    var moduleId = group.moduleId.Value;
+                    var finalSubjects = group.subjects.ToList();
+                    switch (moduleId)
+                    {
+                        case 1:
+                        case 2:
+                        case 3:
+                            c1 = 1.3;
+                            c2 = 0.5;
+                            c3 = 0;
+                            break;
+                        case 4:
+                            c1 = 1.6;
+                            c2 = 0.75;
+                            c3 = 0.5;
+                            break;
+                        case 5:
+                        case 6:
+                        case 7:
+                        case 8:
+                        case 9:
+                            c1 = 1.6;
+                            c2 = 0.75;
+                            c3 = 0.5;
+                            break;
+                    }
+                    for (int i = 0; i < finalSubjects.Count; i++)
+                    {
+
+                        var outcomes = service.GetAll<FinalOutCome>().Where(o => o.SubjectId == finalSubjects[i].Id);
+                        var giteliq = outcomes.Where(o => o.OutComeTypeId == 1);
+                        var karoxutyun = outcomes.Where(o => o.OutComeTypeId == 2);
+                        var hmtutyun = outcomes.Where(o => o.OutComeTypeId == 3);
+                        double credit = 0;
+                        int totalHours = 0;
+                        double totalsum = 0;
+                        double gWeight = giteliq.Sum(g => g.TotalWeight.Value);
+                        double kWeight = karoxutyun.Sum(k => k.TotalWeight.Value);
+                        double hWeight = hmtutyun.Sum(h => h.TotalWeight.Value);
+                        double sum = gWeight + kWeight + hWeight;
+                        finalSubjects[i].Credit = Convert.ToInt32(credit);
+                        finalSubjects[i].TotalHours = totalHours;
+                        service.Update(finalSubjects[i]);
+                        totalsum = totalsum + sum;
+
+                        for (int n = 1; n <= 8; n++)
+                        {
+                            credit = 30 * sum / totalsum;
+                            // grel sa hashvi arac praktikan ev lekciayi u mnacaci jamery amen ararkayi hamar
+                            totalHours = Convert.ToInt32((30 * credit - 1) / 16 * sum + (c1 * gWeight + c2 * kWeight + c3 * hWeight));
+                            // totalHours = credit / gWeight + credit / kWeight + credit / hWeight;
+
+                        }
+                    }
+                }
+                
+            }
+            return View("ControlDistribution");
+        }
 
         [HttpPost]
         public async Task<IActionResult> SaveSubjects([FromBody]SubjectListViewModel model)

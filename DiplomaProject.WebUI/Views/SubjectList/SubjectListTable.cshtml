@@ -16,26 +16,27 @@
             <thead>
                 @{ List<int> level = new List<int>();
                     level.Add(0);
-                    var c = 0;
                  }
                 <tr style="background-color:none">
                     <th>Դասըթացներ/Կիսամյակներ</th>
-                    @for (var i = 0; i < level.Count; i++)
+                    @foreach (var item in ViewBag.Subject)
                     {
-                        @foreach (var item in ViewBag.Subject)
+                        var c = 0;
+                        @for (var i = 0; i < level.Count; i++)
                         {
                             if (item.Level == level[i])
                             {
                                 c++;
                                 break;
                             }
-                            if (c == 0)
-                            {
-                                <th>@item.Level</th>
-                                level.Add(item.Level);
-                            }
-                         }
-                     }
+                        }
+                        if (c == 0)
+                        {
+                            <th>@item.Level</th>
+                            level.Add(item.Level);
+                            c++;
+                        }
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -44,21 +45,23 @@
                 {
                     if (item.Name == n)
                     {
-                        break;
 
                     }
-                    <tr>
-                        <th>@item.Name</th>
-                        @foreach (var item1 in ViewBag.Subject)
-                        {
-
-                            if (item1.Name == item.Name)
+                    else
+                    {
+                        <tr>
+                            <th>@item.Name</th>
+                            @foreach (var item1 in ViewBag.Subject)
                             {
-                                <th>@item1.Credit ( @item.LabHours:@item.LectionHours:@item.PracticalHours )</th>
+
+                                if (item1.Name == item.Name)
+                                {
+                                    <th>@item1.Credit ( @item.LabHours:@item.LectionHours:@item.PracticalHours )</th>
+                                }
                             }
-                        }
-                    </tr>
-                    n = item.Name;
+                        </tr>
+                            n = item.Name;
+                    }
                 }
             </tbody>
 

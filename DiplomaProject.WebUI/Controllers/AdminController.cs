@@ -89,6 +89,12 @@ namespace DiplomaProject.WebUI.Controllers
                 var user = await userManager.FindByNameAsync(model.Username);
                 if (user != null)
                 {
+                    var userroles = service.GetAll<UserRole>().Where(u => u.UserId == user.Id).ToList();
+                    if (userroles.Count == 0)
+                    {
+                        ModelState.AddModelError("", "Դուք դեռ չունեք որևէ իրավասություն համակարգում: Դիմեք համակարգի ադմինիստրատորին դերերի բաշխման համար:");
+                        return View(model);
+                    }                    
                     var result = await signInManager.PasswordSignInAsync(user, model.Password, true, true);
                     if (result.Succeeded)
                     {
@@ -146,10 +152,7 @@ namespace DiplomaProject.WebUI.Controllers
                     var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action("ConfirmEmail", "Admin", new { userId = user.Id, code }, protocol: Request.Scheme);
                     await emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-                    await signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index");
-                    //TempData["UserRegistered"] = Messages.USER_ADDED_SUCCESS;
-                    //return RedirectToAction("Login");
+                    return RedirectToAction("Login");
                 }
                 else
                 {

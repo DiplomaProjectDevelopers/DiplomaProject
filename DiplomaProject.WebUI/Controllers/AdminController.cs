@@ -28,7 +28,7 @@ namespace DiplomaProject.WebUI.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool isFirst = false)
         {
             var user = userManager.GetUserAsync(User).Result;
             var users = service.GetAll<User>().ToList();
@@ -50,7 +50,7 @@ namespace DiplomaProject.WebUI.Controllers
                 .Select(s => mapper.Map<ProfessionViewModel>(service.GetById<Profession>(s))).ToList();
 
             ViewBag.User = um;
-            return View("UserList", model);
+            return (isFirst ? View("PersonalPage") : View("UserList", model));
         }
 
         public IActionResult UserList(string searchTerm)
@@ -99,7 +99,7 @@ namespace DiplomaProject.WebUI.Controllers
                     if (result.Succeeded)
                     {
                         await userManager.ResetAccessFailedCountAsync(user);
-                        return RedirectToAction("Index", "Admin");
+                        return RedirectToAction("Index", new { isFirst = true });
                     }
                     else if (result.IsLockedOut)
                     {

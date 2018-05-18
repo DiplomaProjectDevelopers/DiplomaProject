@@ -64,8 +64,10 @@ public class Graph
     {
         // Mark the current node as visited and print it
         visited[v] = true;
-        var list = new List<int>();
-        list.Add(v);
+        var list = new List<int>
+        {
+            v
+        };
         //Console.Write(v + " ");
 
         int n;

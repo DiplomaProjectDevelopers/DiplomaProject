@@ -287,12 +287,14 @@ namespace DiplomaProject.WebUI.Controllers
         {
             var finaloutcomes = service.GetAll<FinalOutCome>().Select(o => mapper.Map<FinalOutCome>(o)).ToList();
             var subjects = service.GetAll<Subject>().Where(s => s.ProfessionId == professionId).Select(s => mapper.Map<SubjectViewModel>(s)).ToList();
+            var semesterCount = service.GetById<Profession>(professionId).BdfullTimeSemesters.HasValue && service.GetById<Profession>(professionId).BdfullTimeSemesters.Value > 0 ?
+                service.GetById<Profession>(professionId).BdfullTimeSemesters.Value : 8;
             if (subjects.All(s => s.Level.HasValue && s.Level.Value > 0))
             {
-                var subjectModel = new List<SubjectViewModel>[8];
+                var subjectModel = new List<SubjectViewModel>[semesterCount];
                 foreach (var subject in subjects)
                 {
-                    if (subject.Level <= 8)
+                    if (subject.Level <= semesterCount)
                     {
                         if (subjectModel[subject.Level.Value - 1] == null)
                         {
@@ -344,8 +346,8 @@ namespace DiplomaProject.WebUI.Controllers
                 var s2 = subjects[edg[i].Item2].Id;
                 filteredEdges.Add(new Tuple<int, int>(s1, s2));
             }
-            var subjectLevels = new List<int>[9];
-            for (int i = 0; i < 9; i++)
+            var subjectLevels = new List<int>[semesterCount + 1];
+            for (int i = 0; i < semesterCount + 1; i++)
             {
                 subjectLevels[i] = new List<int>();
             }
@@ -357,8 +359,8 @@ namespace DiplomaProject.WebUI.Controllers
                 var currunt = subjects.Select(s => s.Id).Where(s => filteredEdges.Any(e => e.Item2 == s && prevoious.Contains(e.Item1)));
                 subjectLevels[i] = currunt.ToList();
             }
-            subjectLevels[8] = subjects.Select(s => s.Id).Where(s => subjectLevels.All(l => l.All(v => v != s))).ToList();
-            var model = new List<SubjectViewModel>[9];
+            subjectLevels[semesterCount] = subjects.Select(s => s.Id).Where(s => subjectLevels.All(l => l.All(v => v != s))).ToList();
+            var model = new List<SubjectViewModel>[semesterCount + 1];
             for (int i = 0; i < model.Length; ++i)
             {
                 if (model[i] == null) model[i] = new List<SubjectViewModel>();

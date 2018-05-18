@@ -8,15 +8,16 @@
     <div class="table-responsive">
         <div class="btn row">
             @if (ViewBag.UserRoles.Contains("CURRICULUMMAKER"))
-            {
-            <button class="btn btn-primary" type="button" onclick="ֆունկցիայի անուն"><span class="glyphicon glyphicon-pencil"></span> Փոփոխել </button>
-            }
+    {
+        <button class="btn btn-primary" type="button" id="edit"><span class="glyphicon glyphicon-pencil"></span> Փոփոխել </button>
+        <button class="btn btn-primary" type="button" id="save" style="display:none"><span class="glyphicon glyphicon-ok"></span> Հաստատել </button>
+}
         </div>
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped" id="tbl_subjects" disabled>
             <thead>
                 @{ List<int> level = new List<int>();
                     level.Add(0);
-                 }
+                }
                 <tr style="background-color:none">
                     <th>Դասըթացներ/Կիսամյակներ</th>
                     @foreach (var item in ViewBag.Subject)
@@ -40,7 +41,7 @@
                 </tr>
             </thead>
             <tbody>
-                @{var n=""; }
+                @{var n = ""; }
                 @foreach (var item in ViewBag.Subject)
                 {
                     if (item.Name == n)
@@ -60,11 +61,36 @@
                                 }
                             }
                         </tr>
-                            n = item.Name;
+                        n = item.Name;
                     }
                 }
             </tbody>
 
         </table>
     </div>
-    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+        
+        $(document).ready(function () {
+            // $("#edit").prop("disabled", true);
+            $("#tbl_subjects").css({ opacity:0.6});
+
+            $("#edit").click(function () {
+                $("#save").show();
+                // $("#tbl_subjects").prop("disabled", false);
+                $("#tbl_subjects").css({ opacity: 1 });
+            });
+            $("#save").click(function () {
+                $("#save").hide();
+                // $("#tbl_subjects").prop("disabled", false);
+                $("#tbl_subjects").css({ opacity: 0.6 });
+            });
+        });
+
+        
+
+    </script>
+}

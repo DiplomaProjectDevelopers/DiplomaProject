@@ -9,7 +9,7 @@
 <div>
     <h4>Առարկայի կառուցվածքը</h4>
     <hr />
-    <dl class="dl-horizontal">
+    <dl class="dl-horizontal" style="width:1000px">
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -47,13 +47,31 @@
             @Html.DisplayFor(model => model.TotalHours)
         </dd>
         <dt>
+            @Html.DisplayNameFor(model => model.LabHours)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LabHours)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LectionHours)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LectionHours)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PracticalHours)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PracticalHours)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.Outcomes)
         </dt>
         <dd>
             @foreach (var outcome in Model.Outcomes)
-            {
-                <p>@outcome.Name</p>
-            }
+        {
+            <p>@outcome.Name</p>
+    }
         </dd>
     </dl>
 </div>

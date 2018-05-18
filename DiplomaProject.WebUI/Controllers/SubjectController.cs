@@ -171,12 +171,16 @@ namespace DiplomaProject.WebUI.Controllers
             if (subject is null) return NotFound();
             var outcomes = service.GetAll<FinalOutCome>().Where(f => f.SubjectId == subjectId).ToList();
             var model = mapper.Map<SubjectViewModel>(subject);
+            model.ProfessionName = model.ProfessionId.HasValue ? service.GetById<Profession>(model.ProfessionId.Value).Name : "";
+            model.SubjectModule = model.SubjectModuleId.HasValue ? service.GetById<SubjectModule>(model.SubjectModuleId.Value).Name : "";
             for (int i = 0; i < outcomes.Count; i++)
             {
                 var omodel = mapper.Map<OutcomeViewModel>(outcomes[i]);
                 model.Outcomes.Add(omodel);
             }
-            return View(model);
+
+            return View("SubjectDetailsHours",new List<SubjectViewModel> { model});
+            //return View(model);
         }
         [HttpGet]
         [Authorize(Roles = "SubjectMaker")]

@@ -31,16 +31,16 @@ namespace DiplomaProject.Domain.ViewModels
         public int? Credit { get; set; }
         [Display(Name = "Կիսամյակ")]
         public int? Level { get; set; }
-
+        [Display(Name = "Գործնական ժամաքանակ")]
         public int? PracticalHours { get; set; }
 
         [Display(Name = "Ընդհանուր ժամաքանակ")]
         public int? TotalHours { get; set; }
-        [Display(Name = "Ընդհանուր ժամաքանակ")]
+        [Display(Name = "Լաբորատոր աշխատանք")]
         public int? LabHours { get; set; }
-        [Display(Name = "Ընդհանուր ժամաքանակ")]
+        [Display(Name = "Դասախոսություն")]
         public int? LectionHours { get; set; }
-        [Display(Name = "Ընդհանուր ժամաքանակ")]
+        [Display(Name = "Կուրսային ժամաքանակ")]
         public int? CoursHours { get; set; }
         [Display(Name = "Վերջնարդյունքներ")]
         public List<OutcomeViewModel> Outcomes { get; set; }

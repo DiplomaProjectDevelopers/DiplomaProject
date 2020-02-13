@@ -51,7 +51,7 @@
         $(document).ready(function () {
             model = @Html.Raw(Json.Serialize(Model));
             if (model.length === 9 && model[8].length === 0) {
-                model.splice(8, 1);
+                model.splice(9, 1);
             }
             renderSemesters();
         });

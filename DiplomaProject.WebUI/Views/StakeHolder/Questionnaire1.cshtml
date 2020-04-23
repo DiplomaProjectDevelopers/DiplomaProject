@@ -37,7 +37,7 @@
                     <option selected disabled>կազմակերպություն</option>
                 </select>
                 <div class="Azat">
-                    <a class="Button" href="#"  data-toggle="modal" data-target="#myModal">    
+                    <a class="Button" href="#"  data-toggle="modal" onclick="OK(); return false" data-dismiss="modal">    
                         Հաստատել
                     </a>
                 </div>
@@ -131,13 +131,10 @@
             })
             str = selected.toString();
             data.set("stakeholderstr", str);
-            var gmail = $("#Gmail").val();
-            var pass = $("#Pass").val();
-            data.set("gmail", $("#Gmail").val());
-            data.set("pass", $("#Pass").val());
-          //  alert("onclick");
-            //$("#mydialog").dialog("open");
+            data.set("gmail", "diploma.project.polytech@gmail.com");
+            data.set("pass", "polytechDP");
             req.send(data);
+            alert("Հարցաթերթիկն ուղարկված է", "Հաղորդագրություն");
         }
     </script>
 }

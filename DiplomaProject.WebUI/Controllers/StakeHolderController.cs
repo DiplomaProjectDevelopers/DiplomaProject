@@ -313,10 +313,11 @@ namespace DiplomaProject.WebUI.Controllers
             {
                 using (MailMessage mm = new MailMessage(gmail, email[j]))
                 {
+                    string baseUrl = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + "/StakeHolder/Outcome?professionoId=" + proffid;
                     mm.Subject = "Հարցաթերթիկ";
                     mm.Body = "Հարգելի " + name[j] + " խնդրում ենք տրամադրել մի փոքր ժամանակ և լրացնել հետևյալ հղումով տրված հարցաթերթիկը։" +
-                        " Նախապես շնորհակալություն\n" + "http://localhost:59468/StakeHolder/Outcome?professionoId="+proffid+"." + "\n\n\nՀարգանքներով` "
-                        + currentUser.FirstName + " " + currentUser.LastName;
+                        " Նախապես շնորհակալություն\n" + baseUrl  
+                        + "." + "\n\n\nՀարգանքներով` Հայաստանի Ազգային Պոլիտեխնիկական Համալսարան";
                     mm.IsBodyHtml = false;
                     SmtpClient smtp = new SmtpClient();
                     smtp.Host = "smtp.gmail.com";

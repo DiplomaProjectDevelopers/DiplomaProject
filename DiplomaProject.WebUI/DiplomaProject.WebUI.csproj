@@ -16,12 +16,12 @@
     <PackageReference Include="AE.Net.Mail" Version="1.7.10" />
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
-    <PackageReference Include="bootstrap" Version="4.1.1" />
     <PackageReference Include="bootstrap.sass" Version="4.3.1" />
+    <PackageReference Include="bootstrap" Version="4.3.1" />
     <PackageReference Include="Google.Apis.auth" Version="1.33.0" />
     <PackageReference Include="Google.Apis.Plus.v1" Version="1.33.0.1209" />
     <PackageReference Include="jQuery.UI.Combined" Version="1.12.1" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" />
   </ItemGroup>

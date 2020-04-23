@@ -13,14 +13,14 @@ namespace DiplomaProject.Domain.Services
             {
                 Host = "smtp.gmail.com",
                 Port = 587,
-                UseDefaultCredentials = true,
                 EnableSsl = true,
-                Credentials = new NetworkCredential("issd.armenianteam@gmail.com", "13&3d3upp0rt!")
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential("diploma.project.polytech@gmail.com", "polytechDP")
             };
 
             MailMessage mailMessage = new MailMessage
             {
-                From = new MailAddress("issd.armenianteam@gmail.com", "ISSD Support Team"),
+                From = new MailAddress("diploma.project.polytech@gmail.com", "ISSD Support Team"),
                 Subject = subject,
                 Body = message,
                 IsBodyHtml = true

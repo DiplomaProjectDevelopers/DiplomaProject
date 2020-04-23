@@ -26,13 +26,12 @@ namespace DiplomaProject.Domain.ViewModels
         [Required]
         [StringLength(32, MinimumLength = 8)]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "<<\"Գաղտնաբառ\" և \"Հաստատել գաղտնաբառը\" դաշտերի պարունակությունը չեն համընկնում")]
+        [Compare("Password", ErrorMessage = "\"Գաղտնաբառ\" և \"Հաստատել գաղտնաբառը\" դաշտերի պարունակությունը չեն համընկնում")]
         [Display(Name = "Հաստատել գաղտնաբառը *")]
         public string ConfirmPassword { get; set; }
 
         [Display(Name = "Ծննդյան տարեթիվ")]
         [DataType(DataType.Date)]
-        [Range(typeof(DateTime), "1900-01-01", "2018-01-01")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? BirthDate { get; set; }
 

@@ -373,8 +373,8 @@ namespace DiplomaProject.WebUI.Controllers
                 idlist[i] = int.Parse(idstr[i]);
                 subjectlist[i] = int.Parse(subjectstr[i]);
             }
-            var stakeHolderType = service.GetAll<StakeHolderType>().ToList();
-            var sthtypemodel = stakeHolderType.Select(st => mapper.Map<StakeHolderTypeViewModel>(st)).ToList();
+            var stakeHolderType = await (service.GetAll<StakeHolderType>().ToList());
+            var sthtypemodel = ((List<StakeHolderType>)stakeHolderType).Select(st => mapper.Map<StakeHolderTypeViewModel>(st)).ToList();
             var coefficient = sthtypemodel.Find(st => st.Id.Equals(stakeholderid)).Coefficient.Value;
             double[] multipleofcoefficient = new double[weightlist.Length];
             for (int i = 0; i < weightlist.Length; i++)
@@ -394,10 +394,90 @@ namespace DiplomaProject.WebUI.Controllers
                 };
                 var outcomeinsert = service.Insert<OutCome>(data);
             }
-            return RedirectToAction("FinalOutcomeFunc");
+
+            var finaloutcome = await (service.GetAll<FinalOutCome>().ToList());
+            var finaloutcomemodel =((List<FinalOutCome>)finaloutcome).Select(f => mapper.Map<OutcomeViewModel>(f)).ToList();
+            var outcome = service.GetAll<OutCome>().ToList();
+            var outcomemodel = outcome.Select(o => mapper.Map<FinalOutcomeViewModel>(o)).ToList();
+            string[] arrname = new string[outcomemodel.Count];
+            double[] arrweight = new double[outcomemodel.Count];
+            int[] arrsubject = new int[outcomemodel.Count];
+            int k = 0;
+            foreach (var outcomeitem in outcomemodel)
+            {
+                arrsubject[k] = (int)outcomeitem.InitialSubjectId;
+                arrname[k] = outcomeitem.Name;
+                arrweight[k] = 0;
+                foreach (var outcomeitem1 in outcomemodel)
+                {
+                    if (outcomeitem1.Name == outcomeitem.Name && outcomeitem1.InitialSubjectId == outcomeitem.InitialSubjectId)
+                    {
+                        arrweight[k] += outcomeitem1.Weight;
+                        service.DeleteById<OutCome>(outcomeitem1.Id);
+                    }
+                }
+                k++;
+            }
+            int j = 0;
+            while (j < arrsubject.Length)
+            {
+                int count = 0;
+                foreach (var finaloutcomeitem in finaloutcomemodel)
+                {
+                    if (finaloutcomeitem.Name == arrname[j] && finaloutcomeitem.InitialSubjectId == arrsubject[j])
+                    {
+                        var update = ((List<FinalOutCome>)finaloutcome).Where(fo => fo.Name == arrname[j] && fo.InitialSubjectId == arrsubject[j]).FirstOrDefault();
+                        if (update != null)
+                        {
+                            double sum = 0;
+                            if (update.TotalWeight == null)
+                            {
+                                sum = arrweight[j];
+                            }
+                            else
+                            {
+                                sum = (float)(update.TotalWeight + arrweight[j]) / 2;
+                            }
+                            update.TotalWeight = Math.Round(sum, 2);
+                            var itemupdate = service.Update<FinalOutCome>(update);
+                            j++;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        count++;
+                        if (count == finaloutcomemodel.Count)
+                        {
+                            var data = new FinalOutCome
+                            {
+                                Name = arrname[j],
+                                SubjectId = arrsubject[j],
+                                TotalWeight = arrweight[j],
+                            };
+                            var iteminsert = service.Insert<FinalOutCome>(data);
+                            j++;
+                        }
+                    }
+                }
+            }
+            return View("Questionnaire2");
+
+            //return RedirectToAction("FinalOutcomeFunc");
         }
 
-        public ActionResult FinalOutcomeFunc()
+        private object await(List<StakeHolderType> list)
+        {
+            return list;
+        }
+
+        private object await(List<FinalOutCome> list)
+        {
+            return list;
+        }
+
+        [HttpGet]
+        public IActionResult FinalOutcomeFunc()
         {
             var finaloutcome = service.GetAll<FinalOutCome>().ToList();
             var finaloutcomemodel = finaloutcome.Select(f => mapper.Map<OutcomeViewModel>(f)).ToList();

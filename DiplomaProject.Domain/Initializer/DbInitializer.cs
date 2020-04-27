@@ -707,12 +707,6 @@ namespace DiplomaProject.Domain.Initializer
                            InitialSubjectId = 8,
                            OutComeTypeId =2,
                            ProfessionId = 2
-                       },
-                       new FinalOutCome
-                       {
-                           Name = "Տրամաբանական խնդիրներ լուծելու հմտություն",
-                           OutComeTypeId = 3,
-                           ProfessionId = 1
                        }
                     };
                     _context.FinalOutComes.AddRange(outComes);
